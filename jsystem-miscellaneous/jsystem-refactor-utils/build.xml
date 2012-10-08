@@ -1,0 +1,98 @@
+<project default="all">
+	<property environment="env"/>
+	<property name="src.dir" location="./src" />
+	<property name="tests.dir" location="./tests" />
+	<property name="lib.dir" location="./lib" />
+	<property name="dist" location="./dist" />
+	<property name="out" location="./out" />
+	<property name="test.class.name" value="il.co.topq.refactor.refactorUtil.SanityTests"/>
+	<property name="jar.class.path" value="lib/commons-cli-1.2.jar lib/jsystemApp.jar lib/jsystemCore.jar"/>
+	<property name="runnerRoot" value="${env.RUNNER_ROOT}"/>
+
+	<target name="init">
+		<delete dir="${dist}"/>
+		<mkdir dir="${dist}" />
+		<mkdir dir="${out}" />
+	</target>
+
+	<target name="compile">
+		<javac srcdir="${src.dir};${tests.dir}" classpathref="build.classpath" destdir="${out}" />
+	</target>
+
+	<path id="build.classpath">
+		<fileset dir="lib">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	<target name="jar">
+		<delete file="JSystemRefactorUtils.jar" />
+		<property name="version.num" value="1.00" />
+		<buildnumber file="build.num" />
+		<tstamp>
+			<format property="TODAY" pattern="yyyy-MM-dd HH:mm:ss" />
+		</tstamp>
+
+		<manifest file="MANIFEST.MF">
+			<attribute name="Built-By" value="${user.name}" />
+			<attribute name="Main-Class" value="il.co.topq.refactor.Main" />
+			<attribute name="Implementation-Version" value="${version.num}-b${build.number}" />
+			<attribute name="Built-Date" value="${TODAY}" />
+			<!--attribute name="Class-Path" value="${jar.class.path}"/-->
+		</manifest>
+
+		<jar destfile="${dist}/JSystemRefactorUtils.jar" basedir="${out}" includes="**/*.class" manifest="MANIFEST.MF" />
+	</target>
+
+	<path id="test.classpath">
+		<pathelement location="${out}" />
+		<!--pathelement location="/path/to/junit.jar" /-->
+		<fileset dir="${lib.dir}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	<target name="test">
+		<junit fork="yes" haltonfailure="yes">
+			<test name="${test.class.name}" />
+			<formatter type="plain" usefile="false" />
+			<classpath refid="test.classpath" />
+		</junit>
+	</target>
+	
+
+	
+    <target name="copyLibs">
+    	<copy todir="${dist}/lib">
+    	  <fileset dir="${lib.dir}">
+    	    <include name="commons-cli-1.2.jar"/>
+    	  </fileset>
+    	</copy>
+    </target>
+	
+    <target name="copyFiles">
+    	<copy todir="${dist}">
+    	  <fileset dir=".">
+    	    <include name="run.bat"/>
+    	  	<include name="log.config"/>
+    	  </fileset>
+    	</copy>
+    </target>
+
+
+
+	<target name="cleanup">
+		<delete>
+			<fileset dir="${out}" includes="**/*.class" />
+			<fileset file="MANIFEST.MF" />
+		</delete>
+	</target>
+	
+	<target name="copyToRunner">
+		<copy todir="${runnerRoot}/tools/refactorUtils">
+			 <fileset dir="${dist}"/>
+			</copy>
+	</target>
+
+	<target name="all" depends="init,compile,test,jar,copyLibs,copyFiles,cleanup,copyToRunner" />
+</project>

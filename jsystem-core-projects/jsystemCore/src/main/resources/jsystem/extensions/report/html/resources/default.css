@@ -1,0 +1,75 @@
+/*
+ #test_breadcrumbs - 
+ span.test_level_XXXX a - 
+ span.test_report_XXX a - 
+ span.test_list_XXX a -
+ span.tree_XXXX - 
+ span.all_tests_XXXX a -
+ span.all_fails_XXXX a -
+ span.package_list_XXXX a- 
+ span.tree_XXXX a-
+
+*/
+
+/* Test bread crumbs inside test information table */
+span.test_breadcrumbs {
+	font-size:13;
+	/* display: none; */
+}
+
+/* Test information table */
+span.test_info_table {
+	/* display: none; */
+}
+
+/* Test parameters in test information table */
+span.parameters {
+	/* display: none; */
+}
+
+/* Test class documentation in test information table */
+span.class_doc {
+	/* display: none; */
+}
+
+/* Test documentation in test information table */
+span.test_doc {
+	/* display: none; */
+}
+
+/* Test user documentation in test information table */
+span.user_doc {
+	/* display: none; */
+}
+
+/* Time stamp on reports */
+span.time_stamp {
+	/* display: none; */
+}
+
+span.test_level_pass a, span.test_report_pass a, span.test_list_pass a , span.tree_pass ,span.all_tests_pass a,span.all_fails_pass a,span.package_list_pass a , span.tree_pass a{
+	color:#0000ff;
+}
+
+span.test_level_warn a, span.test_report_warn, span.test_report_warn a, span.test_list_warn a , span.tree_warn , span.all_tests_warn a,span.all_fails_warn a,span.package_list_warn a , span.tree_warn a{
+	color:#ff6600;
+	font-weight:bold;
+}
+
+span.test_level_erro a, span.test_report_erro, span.test_report_erro a, span.test_list_erro a , span.tree_erro ,span.all_tests_erro a,span.all_fails_erro a,span.package_list_erro a, span.tree_erro a{
+	color:#ff0000;
+	font-weight:bold;
+}
+
+span.test_summary_pass {
+	color:#0000ff;
+}
+
+span.test_summary_warn {
+	color:#ff6600;
+}
+
+span.test_summary_erro {
+	color:#ff0000;
+}
+

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sut>
+	<embeddedCatalina>
+		<class>com.ignis.embeddedcatalina.EmbeddedCatalina</class>
+		<defaultConnectorPort>8097</defaultConnectorPort>
+		<defaultAppBase>newDir</defaultAppBase>
+		<defaultDocBase>anotherDir</defaultDocBase>
+		<defaultContextPath>testInitEmbeddedContainerFromSUTFile</defaultContextPath>
+    </embeddedCatalina>
+</sut>

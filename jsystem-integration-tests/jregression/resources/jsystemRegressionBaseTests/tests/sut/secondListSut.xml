@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sut>
+	<connections>
+		<cliConnection index="0">
+			<class>com.aqua.sysobj.conn.WindowsDefaultCliConnection</class>
+			<password>simpleuser</password>
+			<user>simpleuser</user>
+			<host>xxx</host>
+		</cliConnection>
+		<cliConnection index="1">
+			<class>com.aqua.sysobj.conn.CmdConnection</class>
+			<password>simpleuser</password>
+			<user>simpleuser</user>
+			<host>yyy</host>
+		</cliConnection>
+		<cliConnection index="2">
+			<class>com.aqua.sysobj.conn.WindowsDefaultCliConnection</class>
+			<password>simpleuser</password>
+			<user>simpleuser</user>
+			<host>zzz</host>
+		</cliConnection>
+	</connections>
+</sut>

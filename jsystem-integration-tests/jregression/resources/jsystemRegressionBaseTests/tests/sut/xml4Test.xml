@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sut link="d:\1131694441562.png" name="default">
+    <device1>
+        <class>sysobj.Device1</class>
+        <ip edit="enable">10.10.10.10</ip>
+        <telnet>
+            <class>sysobj.Telnet</class>
+            <user>guy</user>
+            <password>guy</password>
+            <prompt regExp="false">&gt;</prompt>
+            <index>1</index>
+            <dummy>true</dummy>
+            <timeout edit="enable">40000</timeout>
+            <errors>error;fail</errors>
+        </telnet>
+        <port index="0">
+            <class>sysobj.Port</class>
+            <portId edit="enable">0</portId>
+        </port>
+        <port index="1">
+            <class>sysobj.Port</class>
+            <portId edit="enable">1</portId>
+        </port>
+    </device1>
+    <obj>
+    	<class>sysobj.Obj</class>
+    	<tag>Guy</tag>
+    </obj>
+</sut>

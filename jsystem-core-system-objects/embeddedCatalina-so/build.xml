@@ -1,0 +1,8 @@
+<project name="embeddedCatalina" default="all" basedir=".">
+	<property name="projectName" value="embeddedCatalina"/>
+	<property environment="env"/>
+	<property name="runnerRoot" value="${env.RUNNER_ROOT}"/>
+	<property name="buildFilesDir" value="${runnerRoot}/dev"/>
+	<import file="${buildFilesDir}/buildHelper.xml" />	
+</project>
+

@@ -1,0 +1,13 @@
+<sut>
+    <cli>
+        <class>systemobject.terminal.CliObject</class>
+        <useTelnetInputStream>true</useTelnetInputStream>
+        <host>172.30.112.141</host>
+        <prompt commandEnd="true">></prompt>
+        <prompt sendString="user">login:</prompt>
+        <prompt sendString="user">password:</prompt>
+        <!--prompt sendString="enable">></prompt>
+        <prompt sendString="">--More-- or (q)uit</prompt>
+        <prompt sendString="y" addEnter="false">? (y/n)</prompt-->
+    </cli>
+</sut>

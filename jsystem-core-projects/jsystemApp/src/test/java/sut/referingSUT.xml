@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE sut [
+	<!ENTITY obj0 SYSTEM "sutBase.xml">
+	<!ENTITY obj1 SYSTEM "sutBase1.xml">
+	]>
+<sut>
+	&obj0; 
+	&obj1;
+</sut>

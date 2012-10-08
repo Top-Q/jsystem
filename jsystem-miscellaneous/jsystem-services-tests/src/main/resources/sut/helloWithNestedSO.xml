@@ -1,0 +1,13 @@
+<sut>
+	<helloWorld>
+		<class>com.aqua.services.systemobject.MyDeviceWithNestedSO</class>
+		<connection>
+			<class>com.aqua.sysobj.conn.WindowsDefaultCliConnection</class> 
+			<user>simpleuser</user>
+			<password>simpleuser</password>
+			<host>127.0.0.1</host>
+		</connection>			
+		<message>Hello TAS Course</message>		
+	</helloWorld>
+</sut>
+

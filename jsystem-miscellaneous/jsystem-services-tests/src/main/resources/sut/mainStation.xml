@@ -1,0 +1,11 @@
+<station>
+	<class>com.aqua.services.demo.WindowsStation</class>
+	<cliConnection>
+		<class>com.aqua.sysobj.conn.WindowsDefaultCliConnection</class> 
+		<user>simpleuser</user>
+		<password>simpleuser</password>
+		<host>127.0.0.1</host>
+		<connectOnInit>false</connectOnInit>
+	</cliConnection>
+</station>
+

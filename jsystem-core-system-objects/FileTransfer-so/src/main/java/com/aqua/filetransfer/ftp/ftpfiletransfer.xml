@@ -1,0 +1,26 @@
+<sut>
+	<!-- Example SUT with all remote client parameters 
+	-->	
+	<filetransfer_1>
+		<class>com.aqua.filetransfer.ftp.FTPFileTransfer</class>
+		<remoteHost>192.12.34.56</remoteHost>
+		<localHostExternalName>12.11.23.44</localHostExternalName>
+		<protocol>telnet</protocol>		
+		<port>23</port>		
+		<user>admin</user>
+		<password>admin</password>
+		<ftpUserName>aqua</ftpUserName>
+		<ftpPassword>aqua</ftpPassword>
+		<ftpServerHome>c:/automation</ftpServerHome>
+	</filetransfer_1>
+	
+	<!-- 
+	  Typical SUT
+	-->	
+	<filetransfer_2>
+		<class>com.aqua.filetransfer.ftp.FileTransfer</class>
+		<remoteHost>192.12.34.56</remoteHost>
+		<telnetUser>admin</telnetUser>
+		<telnetPassword>admin</telnetPassword>
+	</filetransfer_2>
+</sut>

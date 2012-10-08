@@ -1,0 +1,14 @@
+<sut>
+	<nested_sys_obj>
+		<class>jsystem.systemobjects.MyNestedSystemObject</class>
+		<arrayOfNested index="0">
+			<class>jsystem.systemobjects.MyNestedSystemObject</class>
+		</arrayOfNested>
+		<arrayOfNested index="1">
+			<class>jsystem.systemobjects.MyNestedSystemObject</class>
+		</arrayOfNested>
+		<arrayOfNested index="2">
+			<class>jsystem.systemobjects.MyNestedSystemObject</class>
+		</arrayOfNested>
+	</nested_sys_obj>
+</sut>

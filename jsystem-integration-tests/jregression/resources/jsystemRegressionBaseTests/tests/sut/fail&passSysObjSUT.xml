@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sut link="d:\1131694441562.png" name="default">
+     <FailSysObj>
+        <class>sysobj.FailSysObj</class>
+    </FailSysObj>
+    <PassSysObj>
+        <class>sysobj.PassSysObj</class>
+    </PassSysObj>
+</sut>

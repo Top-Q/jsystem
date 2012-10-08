@@ -1,0 +1,28 @@
+<sut>
+	<station>
+		<class>com.aqua.services.demo.WindowsStation</class>
+		<userName>myUser</userName>
+		<cliConnection ref="connections/cliConnection[@index='0']">
+			<connectOnInit>true</connectOnInit>
+		</cliConnection>
+	</station>
+	
+	<connections>
+		<cliConnection index="0">
+			<class>com.aqua.sysobj.conn.WindowsDefaultCliConnection</class> 
+			<user >simpleuser</user>
+			<password >simpleuser</password>
+			<host >127.0.0.1</host>
+			<connectOnInit>false</connectOnInit>
+		</cliConnection>
+		<cliConnection index="1">
+			<class>com.aqua.sysobj.conn.WindowsDefaultCliConnection</class> 
+			<user >simpleuser</user>
+			<password >simpleuser</password>
+			<host >10.0.0.46</host>
+			<connectOnInit>false</connectOnInit>
+		</cliConnection>
+	</connections>
+		
+</sut>
+

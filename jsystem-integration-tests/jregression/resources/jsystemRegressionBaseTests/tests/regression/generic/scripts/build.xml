@@ -1,0 +1,157 @@
+<project name="buildTasks" default="" >
+	<!-- 
+	Used to compile tests needs 2 properties:
+		1. dist - the targate to compile to.
+		2. compileSrc - the source directory.
+		3. classpath - class path.
+		4. lib.dir - jars directory.
+	-->
+	<target name="compile">
+		<path id="base.path">
+		    <pathelement path="${classpath}"/>
+		    <fileset dir="${user.dir}/lib">
+		        <include name="**/*.jar"/>
+		    </fileset> 
+		    <fileset dir="${lib.dir}">
+		        <include name="**/*.jar"/>
+		    </fileset> 
+		</path>
+		<tstamp/>
+		<!-- delete dist directory and recreate it -->
+        <!--delete dir="${dist}" failonerror="false"/-->
+        <!--mkdir dir="${dist}"/-->
+		
+		<!-- Compile the code and create javadoc -->
+		<javac
+			srcdir="${compileSrc}"
+			destdir="${dist}"
+			debug="on"
+			includes="${include}"
+			failonerror="false">
+  			<classpath refid="base.path"/>
+  		</javac>
+        <!--copy todir="${dist}">
+            <fileset dir="${compileSrc}">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy-->
+	</target>
+	<!--
+		Used to build regression distribution.
+		Following are the script parameters:
+		1. export.src - if set will run the export of the tests sources.
+		2. export.classes - export tests classes.
+		3. export.so - export system objects.
+		4. export.runner - export the runner.
+		5. out.dir - the out dir used to build the delevery.
+		6. src.dir - the tests sources directory.
+		7. class.dir - the classes directory.
+		8. so.lib - the system objects directory.
+		9. zip.file - the targate zip file.		
+	-->
+	
+	<target name="export_src" if="export.src">
+		<copy todir="${out.dir}/tests">
+            <fileset dir="${src.dir}"/>
+		</copy>
+	</target>
+	<target name="export_classes" if="export.classes">
+		<copy todir="${out.dir}/classes">
+            <fileset dir="${classes.dir}"/>
+		</copy>
+	</target>
+	<target name="export_so" if="export.so">
+		<copy todir="${out.dir}/so_lib" failonerror="false">
+            <fileset dir="${so.lib}"/>
+		</copy>
+	</target>
+	<target name="export_runner" if="export.runner">
+		<copy todir="${out.dir}" failonerror="false">
+            <fileset file="${runner.dir}/run.bat"/>
+            <fileset file="${runner.dir}/run"/>
+            <fileset file="${runner.dir}/.jsystembase"/>
+            <fileset file="${runner.dir}/jsystem.properties"/>
+            <fileset file="${runner.dir}/customer.bat"/>
+            <fileset file="${runner.dir}/dp.properties"/>
+		</copy>
+		<propertyfile file="${out.dir}/jsystem.properties">
+		  <entry  key="tests.src" value="tests"/>
+		  <entry  key="tests.dir" value="classes"/>
+		</propertyfile>
+		<mkdir dir="${out.dir}/lib"/>
+		<copy todir="${out.dir}/lib" failonerror="false">
+            <fileset dir="${runner.dir}/lib"/>
+ 		</copy>
+		<copy todir="${out.dir}/customer_lib" failonerror="false">
+            <fileset dir="${runner.dir}/customer_lib"/>
+ 		</copy>
+		<copy todir="${out.dir}/thirdparty" failonerror="false">
+            <fileset dir="${runner.dir}/thirdparty"/>
+ 		</copy> 		
+	</target>	
+	
+	<target name="export" depends="export_src,export_classes,export_so,export_runner">
+		<zip destfile="${zip.file}"
+		       basedir="${out.dir}"
+		  />
+		<delete dir="${out.dir}"/>
+	</target>
+
+	<target name="import_src" if="import.src">
+		<copy todir="${out.dir}/tests">
+            <fileset dir="${src.dir}"/>
+		</copy>
+	</target>
+	<target name="import_classes" if="import.classes">
+		<copy todir="${out.dir}/classes">
+            <fileset dir="${classes.dir}"/>
+		</copy>
+	</target>
+	<target name="import_so" if="import.so">
+		<copy todir="${out.dir}/so_lib" failonerror="false">
+            <fileset dir="${so.lib}"/>
+		</copy>
+	</target>
+	<target name="import_runner" if="import.runner">
+		<copy todir="${out.dir}" failonerror="false">
+            <fileset file="${runner.dir}/run.bat"/>
+            <fileset file="${runner.dir}/run"/>
+            <fileset file="${runner.dir}/.jsystembase"/>
+            <fileset file="${runner.dir}/jsystem.properties"/>
+            <fileset file="${runner.dir}/customer.bat"/>
+            <fileset file="${runner.dir}/dp.properties"/>
+		</copy>
+		<propertyfile file="${out.dir}/jsystem.properties">
+		  <entry  key="tests.src" value="tests"/>
+		  <entry  key="tests.dir" value="classes"/>
+		</propertyfile>
+		<mkdir dir="${out.dir}/lib"/>
+		<copy todir="${out.dir}/lib" failonerror="false">
+            <fileset dir="${runner.dir}/lib"/>
+ 		</copy>
+	</target>
+	<target name="import" depends="import_src,import_classes,import_so,import_runner">
+		<zip destfile="${zip.file}"
+		       basedir="${out.dir}"
+		  />
+		<deltree dir="${out.dir}"/>
+	</target>
+	<target name="basic">
+		<echo>step: Hello World ${out.dir}</echo>
+	</target>
+	<target name="basicReportFail">
+		<echo level="error">Hello World ${out.dir}</echo>
+	</target>
+	
+	<target name="basicExecutionFail">
+		<!-- expected to fail -->
+		<javac srcdir="fff"
+		         destdir="fff"
+		         classpath="xyz.jar"
+		         debug="on"
+		         source="1.4"
+		  />	
+	</target>
+	
+	<!--includes="mypackage/p1/**,mypackage/p2/**"-->
+</project>

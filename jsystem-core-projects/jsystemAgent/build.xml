@@ -1,0 +1,11 @@
+<project name="jsystemAgent" default="all" basedir=".">
+	<property name="projectName" value="jsystemAgent"/>
+	<property environment="env"/>
+	<property name="runnerRoot" value="${env.RUNNER_ROOT}"/>
+	<property name="buildFilesDir" value="${runnerRoot}/dev"/>
+	<import file="${buildFilesDir}/buildHelper.xml" />
+	<target name="all" depends="build,agentPostBuild,dist" />
+	<target name="agentPostBuild">
+		<copy todir="${out}/dist" file="${thirdPartyRoot}/commonLib/wrapper.exe"/>
+	</target>
+</project>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sut link="d:\1131694441562.png" name="default">
+
+   	<internalObject1>
+   		<class>tests.jsystem.reference.InternalSysObject</class>
+		<descriptor>internalObject1</descriptor>
+		<field2>field2</field2>
+   	</internalObject1>
+
+    <internalObject2 ref="internalObject1">
+    </internalObject2>
+
+    <internalObjectRefToRef ref="internalObject2">
+    </internalObjectRefToRef>
+
+    <internalObjectWithOverride ref="internalObject1">
+	    <field2>internalObjectWithOverride</field2>
+    </internalObjectWithOverride>
+
+    <device1>
+        <class>tests.jsystem.reference.ExampleSystemObject</class>
+        <referenceObject ref="dummy_manager/internalObjects[@index='0']">
+        </referenceObject>
+    </device1>
+
+    <device2 ref="device1">
+    </device2>
+
+    <device6>
+        <class>tests.jsystem.reference.ExampleSystemObject</class>
+	   	<referenceObject>
+	   		<class>tests.jsystem.reference.InternalSysObject</class>
+			<descriptor>internalObject1</descriptor>
+			<field2>field2</field2>
+	   	</referenceObject>
+    </device6>
+
+    <device7 ref="device6">
+    </device7>
+
+    <device8 ref="device6">
+    </device8>
+
+    <dummy_manager_1 ref="dummy_manager">
+    </dummy_manager_1>
+
+    <dummy_manager_2 ref="dummy_manager">
+    </dummy_manager_2>
+    
+    <dummy_manager>
+    	<class>tests.jsystem.reference.DummyManager</class>
+    	<internalObjects index="0">
+    		<class>tests.jsystem.reference.InternalSysObject</class>
+			<descriptor>testname</descriptor>
+    	</internalObjects>
+    </dummy_manager>
+</sut>

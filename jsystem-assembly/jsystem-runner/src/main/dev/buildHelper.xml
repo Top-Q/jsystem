@@ -1,0 +1,167 @@
+<project name="helpers">
+	<property environment="env"/>
+	<property name="out" value="out" />
+	<property name="compileSrc" value="src" />
+	<property name="compileTests" value="tests" />
+	<property name="compTarget" value="1.5" />
+	<property name="packageName" value="*" />
+	<property name="runnerRoot" value="${env.RUNNER_ROOT}"/>
+	<property name="thirdPartyRoot" value="${runnerRoot}/thirdparty" />
+		
+	<!-- 
+	Please note and keep the order of the libraries in the classpath:
+	1. additional jars
+	2. ant lib
+	3. Thirdparty lib
+	4. Thirdparty common
+	5. runner/lib
+	6. runner/customerLib
+	-->
+	<path id="base.path">
+		<path refid="additionalLibs"/>		
+		<fileset dir="${thirdPartyRoot}/ant/lib">
+			<include name="**/*.jar" />
+		</fileset>
+		<fileset dir="${thirdPartyRoot}/lib">
+			<include name="**/*.jar" />
+		</fileset>
+		<fileset dir="${thirdPartyRoot}/commonLib">
+			<include name="**/*.jar" />
+		</fileset>
+		<fileset dir="${runnerRoot}/lib">
+			<include name="**/*.jar" />
+		</fileset>		
+	</path>
+
+	<target name="all" depends="build,dist" />
+
+	<target name="dist" depends="fullDist,partailDist">
+	</target>
+
+	<target name="clean">
+		<delete dir="${out}" />
+	</target>
+
+	<target name="cleanDeep" depends="clean">
+		<delete dir="log" />
+		<delete dir="classes" />
+		<delete>
+			<fileset dir="." includes="*.log,*.properties" />
+		</delete>
+	</target>
+
+	<target name="init" depends="setAdditionalLibs">
+		<mkdir dir="${runnerRoot}" />
+		<mkdir dir="${runnerRoot}/lib" />
+		<mkdir dir="${out}" />
+		<mkdir dir="${out}/classes" />
+		<mkdir dir="${out}/dist/lib" />
+	</target>
+	
+	<target name="compile" depends="init,update version">
+		<!-- Compile the code and create javadoc -->
+		<!-- Please add to your project compTarget property set it to 1.4 by default -->
+		<javac srcdir="${compileSrc}" destdir="${out}/classes" target="${compTarget}" source="${compTarget}" debug="on">
+			<classpath refid="base.path" />
+		</javac>
+				
+		<copy todir="${out}/classes" includeemptydirs="false">
+			<fileset dir="${compileSrc}" excludes="**/*.java,**/*package.html,**/doc-files/*"/>
+		</copy>
+		
+		
+	</target>
+	
+	<target name="compileTests" depends="setAdditionalLibs">
+		<mkdir dir="classes"/>
+		<javac srcdir="${compileTests}" destdir="classes" target="${compTarget}" source="${compTarget}" debug="on">
+			<classpath refid="base.path" />
+		</javac>
+		<copy todir="classes">
+			<fileset dir="${compileTests}">
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="build" depends="clean,init,compile">
+		<tstamp />
+		<delete dir="${out}/doc/${projectName}/api" />
+		<mkdir dir="${out}/doc/${projectName}/api" />
+		
+		<!-- create jars and source files-->
+		<zip destfile="${out}/dist/lib/${projectName}.jar" basedir="${out}/classes" excludes="tests/**,examples/**,${exclude}" />
+		<zip destfile="${out}/dist/lib/${projectName}_src.zip" basedir="${compileSrc}" excludes="${exclude}" />
+		<antcall target="javadoc"></antcall>
+		<copy todir="${out}/dist" failonerror="false">
+			<fileset dir="./bin" />
+		</copy>
+		<mkdir dir="${out}/dist/doc" />
+		<copy todir="${out}/dist/doc" failonerror="false">
+			<fileset dir="./doc" />
+		</copy>
+		<copy todir="${out}/dist/">
+			<fileset file="${buildNumberFile}" />
+		</copy>
+	</target>
+
+	<target name="javadoc" if="javadoc">
+		<!--            
+        please be aware that javadoc.exe should be in the computer path 
+        -->
+		<javadoc destdir="${out}/doc/${projectName}/api" author="false" version="false" use="false" windowtitle="${projectName} API" packagenames="${packageName}"
+        useexternalfile="yes" overview="${compileSrc}/doc-files/overview.html">
+			<classpath refid="base.path" />
+			<sourcepath path="${compileSrc}" />
+		</javadoc>
+		<jar jarfile="${out}/dist/lib/${projectName}_doc.zip" basedir="${out}/doc/${projectName}" excludes="" />
+		<delete dir="${out}/doc/${projectName}" failonerror="false" />
+	</target>
+	
+	<!-- 
+	     Empty implementation of the target that sets 
+	     the additionalLibs path.
+	     Should be overriden by project build file
+	-->
+	<target name="setAdditionalLibs">
+		<path id="additionalLibs">
+		</path>
+	</target>
+
+	<target name="fullDist" unless="dist">
+		<copy todir="${runnerRoot}" failonerror="false">
+			<fileset dir="${out}/dist" casesensitive="no">
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="partailDist" if="dist">
+		<copy todir="${dist}" overwrite="true" verbose="true">
+			<fileset dir="${out}/dist/lib" casesensitive="no">
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="update version">
+		<mkdir dir="${compileSrc}/META-INF" />
+		<tstamp>
+			<format property="date" pattern="dd-MM-yyyy, HH-mm-ss" locale="en,UK"/>
+		</tstamp>
+		<property name="buildNumber" value="${user.name} ${date}"/>
+		<manifest file="${compileSrc}/META-INF/MANIFEST.MF">
+			<attribute name="Built-By" value="${user.name}" />
+			<section name="com/aqua/${projectName}">
+				<attribute name="Implementation-Title" value="com.aqua.${projectName}" />
+				<attribute name="Implementation-Version" value="${buildNumber} ${date}" />
+				<attribute name="Implementation-Vendor" value="AQUA Software, www.aquasw.com" />
+			</section>
+		</manifest>
+		<propertyfile
+		    file="${compileSrc}/META-INF/${projectName}.build.properties"
+		    comment="${projectName} properties file">
+			<entry  key="date"  value="${date}"/>
+			<entry  key="jversion" value="${buildNumber}"/>
+		</propertyfile>
+	</target>
+	
+</project>

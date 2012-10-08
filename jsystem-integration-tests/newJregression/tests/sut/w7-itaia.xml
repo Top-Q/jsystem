@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sut>
+	<envController>
+		<class>com.aqua.jsystemobjects.JSystemEnvController</class>
+		<runnerOutDir>c:\jsystem\runner</runnerOutDir>
+		<runnerSourceDir>c:\jsystem\runner</runnerSourceDir>
+		<handlersListObject>com.aqua.jsystemobjects.handlers.JRegressionHandlerList</handlersListObject>
+	</envController>	
+	<FirefoxPath>C:\Program Files\Mozilla Firefox</FirefoxPath>
+</sut>

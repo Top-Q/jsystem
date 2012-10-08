@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.7.0
+Created-By: 14.2-b01 (Sun Microsystems Inc.)
+Built-By: yoram.shamir
+
+Name: com/aqua/cli
+Implementation-Title: com.aqua.cli
+Implementation-Version: yoram.shamir 27-05-2010, 12-25-07 27-05-2010, 
+ 12-25-07
+Implementation-Vendor: AQUA Software, www.aquasw.com
+

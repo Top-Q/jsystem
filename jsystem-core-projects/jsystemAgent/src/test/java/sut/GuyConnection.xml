@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sut>
+	<AgentConnection>
+		<class>com.aqua.services.AgentConnection</class>
+		<agentHost>10.0.0.20:8999</agentHost>
+		<jsystemHomeDir>/media/sda1/jsystem/runner</jsystemHomeDir>
+		<agentDir>/media/sda1/testDir/runner/</agentDir>
+		<agentAutomationRemoteDir>/media/sda1/workspace/</agentAutomationRemoteDir>
+		<runAgent>/runAgent</runAgent>
+	</AgentConnection>
+</sut>

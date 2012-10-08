@@ -1,0 +1,10 @@
+<sut>
+	<AgentConnection>
+		<class>com.aqua.services.AgentConnection</class>
+		<agentHost>10.0.0.28:8999</agentHost>
+		<jsystemHomeDir>C:/jsystem/runner</jsystemHomeDir>
+		<agentDir>C:/testDir/runner/</agentDir>
+		<agentAutomationRemoteDir>C:/workspace/</agentAutomationRemoteDir>
+		<runAgent>runAgent.bat</runAgent>
+	</AgentConnection>
+</sut>

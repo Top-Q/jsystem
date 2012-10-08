@@ -1,0 +1,4 @@
+#!/bin/sh
+export JSYSTEM_MAIN=jsystem.treeui.TestRunner
+export SPLASH=-splash:splash.jpg
+./runBase $1 $2 $3 $4 $5 $6

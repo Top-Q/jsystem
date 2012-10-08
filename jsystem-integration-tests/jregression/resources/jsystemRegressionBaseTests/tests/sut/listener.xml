@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sut link="d:\1131694441562.png" name="default">
+    <testListener>
+        <class>regression.generic.testlistener.MyTestListener</class>
+    </testListener>
+</sut>

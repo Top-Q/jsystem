@@ -1,0 +1,45 @@
+<project name="jsystemApp" default="all" basedir=".">
+	<property name="projectName" value="jsystemApp" />
+	<property environment="env" />
+	<property name="runnerRoot" value="${env.RUNNER_ROOT}" />
+	<property name="buildFilesDir" value="${runnerRoot}/dev" />
+	<import file="${buildFilesDir}/buildHelper.xml" />
+
+	<target name="update version">
+		<mkdir dir="${compileSrc}/META-INF" />
+		<tstamp>
+			<format property="date" pattern="dd-MM-yyyy, HH-mm-ss" locale="en,UK" />
+		</tstamp>
+		<condition property="buildNumber" else="${user.name} ${date}" value="${env.BUILD_NUMBER}">
+			<and>
+				<isset property="env.BUILD_NUMBER"/>
+			</and>
+		</condition>
+		<manifest file="${compileSrc}/META-INF/MANIFEST.MF">
+			<attribute name="Built-By" value="${user.name}" />
+			<section name="com/aqua/${projectName}">
+				<attribute name="Implementation-Title" value="com.aqua.${projectName}" />
+				<attribute name="Implementation-Version" value="${buildNumber} ${date}" />
+				<attribute name="Implementation-Vendor" value="AQUA Software, www.aquasw.com" />
+			</section>
+		</manifest>
+		<propertyfile file="${compileSrc}/META-INF/${projectName}.build.properties" comment="${projectName} properties file">
+			<entry key="date" value="${date}" />
+			<entry key="jversion" value="${buildNumber}" />
+		</propertyfile>
+	</target>
+
+	<target name="buildAll">
+		<ant antfile="../jsystemCore/build.xml" inheritall="false" />
+		<!-- ant antfile="../jsystemCommon/build.xml" inheritall="false"/ -->
+		<ant antfile="../jsystemAgent/build.xml" inheritall="false" />
+		<ant antfile="../jsystemAnt/build.xml" inheritall="false" />
+		<antcall target="all" />
+		<!-- ant antfile="../jregression/build.xml" inheritall="false"/
+		<copy todir="${env.RUNNER_ROOT}/../runnerAgent/lib">
+			<fileset dir="${env.RUNNER_ROOT}/lib">
+			</fileset>
+		</copy>
+		-->
+	</target>
+</project>

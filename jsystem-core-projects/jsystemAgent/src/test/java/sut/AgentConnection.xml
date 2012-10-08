@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sut>
+	<AgentConnection>
+		<class>com.aqua.services.AgentConnection</class>
+		<agentHost>10.0.0.28:8999</agentHost>
+		<runAgent>/runAgent</runAgent>
+        <runnerDir>/root/Desktop/agtWork/jsystem/runner</runnerDir>
+	</AgentConnection>
+</sut>

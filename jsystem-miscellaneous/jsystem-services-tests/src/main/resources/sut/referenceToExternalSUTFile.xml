@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE sut [
+	<!ENTITY mainStation SYSTEM "mainStation.xml">
+	]>
+<sut>
+	&mainStation; 
+	<StationsManagerWithRef>
+		<class>com.aqua.services.demo.StationsManager</class>
+		<stations index="0">
+			<class>com.aqua.services.demo.WindowsStation</class>
+			<cliConnection ref="station/cliConnection">
+				<host edit="enable">127.0.0.1</host>
+			</cliConnection>
+		</stations>
+		<stations index="1">
+			<class>com.aqua.services.demo.WindowsStation</class>
+			<cliConnection ref="station/cliConnection">
+				<host edit="enable">10.0.0.46</host>
+			</cliConnection>
+		</stations>
+	</StationsManagerWithRef>
+</sut>

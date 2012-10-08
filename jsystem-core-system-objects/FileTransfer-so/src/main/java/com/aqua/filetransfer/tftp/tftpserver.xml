@@ -1,0 +1,24 @@
+<sut>
+	<!-- Example SUT with all TFTP parameters 
+	  Creates a FTPServer which listens for ftp sessions on port 299.
+	  The FTP server is created with one default user.
+	  Default user name is admin, password is admin;
+	  home directory is c:/ftp
+	-->	
+	<tftpserver_1>
+		<class>com.aqua.tftp.tftpserver.TFTPServer</class>
+		<port>69</port>
+		<defaultUserHomeDirectory>c:/ftp</defaultUserHomeDirectory>
+	</tftpserver_1>
+	
+	<!-- 
+	  Typical SUT
+	  Creates a FTPServer which listens for ftp sessions on port 21.
+	  The FTP server is created with one default user.
+	  Default user name is aqua, password is aqua;
+	  home directory is currentDirectory/aquaftp21
+	-->	
+	<tftpserver_2>
+		<class>com.aqua.tftp.tftpserver.TFTPServer</class>
+	</tftpserver_2>
+</sut>

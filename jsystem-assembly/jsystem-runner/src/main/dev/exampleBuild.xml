@@ -1,0 +1,7 @@
+<project name="exampleBuild" default="all" basedir=".">
+	<property environment="env"/>
+	<property name="projectName" value="exampleBuild"/>
+	<property name="runnerRoot" value="${env.RUNNER_ROOT}"/>
+	<property name="dist" value="../TESTS_PROJECT_FOLDER_NAME/lib"/>
+	<import file="${runnerRoot}/dev/buildHelper.xml" />
+</project>

@@ -1,0 +1,33 @@
+<project name="jsystemRegressionBaseTests" default="all" basedir=".">
+
+	<property name="projectName" value="jsystemRegressionBaseTests"/>
+	<property environment="env"/>
+	<property name="runnerRoot" value="${env.RUNNER_ROOT}"/>
+	<property name="buildFilesDir" value="${runnerRoot}/dev"/>
+	<import file="${buildFilesDir}/buildHelper.xml" />
+	
+	<target name="all" depends="clean,compile" />
+	
+	<target name="clean">
+		<delete dir="classes" />
+		<delete dir="log" />
+		<delete>
+			<fileset dir="." includes="*.log,*.properties" />
+		</delete>
+		<mkdir dir="classes"/>
+		<mkdir dir="${runnerRoot}/customer_lib"/>
+	</target>
+
+	<target name="compile" depends="setAdditionalLibs">
+		<javac srcdir="tests" destdir="classes" target="${compTarget}" source="${compTarget}" debug="on">
+			<classpath refid="base.path" />
+		</javac>
+		<copy todir="classes">
+			<fileset dir="tests">
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+		<delete dir="classes/manualTests"/>
+	</target>
+		
+</project>

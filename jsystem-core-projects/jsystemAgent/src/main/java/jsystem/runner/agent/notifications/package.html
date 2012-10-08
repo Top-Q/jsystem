@@ -1,0 +1,11 @@
+<HTML>
+<Body>
+<u><b>Notifications flow</b></u>
+In the agent side, mediators are added as listeners to the RunnerListenersManager.<br>
+When the mediators catch a fired event, the create a JMX notification and dispatch it.<br> 
+In the client side, ClientEventsHub is the listener for notifications.<br> 
+When a notification arrives, the method <code>invokeDispatcher</code> of the notification is invoked,<br> 
+an instance of AgentClientListenersManager (which implements the JSystemListeners interface) is passed<br>
+to the notification each Notification activates the relevant manager method. <br> 
+</Body>
+</HTML>

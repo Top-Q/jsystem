@@ -1,0 +1,25 @@
+<HTML>
+<Body>
+<img src="doc-files/automation-layers.gif"/><p>
+This is the documentation for the JSystem framework. JSystem provide enterprise solution
+for automation life cycle.<p>
+It gives services to the environment management layer called 'system object' ({@link jsystem.framework.system.SystemObject}) as well as the
+tests layer ({@link junit.framework.SystemTestCase}). <code>SystemTestCase</code> extends junit <code>TestCase</code> and give
+additional services.<p>
+The main services given by the framework are the following:
+<ul>
+<li>{@link jsystem.framework.report.Reporter}, enable both the 'system object' or the test layer to post reports
+messages, all the system reporters will be notified with that message, the most common reporter is the {@link jsystem.extensions.report.html.HtmlTestReporter},
+it enable full off-line analysis. Both tests and system objects can access this service using the {@link junit.framework.SystemTestCase#report}.
+<li>{@link jsystem.framework.system.SystemObjectManager} is used by the tests and {@link jsystem.framework.fixture.Fixture} to manage the SUT (System Under Test).
+<li>SUT independent is an XML base layer that define the SUT fixed parts like IP addresses, it also contain information about the used system object java implementation.
+Example for SUT file can be found at {@link jsystem.framework.system.SystemObjectManager}. The test also can use the {@link junit.framework.SystemTestCase#sut} field to access the file.
+<li>{@link jsystem.framework.analyzer.Analyzer} define an interface implemented by all the 'system objects' that enable results analysis {@link jsystem.framework.system.SystemObjectImpl#analyze(AnalyzerParameter)}.
+All the analyzers implements {@link jsystem.framework.analyzer.AnalyzerParameter} or extends {@link jsystem.framework.analyzer.AnalyzerParameterImpl}.
+<li>{@link jsystem.framework.fixture.Fixture} is a configuration state of the tested environment. {@link junit.framework.SystemTestCase#setFixture(Class)} is used to set the test
+fixture.
+<li>{@link jsystem.framework.monitor.Monitor} is a <code>Thread</code> that can be executed during the test. The {@link junit.framework.SystemTestCase#monitors} field is used to manage the monitors.
+<li>The parameters layer define an interface between the engineer that write the test and infrastructures and the engineer that will build scenarios and execute the tests. 
+</ul>
+</Body>
+</HTML>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sut>
+ 	<intChange>111</intChange>
+ 	<stringChange>String from Reference</stringChange>
+ 	<doubleChange>1.345</doubleChange>
+ 	<longChange>444444</longChange>
+ 	<floatChange>2.0E-40</floatChange>
+ 	<fileChange>testReferenceFile.stam</fileChange>
+ 	<dateChange>Mon Apr 07 22:16:29 IDT 2008</dateChange>
+</sut>

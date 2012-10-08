@@ -1,0 +1,833 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<install4j version="4.2.8" transformSequenceNumber="2">
+  <directoryPresets config="${compiler:root}/reports/reports.war" />
+  <application name="JSystem Automation Framework" distributionSourceDir="" applicationId="7707-7125-5197-2336" mediaDir="${compiler:buildRoot}" mediaFilePattern="jsystemInstall" compression="6" lzmaCompression="true" pack200Compression="false" excludeSignedFromPacking="false" keepModificationTimes="false" missingFilesStrategy="warn" shortName="JSystem" publisher="Ignis Software Tools Ltd." publisherWeb="http://www.jsystemtest.org" version="${compiler:buildNumber}" allPathsRelative="true" backupOnSave="false" autoSave="false" convertDotsToUnderscores="true" macSignature="????" installerName="" javaMinVersion="1.6" javaMaxVersion="1.7" allowBetaVM="false" jdkMode="runtimeJre" jdkName="">
+    <languages skipLanguageSelection="false" languageSelectionInPrincipalLanguage="false">
+      <principalLanguage id="en" customLocalizationFile="" />
+      <additionalLanguages />
+    </languages>
+    <searchSequence>
+      <registry />
+      <envVar name="JAVA_HOME" />
+      <envVar name="JDK_HOME" />
+    </searchSequence>
+    <variables>
+      <variable name="site.address" value="www.jsystemtest.org" />
+      <variable name="buildRoot" value="C:\Documents and Settings\yoram.shamir\JSystemWorkspace\build" />
+      <variable name="buildNumber" value="5.4" />
+      <variable name="eclipsePluginName" value="" />
+      <variable name="projectRoot" value="C:\Documents and Settings\yoram.shamir\JSystemWorkspace\jsystemInstall" />
+    </variables>
+  </application>
+  <files>
+    <filesets />
+    <roots />
+    <mountPoints>
+      <mountPoint id="6974" root="" location="runner" mode="777" />
+    </mountPoints>
+    <entries>
+      <dirEntry mountPoint="6974" file="${compiler:buildRoot}" overwrite="4" shared="false" mode="644" uninstallMode="0" excludeSuffixes="&quot;*.xxx,*.log, *.lck, *.1, *.2, *.xxx&quot;" dirMode="755">
+        <exclude>
+          <entry location="customer_lib" fileType="regular" />
+          <entry location="db.properties" fileType="regular" />
+          <entry location="doc/.project" fileType="regular" />
+          <entry location="doc/Chapter 1 Introduction.doc" fileType="regular" />
+          <entry location="doc/Chapter 10 JSystem Automation Framework Application Libraries.doc" fileType="regular" />
+          <entry location="doc/Chapter 11 JSystem Quick Start Project.doc" fileType="regular" />
+          <entry location="doc/Chapter 12 JSystem Automation Framework Automation Testing Guidelines.doc" fileType="regular" />
+          <entry location="doc/Chapter 13 Tips and Tricks.doc" fileType="regular" />
+          <entry location="doc/Chapter 14 Trouble Shooting Guide.doc" fileType="regular" />
+          <entry location="doc/Chapter 15 Enabling the CLI Agent.doc" fileType="regular" />
+          <entry location="doc/Chapter 16 Installing the Java Developers Environment.doc" fileType="regular" />
+          <entry location="doc/Chapter 17 Installing MySQL.doc" fileType="regular" />
+          <entry location="doc/Chapter 18 Configuring Tomcat.doc" fileType="regular" />
+          <entry location="doc/Chapter 19 Framework Options.doc" fileType="regular" />
+          <entry location="doc/Chapter 2 JSystem Automation Framework General Description.doc" fileType="regular" />
+          <entry location="doc/Chapter 3 Getting Started with.doc" fileType="regular" />
+          <entry location="doc/Chapter 4 JSystem Framework Services.doc" fileType="regular" />
+          <entry location="doc/Chapter 5 JSystem GUI.doc" fileType="regular" />
+          <entry location="doc/Chapter 6 JSystem Automation Framework Functionality.doc" fileType="regular" />
+          <entry location="doc/Chapter 7 JSystem Agent.doc" fileType="regular" />
+          <entry location="doc/Chapter 8 JSystem Automation Framework Advanced Functionality.doc" fileType="regular" />
+          <entry location="doc/Chapter 9 JReporter System.doc" fileType="regular" />
+          <entry location="doc/Chapter 9 JReporter System.pdf" fileType="regular" />
+          <entry location="doc/Chapter 10 JReporter System.pdf" fileType="regular" />
+          <entry location="doc/Chapter 16 Installing the Java Developers Environment.pdf" fileType="regular" />
+          <entry location="doc/Chapter 17 Installing MySQL.pdf" fileType="regular" />
+          <entry location="doc/Chapter 18 Configuring Tomcat.pdf" fileType="regular" />
+          <entry location="doc/Chapter 19 JReporter System.pdf" fileType="regular" />
+          <entry location="doc/JSystem_5.0_Release_Notes.doc" fileType="regular" />
+          <entry location="doc/JSystem_5.1_Release_Notes.doc" fileType="regular" />
+          <entry location="doc/JSystem_5.4_Release_notes.doc" fileType="regular" />
+          <entry location="doc/JSystem_5.5_Release_notes.doc" fileType="regular" />
+          <entry location="doc/JSystem_5.6_Release_notes.doc" fileType="regular" />
+          <entry location="thirdparty/lib/antlr-2.7.6.jar" fileType="regular" />
+          <entry location="thirdparty/lib/asm-attrs.jar" fileType="regular" />
+          <entry location="thirdparty/lib/asm.jar" fileType="regular" />
+          <entry location="thirdparty/lib/batik-awt-util-1.6.jar" fileType="regular" />
+          <entry location="thirdparty/lib/batik-dom-1.6.jar" fileType="regular" />
+          <entry location="thirdparty/lib/batik-svggen-1.6.jar" fileType="regular" />
+          <entry location="thirdparty/lib/batik-util-1.6.jar" fileType="regular" />
+          <entry location="thirdparty/lib/batik-xml-1.6.jar" fileType="regular" />
+          <entry location="thirdparty/lib/bsh.jar" fileType="regular" />
+          <entry location="thirdparty/lib/cewolf-1.0.jar" fileType="regular" />
+          <entry location="thirdparty/lib/cglib-2.1.3.jar" fileType="regular" />
+          <entry location="thirdparty/lib/comfyj-2.2.jar" fileType="regular" />
+          <entry location="thirdparty/lib/cos.jar" fileType="regular" />
+          <entry location="thirdparty/lib/crimson-1.1.3.jar" fileType="regular" />
+          <entry location="thirdparty/lib/DBPool_v4.8.jar" fileType="regular" />
+          <entry location="thirdparty/lib/dnsjava-2.0.2.jar" fileType="regular" />
+          <entry location="thirdparty/lib/dom4j-1.6.1.jar" fileType="regular" />
+          <entry location="thirdparty/lib/etsmbw32.dll" fileType="regular" />
+          <entry location="thirdparty/lib/gnujaxp-1.0.0.jar" fileType="regular" />
+          <entry location="thirdparty/lib/gnujaxp.jar" fileType="regular" />
+          <entry location="thirdparty/lib/hibernate3.jar" fileType="regular" />
+          <entry location="thirdparty/lib/httpclient.jar" fileType="regular" />
+          <entry location="thirdparty/lib/httpunit.jar" fileType="regular" />
+          <entry location="thirdparty/lib/itext-1.3.jar" fileType="regular" />
+          <entry location="thirdparty/lib/j2smartbits.dll" fileType="regular" />
+          <entry location="thirdparty/lib/j2smartbits.jar" fileType="regular" />
+          <entry location="thirdparty/lib/JainSipApi1.2.jar" fileType="regular" />
+          <entry location="thirdparty/lib/JainSipRi1.2.jar" fileType="regular" />
+          <entry location="thirdparty/lib/jars.txt" fileType="regular" />
+          <entry location="thirdparty/lib/java2html.jar" fileType="regular" />
+          <entry location="thirdparty/lib/java-getopt-1.0.12.jar" fileType="regular" />
+          <entry location="thirdparty/lib/javacsv.jar" fileType="regular" />
+          <entry location="thirdparty/lib/javadoc_net.sourceforge.jpcap-0.01.16.jar" fileType="regular" />
+          <entry location="thirdparty/lib/javasvn.jar" fileType="regular" />
+          <entry location="thirdparty/lib/jconn3.jar" fileType="regular" />
+          <entry location="thirdparty/lib/jexplorer-1.7.jar" fileType="regular" />
+          <entry location="thirdparty/lib/jniwrap-3.4.jar" fileType="regular" />
+          <entry location="thirdparty/lib/jniwrap.dll" fileType="regular" />
+          <entry location="thirdparty/lib/jradius-client.jar" fileType="regular" />
+          <entry location="thirdparty/lib/js.jar" fileType="regular" />
+          <entry location="thirdparty/lib/jta.jar" fileType="regular" />
+          <entry location="thirdparty/lib/jwinpcap.dll" fileType="regular" />
+          <entry location="thirdparty/lib/jwinpcap.ilk" fileType="regular" />
+          <entry location="thirdparty/lib/jwinpcap.jar" fileType="regular" />
+          <entry location="thirdparty/lib/jxl.jar" fileType="regular" />
+          <entry location="thirdparty/lib/mshtml.jar" fileType="regular" />
+          <entry location="thirdparty/lib/nekohtml.jar" fileType="regular" />
+          <entry location="thirdparty/lib/net.sourceforge.jpcap-0.01.16.jar" fileType="regular" />
+          <entry location="thirdparty/lib/nist-sdp-1.0.jar" fileType="regular" />
+          <entry location="thirdparty/lib/ojdbc14.jar" fileType="regular" />
+          <entry location="thirdparty/lib/pager-src.jar" fileType="regular" />
+          <entry location="thirdparty/lib/pager-taglib.jar" fileType="regular" />
+          <entry location="thirdparty/lib/svnant.jar" fileType="regular" />
+          <entry location="thirdparty/lib/svnClientAdapter.jar" fileType="regular" />
+          <entry location="thirdparty/lib/svnjavahl.jar" fileType="regular" />
+          <entry location="thirdparty/lib/Tidy.jar" fileType="regular" />
+          <entry location="thirdparty/lib/watij.jar" fileType="regular" />
+          <entry location="thirdparty/lib/watijcom.jar" fileType="regular" />
+          <entry location="thirdparty/lib/win32com.dll" fileType="regular" />
+          <entry location="thirdparty/lib/winpack-3.5.jar" fileType="regular" />
+          <entry location="thirdparty/lib/xercesImpl.jar" fileType="regular" />
+          <entry location="thirdparty/lib/commons-lang-2.5.jar" fileType="regular" />
+          <entry location="thirdparty/lib/jpcap.jar" fileType="regular" />
+          <entry location="thirdparty/lib/jpcap.dll" fileType="regular" />
+          <entry location="thirdparty/lib/snmp4j.jar" fileType="regular" />
+          <entry location="thirdparty/libDoc" fileType="regular" />
+        </exclude>
+      </dirEntry>
+    </entries>
+    <components />
+  </files>
+  <launchers>
+    <launcher name="run" id="11642" external="true" excludeFromMenu="true" menuName="" externalFile="runner\run" />
+    <launcher name="run.bat" id="50519" external="true" excludeFromMenu="true" menuName="" externalFile="runner\run.bat" />
+    <launcher name="runAgent.bat" id="80841" external="true" excludeFromMenu="true" menuName="" externalFile="runner\runAgent.bat" />
+    <launcher name="runAgent" id="80843" external="true" excludeFromMenu="true" menuName="" externalFile="runner\runAgent" />
+  </launchers>
+  <installerGui installerType="1" suggestPreviousProgramGroup="true" addOnAppId="" suggestPreviousLocations="false">
+    <customCode useInstalledFiles="false" />
+    <applications>
+      <application name="" id="installer" beanClass="com.install4j.runtime.beans.applications.InstallerApplication" enabled="true" commentSet="false" comment="" customIcnsFile="" customIcoFile="${compiler:projectRoot}/JSystem.ico">
+        <serializedBean>
+          <java class="java.beans.XMLDecoder">
+            <object class="com.install4j.runtime.beans.applications.InstallerApplication">
+              <void property="customHeaderImage">
+                <object class="com.install4j.api.beans.ExternalFile">
+                  <string>${compiler:projectRoot}/jsystem_logo.gif</string>
+                </object>
+              </void>
+              <void property="customPngIcon16File">
+                <object class="com.install4j.api.beans.ExternalFile">
+                  <string>${compiler:projectRoot}/JSystem.gif</string>
+                </object>
+              </void>
+              <void property="customPngIcon32File">
+                <object class="com.install4j.api.beans.ExternalFile">
+                  <string>${compiler:projectRoot}/JSystem.gif</string>
+                </object>
+              </void>
+              <void property="useCustomIcon">
+                <boolean>true</boolean>
+              </void>
+            </object>
+          </java>
+        </serializedBean>
+        <startup>
+          <screen name="" id="15" beanClass="com.install4j.runtime.beans.screens.StartupScreen" enabled="true" commentSet="false" comment="" rollbackBarrier="false" backButton="2" finishScreen="false">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.StartupScreen" />
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions />
+            <formComponents />
+          </screen>
+        </startup>
+        <screens>
+          <screen name="" id="1" beanClass="com.install4j.runtime.beans.screens.WelcomeScreen" enabled="true" commentSet="false" comment="" rollbackBarrier="false" backButton="2" finishScreen="false">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.WelcomeScreen">
+                  <void property="bannerBackground">
+                    <object class="java.awt.Color">
+                      <int>246</int>
+                      <int>246</int>
+                      <int>246</int>
+                      <int>255</int>
+                    </object>
+                  </void>
+                  <void property="bannerImageFile">
+                    <object class="com.install4j.api.beans.ExternalFile">
+                      <string>${compiler:projectRoot}/AboutDialogLeftImage.jpg</string>
+                    </object>
+                  </void>
+                </object>
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions />
+            <formComponents />
+          </screen>
+          <screen name="" id="2" beanClass="com.install4j.runtime.beans.screens.InstallationDirectoryScreen" enabled="true" commentSet="false" comment="" rollbackBarrier="false" backButton="2" finishScreen="false">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.InstallationDirectoryScreen" />
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions />
+            <formComponents />
+          </screen>
+          <screen name="" id="80873" beanClass="com.install4j.runtime.beans.screens.FormScreen" enabled="true" commentSet="false" comment="" rollbackBarrier="false" backButton="2" finishScreen="false">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.FormScreen">
+                  <void property="subTitle">
+                    <string>Check the "Install Eclipse Plugin" to install Eclipse plugin</string>
+                  </void>
+                  <void property="title">
+                    <string>Eclipse Plugin</string>
+                  </void>
+                </object>
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions />
+            <formComponents>
+              <formComponent name="" id="80900" beanClass="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent" enabled="true" commentSet="false" comment="" insetTop="" insetLeft="" insetBottom="" insetRight="" resetInitOnPrevious="false">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent">
+                      <void property="labelText">
+                        <string>JSystem distribution comes with an Eclipse plugin which assists in creating JSystem development environment. 
+If you want to install the plugin, please check the "Install Eclipse Plugin" check box and 
+select Eclipse root directory (i.e. c:\Program Files\eclipse). 
+If Eclipse is currently open, don't forget to restart it once Jsystem installation is done.</string>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <initScript />
+                <visibiltyScript />
+              </formComponent>
+              <formComponent name="" id="80901" beanClass="com.install4j.runtime.beans.formcomponents.SpacerComponent" enabled="true" commentSet="false" comment="" insetTop="" insetLeft="" insetBottom="" insetRight="" resetInitOnPrevious="false">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.formcomponents.SpacerComponent" />
+                  </java>
+                </serializedBean>
+                <initScript />
+                <visibiltyScript />
+              </formComponent>
+              <formComponent name="" id="80874" beanClass="com.install4j.runtime.beans.formcomponents.CheckboxComponent" enabled="true" commentSet="false" comment="" insetTop="" insetLeft="" insetBottom="" insetRight="" resetInitOnPrevious="false">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.formcomponents.CheckboxComponent">
+                      <void property="checkboxText">
+                        <string>Install Eclipse Plugin</string>
+                      </void>
+                      <void property="initiallySelected">
+                        <boolean>true</boolean>
+                      </void>
+                      <void property="variableName">
+                        <string>eclipsePlugin</string>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <initScript />
+                <visibiltyScript />
+              </formComponent>
+              <formComponent name="" id="80875" beanClass="com.install4j.runtime.beans.formcomponents.DirectoryChooserComponent" enabled="true" commentSet="false" comment="" insetTop="" insetLeft="" insetBottom="" insetRight="" resetInitOnPrevious="false">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.formcomponents.DirectoryChooserComponent">
+                      <void property="labelText">
+                        <string>Eclipse root</string>
+                      </void>
+                      <void property="variableName">
+                        <string>eclipseRoot</string>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <initScript />
+                <visibiltyScript />
+              </formComponent>
+            </formComponents>
+          </screen>
+          <screen name="" id="4" beanClass="com.install4j.runtime.beans.screens.StandardProgramGroupScreen" enabled="true" commentSet="false" comment="" rollbackBarrier="false" backButton="2" finishScreen="false">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.StandardProgramGroupScreen" />
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions />
+            <formComponents />
+          </screen>
+          <screen name="" id="75986" beanClass="com.install4j.runtime.beans.screens.AdditionalConfirmationsScreen" enabled="true" commentSet="false" comment="" rollbackBarrier="false" backButton="2" finishScreen="false">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.AdditionalConfirmationsScreen" />
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions />
+            <formComponents>
+              <formComponent name="Create a quick launch icon" id="75987" beanClass="com.install4j.runtime.beans.formcomponents.CheckboxComponent" enabled="true" commentSet="false" comment="" insetTop="" insetLeft="" insetBottom="" insetRight="" resetInitOnPrevious="false">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.formcomponents.CheckboxComponent">
+                      <void property="checkboxText">
+                        <string>${i18n:CreateQuickLaunchIcon}</string>
+                      </void>
+                      <void property="initiallySelected">
+                        <boolean>true</boolean>
+                      </void>
+                      <void property="variableName">
+                        <string>createQuicklaunchIconAction</string>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <initScript>component.setVisible(Util.isWindows());</initScript>
+                <visibiltyScript />
+              </formComponent>
+              <formComponent name="Add a desktop link" id="75989" beanClass="com.install4j.runtime.beans.formcomponents.CheckboxComponent" enabled="true" commentSet="false" comment="" insetTop="" insetLeft="" insetBottom="" insetRight="" resetInitOnPrevious="false">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.formcomponents.CheckboxComponent">
+                      <void property="checkboxText">
+                        <string>${i18n:CreateDesktopIcon}</string>
+                      </void>
+                      <void property="initiallySelected">
+                        <boolean>true</boolean>
+                      </void>
+                      <void property="variableName">
+                        <string>createDesktopLinkAction</string>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <initScript />
+                <visibiltyScript />
+              </formComponent>
+            </formComponents>
+          </screen>
+          <screen name="" id="5" beanClass="com.install4j.runtime.beans.screens.InstallationScreen" enabled="true" commentSet="false" comment="" rollbackBarrier="true" backButton="2" finishScreen="false">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.InstallationScreen" />
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions>
+              <action name="" id="6" beanClass="com.install4j.runtime.beans.actions.InstallFilesAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.InstallFilesAction" />
+                  </java>
+                </serializedBean>
+                <condition />
+              </action>
+              <action name="" id="7" beanClass="com.install4j.runtime.beans.actions.desktop.CreateProgramGroupAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.desktop.CreateProgramGroupAction">
+                      <void property="programGroupEntryConfigs">
+                        <void method="add">
+                          <object class="com.install4j.runtime.beans.screens.components.ProgramGroupEntryConfig">
+                            <void property="iconFile">
+                              <object class="com.install4j.api.beans.ExternalFile">
+                                <string>${compiler:projectRoot}/JSystem.ico</string>
+                              </object>
+                            </void>
+                            <void property="name">
+                              <string>run</string>
+                            </void>
+                            <void property="target">
+                              <object class="java.io.File">
+                                <string>runner/run.bat</string>
+                              </object>
+                            </void>
+                          </object>
+                        </void>
+                        <void method="add">
+                          <object class="com.install4j.runtime.beans.screens.components.ProgramGroupEntryConfig">
+                            <void property="iconFile">
+                              <object class="com.install4j.api.beans.ExternalFile">
+                                <string>${compiler:projectRoot}/JSystem.ico</string>
+                              </object>
+                            </void>
+                            <void property="name">
+                              <string>runAgent</string>
+                            </void>
+                            <void property="target">
+                              <object class="java.io.File">
+                                <string>runner/runAgent.bat</string>
+                              </object>
+                            </void>
+                          </object>
+                        </void>
+                      </void>
+                      <void property="programGroupName">
+                        <string>${compiler:sys.fullName}</string>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition />
+              </action>
+              <action name="" id="80825" beanClass="com.install4j.runtime.beans.actions.misc.ModifyEnvironmentVariableAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.misc.ModifyEnvironmentVariableAction">
+                      <void property="value">
+                        <string>${installer:sys.installationDir}\runner</string>
+                      </void>
+                      <void property="variableName">
+                        <string>RUNNER_ROOT</string>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition />
+              </action>
+              <action name="" id="60489" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.files.SetModeAction">
+                      <void property="file">
+                        <object class="java.io.File">
+                          <string>runner</string>
+                        </object>
+                      </void>
+                      <void property="mode">
+                        <string>777</string>
+                      </void>
+                      <void property="recursive">
+                        <boolean>true</boolean>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition />
+              </action>
+              <action name="" id="75985" beanClass="com.install4j.runtime.beans.actions.desktop.CreateQuicklaunchIconAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.desktop.CreateQuicklaunchIconAction">
+                      <void property="description">
+                        <string>${compiler:sys.fullName}</string>
+                      </void>
+                      <void property="file">
+                        <object class="java.io.File">
+                          <string>${installer:sys.installationDir}/runner/run.bat</string>
+                        </object>
+                      </void>
+                      <void property="icon">
+                        <object class="com.install4j.api.beans.ExternalFile">
+                          <string>${compiler:projectRoot}/JSystem.ico</string>
+                        </object>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition>context.getBooleanVariable("createQuicklaunchIconAction")</condition>
+              </action>
+              <action name="" id="75988" beanClass="com.install4j.runtime.beans.actions.desktop.CreateDesktopLinkAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.desktop.CreateDesktopLinkAction">
+                      <void property="file">
+                        <object class="java.io.File">
+                          <string>${installer:sys.installationDir}/runner/run.bat</string>
+                        </object>
+                      </void>
+                      <void property="name">
+                        <string>${compiler:sys.fullName}</string>
+                      </void>
+                      <void property="winIconFile">
+                        <object class="com.install4j.api.beans.ExternalFile">
+                          <string>${compiler:projectRoot}/JSystem.ico</string>
+                        </object>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition>context.getBooleanVariable("createDesktopLinkAction")</condition>
+              </action>
+              <action name="" id="80872" beanClass="com.install4j.runtime.beans.actions.files.CopyFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="3" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.files.CopyFileAction">
+                      <void property="destinationFile">
+                        <object class="java.io.File">
+                          <string>${installer:eclipseRoot}/plugins/com.ignis.eclipse.plugin.jar</string>
+                        </object>
+                      </void>
+                      <void property="sourceFile">
+                        <object class="java.io.File">
+                          <string>runner/eclipse/com.ignis.eclipse.plugin_${compiler:buildNumber}.jar</string>
+                        </object>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition>context.getBooleanVariable("eclipsePlugin")</condition>
+              </action>
+            </actions>
+            <formComponents />
+          </screen>
+          <screen name="" id="9" beanClass="com.install4j.runtime.beans.screens.FinishedScreen" enabled="true" commentSet="false" comment="" rollbackBarrier="false" backButton="2" finishScreen="true">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.FinishedScreen">
+                  <void property="bannerBackground">
+                    <object class="java.awt.Color">
+                      <int>246</int>
+                      <int>246</int>
+                      <int>246</int>
+                      <int>255</int>
+                    </object>
+                  </void>
+                  <void property="bannerImageFile">
+                    <object class="com.install4j.api.beans.ExternalFile">
+                      <string>${compiler:projectRoot}/AboutDialogLeftImage.jpg</string>
+                    </object>
+                  </void>
+                </object>
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions />
+            <formComponents>
+              <formComponent name="" id="4706" beanClass="com.install4j.runtime.beans.formcomponents.HyperlinkLabelComponent" enabled="true" commentSet="false" comment="" insetTop="" insetLeft="" insetBottom="" insetRight="" resetInitOnPrevious="false">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.formcomponents.HyperlinkLabelComponent">
+                      <void property="hyperlinkText">
+                        <string>${compiler:site.address}</string>
+                      </void>
+                      <void property="labelIconFile">
+                        <object class="com.install4j.api.beans.ExternalFile">
+                          <string>${compiler:projectRoot}/JSystem.gif</string>
+                        </object>
+                      </void>
+                      <void property="labelText">
+                        <string>For support please visit our website:</string>
+                      </void>
+                      <void property="url">
+                        <string>http://www.jsystemtest.org</string>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <initScript />
+                <visibiltyScript />
+              </formComponent>
+            </formComponents>
+          </screen>
+        </screens>
+      </application>
+      <application name="" id="uninstaller" beanClass="com.install4j.runtime.beans.applications.UninstallerApplication" enabled="true" commentSet="false" comment="" customIcnsFile="" customIcoFile="${compiler:projectRoot}/JSystem.ico">
+        <serializedBean>
+          <java class="java.beans.XMLDecoder">
+            <object class="com.install4j.runtime.beans.applications.UninstallerApplication">
+              <void property="customHeaderImage">
+                <object class="com.install4j.api.beans.ExternalFile">
+                  <string>${compiler:projectRoot}/jsystem_logo.gif</string>
+                </object>
+              </void>
+              <void property="customPngIcon16File">
+                <object class="com.install4j.api.beans.ExternalFile">
+                  <string>${compiler:projectRoot}/JSystem.gif</string>
+                </object>
+              </void>
+              <void property="customPngIcon32File">
+                <object class="com.install4j.api.beans.ExternalFile">
+                  <string>${compiler:projectRoot}/JSystem.gif</string>
+                </object>
+              </void>
+              <void property="useCustomIcon">
+                <boolean>true</boolean>
+              </void>
+            </object>
+          </java>
+        </serializedBean>
+        <startup>
+          <screen name="" id="16" beanClass="com.install4j.runtime.beans.screens.StartupScreen" enabled="true" commentSet="false" comment="" rollbackBarrier="false" backButton="2" finishScreen="false">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.StartupScreen" />
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions />
+            <formComponents />
+          </screen>
+        </startup>
+        <screens>
+          <screen name="" id="10" beanClass="com.install4j.runtime.beans.screens.UninstallWelcomeScreen" enabled="true" commentSet="false" comment="" rollbackBarrier="false" backButton="2" finishScreen="false">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.UninstallWelcomeScreen">
+                  <void property="bannerBackground">
+                    <object class="java.awt.Color">
+                      <int>246</int>
+                      <int>246</int>
+                      <int>246</int>
+                      <int>255</int>
+                    </object>
+                  </void>
+                  <void property="bannerImageFile">
+                    <object class="com.install4j.api.beans.ExternalFile">
+                      <string>${compiler:projectRoot}/AboutDialogLeftImage.jpg</string>
+                    </object>
+                  </void>
+                </object>
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions />
+            <formComponents />
+          </screen>
+          <screen name="" id="80816" beanClass="com.install4j.runtime.beans.screens.FormScreen" enabled="true" commentSet="false" comment="" rollbackBarrier="false" backButton="2" finishScreen="false">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.FormScreen">
+                  <void property="subTitle">
+                    <string>If 'Delete all files' is selected files which were not created by the installer will be also deleted in the uninstall process.</string>
+                  </void>
+                  <void property="title">
+                    <string>Delete Files</string>
+                  </void>
+                </object>
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions />
+            <formComponents>
+              <formComponent name="" id="80817" beanClass="com.install4j.runtime.beans.formcomponents.CheckboxComponent" enabled="true" commentSet="false" comment="" insetTop="" insetLeft="" insetBottom="" insetRight="" resetInitOnPrevious="false">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.formcomponents.CheckboxComponent">
+                      <void property="checkboxText">
+                        <string>Delete all files</string>
+                      </void>
+                      <void property="variableName">
+                        <string>deleteAll</string>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <initScript />
+                <visibiltyScript />
+              </formComponent>
+            </formComponents>
+          </screen>
+          <screen name="" id="11" beanClass="com.install4j.runtime.beans.screens.UninstallationScreen" enabled="true" commentSet="false" comment="" rollbackBarrier="false" backButton="2" finishScreen="false">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.UninstallationScreen" />
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions>
+              <action name="" id="12" beanClass="com.install4j.runtime.beans.actions.UninstallFilesAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.UninstallFilesAction" />
+                  </java>
+                </serializedBean>
+                <condition />
+              </action>
+              <action name="" id="80818" beanClass="com.install4j.runtime.beans.actions.files.DeleteFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.files.DeleteFileAction">
+                      <void property="file">
+                        <object class="java.io.File">
+                          <string>${installer:sys.installationDir}</string>
+                        </object>
+                      </void>
+                      <void property="recurse">
+                        <boolean>true</boolean>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition>context.getBooleanVariable("deleteAll")</condition>
+              </action>
+            </actions>
+            <formComponents />
+          </screen>
+          <screen name="" id="14" beanClass="com.install4j.runtime.beans.screens.UninstallFailureScreen" enabled="true" commentSet="false" comment="" rollbackBarrier="false" backButton="2" finishScreen="true">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.UninstallFailureScreen" />
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions />
+            <formComponents />
+          </screen>
+          <screen name="" id="13" beanClass="com.install4j.runtime.beans.screens.UninstallSuccessScreen" enabled="true" commentSet="false" comment="" rollbackBarrier="false" backButton="2" finishScreen="true">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.UninstallSuccessScreen">
+                  <void property="bannerBackground">
+                    <object class="java.awt.Color">
+                      <int>246</int>
+                      <int>246</int>
+                      <int>246</int>
+                      <int>255</int>
+                    </object>
+                  </void>
+                  <void property="bannerImageFile">
+                    <object class="com.install4j.api.beans.ExternalFile">
+                      <string>${compiler:projectRoot}/AboutDialogLeftImage.jpg</string>
+                    </object>
+                  </void>
+                </object>
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions />
+            <formComponents />
+          </screen>
+        </screens>
+      </application>
+    </applications>
+  </installerGui>
+  <mediaSets>
+    <win32 name="Windows" id="27" mediaFileName="" installDir="jsystem" overridePrincipalLanguage="false" requires64bit="false" jreBitType="32" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" includedJRE="" manualJREEntry="false" bundleType="1" jreURL="" jreFtpURL="" jreShared="false" directDownload="false" customInstallBaseDir="c:\" createUninstallIcon="true" contentFilesType="1" downloadURL="" runAsAdmin="false">
+      <excludedLaunchers>
+        <launcher id="11642" />
+        <launcher id="80843" />
+      </excludedLaunchers>
+      <excludedComponents />
+      <excludedBeans />
+      <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
+      <exclude />
+      <variables>
+        <variable name="buildNumber" value="5.6" />
+      </variables>
+    </win32>
+    <unixInstaller name="Unix Installer" id="1347" mediaFileName="" installDir="jsystem" overridePrincipalLanguage="false" requires64bit="false" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" includedJRE="" manualJREEntry="false" bundleType="1" jreURL="" jreFtpURL="" jreShared="false" directDownload="false" customInstallBaseDir="" createUninstallIcon="true" contentFilesType="1" downloadURL="">
+      <excludedLaunchers>
+        <launcher id="50519" />
+        <launcher id="80841" />
+      </excludedLaunchers>
+      <excludedComponents />
+      <excludedBeans />
+      <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
+      <exclude />
+      <variables>
+        <variable name="buildNumber" value="5.6" />
+      </variables>
+      <installerScript mode="3" file="">
+        <scriptLines>
+          <line content="#Setting Files To Unix mode" />
+          <line content="" />
+          <line content="chmod 777 -R /usr/local/jsystem/runner/run" />
+          <line content="dos2unix /usr/local/jsystem/runner/run" />
+          <line content="" />
+          <line content="#Setting Runner desktop shortcut" />
+          <line content="" />
+          <line content=" echo &quot;#!/bin/sh&quot; &gt; ~/Desktop/jsystem\ JSystem\ Runner.desktop" />
+          <line content=" echo &quot;&quot; &gt;&gt; ~/Desktop/jsystem\ JSystem\ Runner.desktop" />
+          <line content=" echo &quot;#Runnig jsystem jrunner&quot;&gt;&gt;  ~/Desktop/jsystem\ JSystem\ Runner.desktop" />
+          <line content=" echo &quot;Type=Application&quot; &gt;&gt;  ~/Desktop/jsystem\ JSystem\ Runner.desktop" />
+          <line content=" echo &quot;Name=\&quot;JSystem Runner\&quot;&quot;&gt;&gt;  ~/Desktop/jsystem\ JSystem\ Runner.desktop" />
+          <line content=" echo &quot;cd /usr/local/jsystem/runner/&quot;&gt;&gt;  ~/Desktop/jsystem\ JSystem\ Runner.desktop" />
+          <line content=" echo &quot;./run&quot; &gt;&gt;  ~/Desktop/jsystem\ JSystem\ Runner.desktop " />
+          <line content="" />
+        </scriptLines>
+      </installerScript>
+    </unixInstaller>
+  </mediaSets>
+  <buildIds buildAll="true">
+    <mediaSet refId="27" />
+    <mediaSet refId="1347" />
+  </buildIds>
+</install4j>
+

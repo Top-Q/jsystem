@@ -1,0 +1,33 @@
+<!-- jsystem_object build script using ant 1.4 -->
+<project name="jregression" default="all" basedir=".">
+	<property name="projectName" value="jregression"/>
+	<property environment="env" /> 
+	<property name="dist" value="lib"/>
+	<property name="runnerRoot" value="${env.RUNNER_ROOT}"/>
+	<property name="buildFilesDir" value="${runnerRoot}/dev"/>
+	<import file="${buildFilesDir}/buildHelper.xml" />
+	
+	<target name="all">
+		<ant antfile="${buildFilesDir}/buildHelper.xml" target="all"/>
+		<mkdir dir="classes"/>
+		<antcall target="compileToClasses"></antcall>
+	</target>
+	
+	<target name="compileToClasses" depends="setAdditionalLibs">
+		<javac srcdir="src" destdir="classes" target="${compTarget}" source="${compTarget}" debug="on">
+			<classpath refid="base.path" />
+		</javac>
+		<javac srcdir="tests" destdir="classes" target="${compTarget}" source="${compTarget}" debug="on">
+			<classpath refid="base.path" />
+		</javac>
+		<copy todir="classes">
+			<fileset dir="src">
+				<exclude name="**/*.java" />
+			</fileset>
+			<fileset dir="tests">
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+	</target>
+	
+</project>

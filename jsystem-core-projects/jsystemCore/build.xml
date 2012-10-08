@@ -1,0 +1,25 @@
+<project name="jsystemCore" default="all" basedir=".">
+	<property name="projectName" value="jsystemCore"/>
+	<property environment="env"/>
+	<property name="runnerRoot" value="${env.RUNNER_ROOT}"/>
+	<property name="buildFilesDir" value="${runnerRoot}/dev"/>
+	<property name="packageName" value="com.aqua.excel,jsystem.extensions.analyzers.csv,jsystem.extensions.analyzers.document,jsystem.extensions.analyzers.tabletext,jsystem.extensions.analyzers.text,jsystem.framework,jsystem.framework.analyzer,jsystem.framework.fixture,jsystem.framework.graph,jsystem.framework.monitor,jsystem.framework.report,jsystem.framework.sut,jsystem.framework.system,jsystem.utils,junit.framework"/>
+	<import file="${buildFilesDir}/buildHelper.xml" />
+	<target name="all" depends="build,jsystem-jar,jython,dist"/>
+	<target name="jsystem-jar">
+		<jar
+			jarfile="out/dist/lib/jsystem-launcher.jar"
+			basedir="out/classes"
+			includes="jsystem/framework/launcher/**,jsystem/framework/common/**">
+			<manifest>
+			    <attribute name="Built-By" value="${user.name}"/>
+			    <attribute name="Main-Class" value="jsystem.framework.launcher.Launcher2"/>				 
+			</manifest>
+		</jar>
+	</target>
+    <target name="jython">
+        <copy todir="${runnerRoot}/lib/jython" includeemptydirs="false" flatten="true">
+			<fileset dir="${compileSrc}" includes="**/*.py"/>
+		</copy>
+    </target>
+</project>

@@ -1,0 +1,29 @@
+<sut>
+	<helloWorld>
+		<class>com.aqua.services.systemobject.MyDeviceWithNestedSO</class>
+		<message>Hello TAS Course</message>		
+		<fileName>C:/TAS/workspace/java/examples/capture.txt</fileName>
+		<connection ref="connections/connection[@index='0']">
+			<host edit="enable">10.0.0.93</host>
+		</connection>
+	</helloWorld>
+	<helloWorld2>
+		<class>com.aqua.services.systemobject.MyDeviceWithNestedSO</class>
+		<connection ref="connections/connection[@index='0']"/>
+	</helloWorld2>
+	<connections>
+		<connection index="0">
+			<class>com.aqua.sysobj.conn.WindowsDefaultCliConnection</class> 
+			<user>simpleuser</user>
+			<password>simpleuser</password>
+			<host>127.0.0.1</host>
+		</connection>			
+		<connection index="1">
+			<class>com.aqua.sysobj.conn.WindowsDefaultCliConnection</class> 
+			<user>simpleuser</user>
+			<password>simpleuser</password>
+			<host>127.0.0.1</host>
+		</connection>			
+	</connections>
+</sut>
+

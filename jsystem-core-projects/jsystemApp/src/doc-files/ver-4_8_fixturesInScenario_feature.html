@@ -1,0 +1,33 @@
+<HTML>
+<Body>
+<h1>TAS Version 4.8  - Fixture located in Scenario</h1>
+
+In the previous TAS versions whenever the test developer/runner wanted to assign a test to any fixture, the only way was<br>
+to use the setFixture method of test in the test constructor (only by writing it in the test code)<br>
+In the new feature the possibility to assign test to is now enabled via TAS GUI.<br>
+<br><br>
+The feature allows the user to add one fixture for each scenario via TAS GUI.<br>
+When doing so, each test will update it <b>fixtureName</b> property with the fixture class name.<br>
+The <b>setFixtureName</b> method located in the <b>SystemTestCase</b> activates the old <b>setFixture</b> method<br>
+and the test is now assigned to the fixture added to the scenario.<br>
+
+<h2>Issues To Remember:</h2>
+<ul>
+<li><h4>Fixture Hirarchy in scenario:</h4>
+Fixture assigned to scenario means that every test in the scenario will be work under this Fixture.
+When arriving to a sub scenario that assigned to another Fixture, a navigation to the new Fixture will perform <br>
+and the tests located in the sub scenario will run under the new Fixture.<br>
+In case the Sub Scenario is Fixtureless the tests of the sub scenario will continue to run under the Scenario parent Fixture.<br>
+<br>
+<li><h4>Add New Fixture to Scenario</h4>
+Adding Fixture to a Fixtureless scenario will add the Fixture to the top of the scenario.
+Adding Fixture to a scenario with Fixture will replace the previous Fixture.
+<br><br>
+<li><h4>Conrtol Fixture visability on Test Tree </h4>
+The user can choose not to see Fixtures on his tests tree by adding <b>fixtures.showOnTree = false</b> to the <b>jsystem.properties</b> file.
+
+</ul> 
+
+<br><br>
+</Body>
+</HTML>

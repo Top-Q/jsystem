@@ -1,0 +1,34 @@
+<sut info="D:\work\projects\automation\jsystem\doc\UserManual.doc" name="default">
+
+    <device1>
+        <class>sysobj.Device1</class>
+        <ip>10.10.10.10</ip>
+        <telnet>
+            <class>sysobj.Telnet</class>
+            <user>guy</user>
+            <password>guy</password>
+            <prompt regExp="false">></prompt>
+            <index>1</index>
+            <dummy>true</dummy>
+            <timeout>40000</timeout>
+            <errors>error;fail</errors>
+        </telnet>
+        <port index="0">
+            <class>sysobj.Port</class>
+            <portId>0</portId>
+        </port>
+        <port index="1">
+            <class>sysobj.Port</class>
+            <portId>1</portId>
+        </port>
+    </device1>
+    
+    <obj>
+    	<class>sysobj.Obj</class>
+    	<tag>Yael</tag>
+    </obj>
+    
+    <notSO>
+    	<foo>bla</foo>
+    </notSO>
+</sut>

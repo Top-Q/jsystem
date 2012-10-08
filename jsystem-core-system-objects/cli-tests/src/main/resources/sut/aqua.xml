@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sut>
+	<winStation>
+		<class>com.aqua.cli.objects.WindowsStation</class>
+		<conn>
+			<class>com.aqua.sysobj.conn.ConnectivityManager</class>						
+			<cli>
+				<class>com.aqua.cli.objects.WindowsCliConnection</class>
+				<useTelnetInputStream>true</useTelnetInputStream>
+				<password>simpleuser</password>
+				<user>simpleuser</user>
+				<host>localhost</host>
+				<!-- If set will press Enter after the idle time -->
+				<!-- max idle time is set to 30 seconds here -->
+				<!--maxIdleTime>30000</maxIdleTime-->
+				<!-- If set will put all the cli output in a log file -->
+				<!--cliLogFile>c:/logTest.txt</cliLogFile-->	
+				<!-- If set will change the default port 23 -->
+				<!--port>23</port-->
+				<!-- If set will change the default telnet protocol to ssh or rs232 -->
+				<!-- protocol>ssh</protocol -->
+				<!-- to be used when working with XP telnet server -->
+				<dump>true</dump>
+				<!-- graceful>true</graceful -->
+			</cli>
+		</conn>	
+	</winStation>&gt;
+
+	<linuxStation>
+		<class>com.aqua.cli.objects.LinuxStation</class>
+		<conn>
+			<class>com.aqua.sysobj.conn.ConnectivityManager</class>						
+			<cli>
+				<class>com.aqua.cli.objects.LinuxCliConnection</class>
+				<useTelnetInputStream>true</useTelnetInputStream>
+				<password>t!pyhnux</password>
+				<user>root</user>
+				<host>172.20.0.22</host>
+				<!-- If set will press Enter after the idle time -->
+				<!-- max idle time is set to 30 seconds here -->
+				<!--maxIdleTime>30000</maxIdleTime-->
+				<!-- If set will put all the cli output in a log file -->
+				<!--cliLogFile>c:/logTest.txt</cliLogFile-->	
+				<!-- If set will change the default port 23 -->
+				<port>22</port>
+				<!-- If set will change the default telnet protocol to ssh or rs232 -->
+				<protocol>ssh</protocol>
+				<!-- to be used when working with XP telnet server -->
+				<dump>true</dump>
+				<!-- graceful>true</graceful -->
+			</cli>
+		</conn>	
+	</linuxStation>
+</sut>

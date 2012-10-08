@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sut height="350" width="320">
+	<iperf>
+		<class>com.aqua.iperf.IPerf</class>
+		<serverConnection ref="station1"/>
+		<clientConnection ref="station2"/>
+	</iperf>
+	<station>
+		<class>com.aqua.sysobj.conn.WindowsDefaultCliConnection</class> 
+		<user1 >simpleuser</user1>
+	</station>
+	<station1>
+		<class>com.aqua.sysobj.conn.WindowsDefaultCliConnection</class> 
+		<user>simpleuser</user>
+		<password>simpleuser</password>
+		<host>10.0.0.41</host>
+		<connectOnInit>false</connectOnInit>
+	</station1>
+	<station2>
+		<class>com.aqua.sysobj.conn.WindowsDefaultCliConnection</class> 
+		<user>simpleuser</user>
+		<password >simpleuser</password>
+		<host>10.0.0.46</host>
+		<connectOnInit>false</connectOnInit>
+	</station2>
+</sut>

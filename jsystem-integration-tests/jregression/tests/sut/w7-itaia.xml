@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sut validators="">
+    <envController>
+        <class>com.aqua.jsystemobject.JSystemEnvController</class>
+        <runnerOutDir>C:\jsystem\runner\</runnerOutDir>
+        <runnerSourceDir>C:\jsystem\runner\</runnerSourceDir>
+    </envController>
+    <envControllerOld>
+        <class>com.aqua.jsystemobject.JSystemEnvControllerOld</class>
+        <runnerOutDir>C:\jsystem\runner\</runnerOutDir>
+        <runnerSourceDir>C:\jsystem\runner\</runnerSourceDir>
+    </envControllerOld>
+    <FirefoxPath>C:\Program Files\Mozilla Firefox</FirefoxPath>
+</sut>

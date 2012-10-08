@@ -1,0 +1,19 @@
+<sut>
+	<helloWorld>
+		<class>com.aqua.services.systemobject.MyDeviceWithNestedSOArray</class>
+		<connection index="0">
+			<class>com.aqua.sysobj.conn.WindowsDefaultCliConnection</class> 
+			<user>simpleuser</user>
+			<password>simpleuser</password>
+			<host>127.0.0.1</host>
+		</connection>			
+		<connection index="1">
+			<class>com.aqua.sysobj.conn.WindowsDefaultCliConnection</class> 
+			<user>simpleuser</user>
+			<password>simpleuser</password>
+			<host>127.0.0.1</host>
+		</connection>			
+		<message>Hello JSsystem Course</message>		
+	</helloWorld>
+</sut>
+

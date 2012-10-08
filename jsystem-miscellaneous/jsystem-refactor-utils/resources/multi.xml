@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<run exit="false" stop="true">
+    <command alias="Regrssion" dependOnPrevious="false" freezeOnFail="false" repetitions="0" saveRunProperties="false" stopEntireExecution="false" stopSuiteExecution="true">
+        <projectPath>C:\jsystem\runner\projects\jsystemServices\classes</projectPath>
+        <sutFile>sut\mystation.xml</sutFile>
+        <scenarioName>scenarios\flowControl.xml</scenarioName>
+    </command>
+    <command alias="Sanity" dependOnPrevious="false" freezeOnFail="false" repetitions="3" saveRunProperties="true" stopEntireExecution="true" stopSuiteExecution="true">
+        <projectPath>D:\workspaceJSystem\Sandbox\classes</projectPath>
+        <sutFile/>
+        <scenarioName>scenarios\ManySmall.xml</scenarioName>
+    </command>
+    <command alias="Regrssion2" dependOnPrevious="false" freezeOnFail="false" repetitions="0" saveRunProperties="false" stopEntireExecution="false" stopSuiteExecution="true">
+        <projectPath>C:\jsystem\runner\projects\jsystemServices\classes</projectPath>
+        <sutFile>sut\mystation.xml</sutFile>
+        <scenarioName>scenarios\flowControl.xml</scenarioName>
+    </command>
+    
+</run>

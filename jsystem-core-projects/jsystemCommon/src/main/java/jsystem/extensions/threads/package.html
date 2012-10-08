@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head><h1>Tests Scheduler design</h1></head>
+<body> 
+<h3>Background</h3>
+The motivation of the feature is to exhilarate the execution of the Fixturing, buy enable configuration execution in threads. This infrastructure will be used in tests as well.
+<br>
+Following are the design considerations:<br>
+<ul>  
+    <li> Easy execution unit that enable easy execution and debug.<br>
+    <li> Should be familiar to QA eng.<br>
+    <li> Should support separate reporting for every process.<br>
+    <li> Should enable parametrization of the execution unit. <br>
+</ul>
+<h3>Design</h3>
+The execution unit that was selected is a regular test (SystemTestCase). User can build several tests run and debug them separately then use the infrastructure to execute it in parallel.
+<h4>TestThreadGroup</h4>
+Will manage a group of tests that will be executed in parallel. Will include methods like:
+<ul>  
+   <li> addTest - add a new test to the group.
+   <li> start - start the execution of all the tests that were added.
+   <li> join - join all the executions. 
+</ul>
+To create the TestThreadGroup the TestThreadFactory will be used.
+<br><br>
+
+<h4>TestThreadFactory</h4>
+A singleton that manage all the TestThreadGroup. To instantiate the object a static getInstance method will be used. The factory will have the following methods:
+<ul> 
+    <li> getTestThreadGroup - enable the creation of TestThreadGroup.
+    <li> joinAll - join all the open groups.
+    <li> removeGroup - remove a group from the factory. 
+</ul> 
+<h3>Code example</h3>
+<pre>
+	public void testThread() throws Exception {
+		// create 2 tests
+		ClearAndConfigRouter1 t1 = new ClearAndConfigRouter1();
+		// set the method to be used
+		t1.setName("testClearAndConfigRouter1");
+
+		// set the documentation (will be used in the report)
+		t1.setTestDocumentation("Clearing and configuring the first router...");
+		ClearAndConfigRouter2 t2 = new ClearAndConfigRouter2();
+		t2.setName("testClearAndConfigRouter2");
+
+		t2.setTestDocumentation("Clearing and configuring the second router...");
+		// get the default test thread group
+		TestThreadGroup group = TestThreadFactory.getInstance().getTestThreadGroup();
+		// add the 2 tests to the group
+
+		group.addTest(t1);
+		group.addTest(t2);
+		// start the execution
+		group.start();
+		
+		// wait for all the execution to finish
+		group.join(100000);
+	}
+
+	
+	public void tearDown() throws Exception {
+
+		TestThreadFactory.getInstance().joinAll(10000);
+	}
+</pre>	
+
+<h3>Reports</h3>
+The reports will be sorted to the tests. Every test will be seen in different report level. The user will be able to set the level name by setting the test documentation (see code example).
+Things to consider.
+<br>
+<ul> 
+    <li> Use thread pool in the group and support setting the number of thread to be used.
+    <li> Support rear reports of execution and only then present the sorted reports.
+    <li> Support disable of the feature.
+</ul>  
+<h3>Testing</h3>
+<ul> 
+    <li> Run 4 router configurations.
+    <li> Execute all type of tests (pass, error, failure, fail report).
+    <li> Execute test that never return.
+    <li> Check Fixture agnostics. 
+    ... 
+</ul> 
+</body>
+</html>

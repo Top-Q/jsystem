@@ -1,0 +1,7 @@
+#Wed Nov 07 21:55:05 IST 2007
+testParameterization1param1_1=15
+testParameterization1param1_0=15
+testParameterization1param2_1=not default value 2
+testParameterization1param2_0=not default value
+testParameterization1fixture_1=java.lang.Class
+testParameterization1fixture_0=java.lang.Class

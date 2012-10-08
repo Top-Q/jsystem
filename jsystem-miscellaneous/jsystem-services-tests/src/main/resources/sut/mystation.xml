@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sut>
+	<station>
+		<class>com.aqua.services.demo.WindowsStation</class>
+		<userName>dfdfd</userName>
+		<cliConnection>
+			<class>com.aqua.sysobj.conn.WindowsDefaultCliConnection</class> 
+			<user >simpleuser</user>
+			<password >simpleuser</password>
+			<host >127.0.0.1</host>
+			<connectOnInit>false</connectOnInit>
+		</cliConnection>
+	</station>
+	
+	<StationsManager>
+		<class>com.aqua.services.demo.StationsManager</class>
+		<stations index="0">
+			<class>com.aqua.services.demo.WindowsStation</class>
+			<cliConnection>
+				<class>com.aqua.sysobj.conn.WindowsDefaultCliConnection</class> 
+				<user >simpleuser</user>
+				<password >simpleuser</password>
+				<host >127.0.0.1</host>
+				<connectOnInit>false</connectOnInit>
+			</cliConnection>
+		</stations>
+		<stations index="1">
+			<class>com.aqua.services.demo.WindowsStation</class>
+			<cliConnection>
+				<class>com.aqua.sysobj.conn.WindowsDefaultCliConnection</class> 
+				<user >simpleuser</user>
+				<password >simpleuser</password>
+				<host >10.0.0.46</host>
+				<connectOnInit>false</connectOnInit>
+			</cliConnection>
+		</stations>
+	</StationsManager>
+
+	<StationsManagerWithRef>
+		<class>com.aqua.services.demo.StationsManager</class>
+		<stations index="0">
+			<class>com.aqua.services.demo.WindowsStation</class>
+			<cliConnection ref="station/cliConnection">
+				<host >127.0.0.1</host>
+			</cliConnection>
+		</stations>
+		<stations index="1">
+			<class>com.aqua.services.demo.WindowsStation</class>
+			<cliConnection ref="station/cliConnection">
+				<host >10.0.0.46</host>
+			</cliConnection>
+		</stations>
+	</StationsManagerWithRef>
+	
+</sut>

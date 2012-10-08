@@ -1,0 +1,7 @@
+<project name="jsystemCommon" default="all" basedir=".">
+	<property name="projectName" value="jsystemCommon"/>
+	<property environment="env"/>
+	<property name="runnerRoot" value="${env.RUNNER_ROOT}"/>
+	<property name="buildFilesDir" value="${runnerRoot}/dev"/>
+	<import file="${buildFilesDir}/buildHelper.xml" />
+</project>
