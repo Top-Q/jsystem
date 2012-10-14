@@ -1,7 +1,0 @@
-<sut>
-    <Book> 
-        <class>regression.analyzersTests.Book</class>
-        <name>all my sons</name>
-        <author>arthur miler</author>
-    </Book>
-</sut>
