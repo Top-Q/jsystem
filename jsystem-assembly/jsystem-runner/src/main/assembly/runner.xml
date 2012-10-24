@@ -27,6 +27,31 @@
 			</includes>
 		</dependencySet>
 		<dependencySet>
+			<outputDirectory>projects/jsystemServices/src/main/java</outputDirectory>
+			<unpack>true</unpack>
+			<includes>
+				<include>*:jsystem-services-tests:*:sources:*</include>
+			</includes>
+			<unpackOptions>
+			    <includes>
+			        <include>**/*.java</include>
+			    </includes>
+			</unpackOptions>
+		</dependencySet>
+		<dependencySet>
+			<outputDirectory>projects/jsystemServices/src/main/resources</outputDirectory>
+			<unpack>true</unpack>
+			<includes>
+				<include>*:jsystem-services-tests:*:sources:*</include>
+			</includes>
+			<unpackOptions>
+			    <includes>
+			        <include>**/*.xml</include>
+			        <include>**/*.properties</include>
+			    </includes>
+			</unpackOptions>
+		</dependencySet>
+		<dependencySet>
 			<outputDirectory>projects/jsystemServices/lib</outputDirectory>
 			<unpack>false</unpack>
 			<includes>

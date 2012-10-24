@@ -15,6 +15,10 @@
 			<id>Top-Q_plugin_repo</id>
 			<url>http://80.74.108.9:8081/nexus/content/groups/public</url>
 		</pluginRepository>
+		<pluginRepository>
+			<id>nexus</id>
+			<url>http://80.74.108.9/content/groups/public</url>
+		</pluginRepository>
 	</pluginRepositories>
 	<dependencies>
 		<dependency>
@@ -31,6 +35,20 @@
 	</dependencies>
 	<build>
 		<plugins>
+		    <plugin>
+		        <groupId>org.apache.maven.plugins</groupId>
+		        <artifactId>maven-source-plugin</artifactId>
+		        <version>2.2.1</version>
+		        <executions>
+		          <execution>
+		            <id>attach-sources</id>
+		            <phase>verify</phase>
+		            <goals>
+		              <goal>jar-no-fork</goal>
+		            </goals>
+		          </execution>
+		        </executions>
+		      </plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
