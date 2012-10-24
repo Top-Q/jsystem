@@ -3,22 +3,22 @@
   <groupId>org.jsystemtest</groupId>
   <artifactId>jsystem-services-so</artifactId>
   <version>6.0.00-SNAPSHOT</version>
-  	<repositories>
-		<repository>
-			<id>nexus</id>
-			<url>http://80.74.108.9/content/groups/public</url>
-		</repository>
-	</repositories>
+  	<parent>
+		<groupId>org.jsystemtest.systemobjects</groupId>
+		<artifactId>jsystem-core-system-objects</artifactId>
+		<version>6.0.00-SNAPSHOT</version>
+		<relativePath>..</relativePath>
+	</parent>
 	<dependencies>
   	<dependency>
   		<groupId>org.jsystemtest</groupId>
   		<artifactId>jsystemCore</artifactId>
-  		<version>6.0.00-SNAPSHOT</version>
+  		<version>${project.version}</version>
   	</dependency>
   			<dependency>
 			<groupId>org.jsystemtest.systemobjects</groupId>
 			<artifactId>cli</artifactId>
-			<version>6.0.00-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
   </dependencies>
   <build>
