@@ -5,6 +5,12 @@
 	<groupId>org.jsystemtest.archetypes</groupId>
 	<version>6.0.00-SNAPSHOT</version>	
 	<packaging>pom</packaging>
+    <parent>
+		<groupId>org.jsystemtest</groupId>
+		<artifactId>jsystem-parent</artifactId>
+		<version>6.0.00-SNAPSHOT</version>
+		<relativePath>../jsystem-parent</relativePath>
+	</parent>
 	<properties>
 		<jsystem.version>6.0.00-SNAPSHOT</jsystem.version>
 	</properties>

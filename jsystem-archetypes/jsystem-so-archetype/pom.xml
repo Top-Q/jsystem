@@ -4,10 +4,10 @@
 	<artifactId>jsystem-so-archetype</artifactId>
 	<packaging>maven-archetype</packaging>
 	<parent>
-		<groupId>org.jsystemtest</groupId>
-		<artifactId>jsystem-parent</artifactId>
+		<groupId>org.jsystemtest.archetypes</groupId>
+		<artifactId>jsystem-archetypes</artifactId>
 		<version>6.0.00-SNAPSHOT</version>
-		<relativePath>../jsystem-parent</relativePath>
+		<relativePath>..</relativePath>
 	</parent>
 	<properties>
 		<jsystem.dependency.version>${project.version}</jsystem.dependency.version>
