@@ -25,3 +25,4 @@ jsystem.properties.bu
 runnerState.properties
 log
 myFile.txt
+*.xml.versionsBackup
