@@ -1,16 +1,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.jsystemtest</groupId>
 	<packaging>maven-plugin</packaging>
-	<version>6.0.00-SNAPSHOT</version>
+
 	<name>JSystem Maven Plugin</name>
 	<url>http://www.jsystemtest.org</url>
+	<parent>
+		<groupId>org.jsystemtest</groupId>
+		<artifactId>jsystem-parent</artifactId>
+		<version>6.0.0.00-SNAPSHOT</version>
+		<relativePath>../../jsystem-parent</relativePath>
+	</parent>
 	<repositories>
-		<repository>
-			<id>nexus</id>
-			<url>http://80.74.108.9:80/content/groups/public</url>
-		</repository>
+
 		<repository>
 			<id>lib</id>
 			<name>lib</name>
@@ -57,18 +59,5 @@
 		</dependency>
 	</dependencies>
 	<artifactId>jsystem-maven-plugin</artifactId>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.4</version>
-				<configuration>
-					<target>1.6</target>
-					<source>1.6</source>
-					<encoding>UTF-8</encoding>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+
 </project>

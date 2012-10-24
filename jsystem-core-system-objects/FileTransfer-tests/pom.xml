@@ -3,12 +3,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.jsystemtest.systemobjects</groupId>
 	<artifactId>FileTransfer-tests</artifactId>
-		<parent>
-		<groupId>org.jsystemtest.systemobjects</groupId>
-		<artifactId>jsystem-core-system-objects</artifactId>
-		<version>6.0.00-SNAPSHOT</version>
-		<relativePath>..</relativePath>
+	<parent>
+		<groupId>org.jsystemtest</groupId>
+		<artifactId>jsystem-parent</artifactId>
+		<version>6.0.0.00-SNAPSHOT</version>
+		<relativePath>../../jsystem-parent</relativePath>
 	</parent>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.jsystemtest</groupId>

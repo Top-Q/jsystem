@@ -3,24 +3,17 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.jsystemtest.systemobjects</groupId>
 	<artifactId>cli-tests</artifactId>
-	<version>6.0.00-SNAPSHOT</version>
-	<repositories>
-		<repository>
-			<id>nexus</id>
-			<url>http://80.74.108.9:8081/nexus/content/groups/public</url>
-		</repository>
-	</repositories>
-	<pluginRepositories>
-		<pluginRepository>
-			<id>Top-Q_plugin_repo</id>
-			<url>http://80.74.108.9:8081/nexus/content/groups/public</url>
-		</pluginRepository>
-	</pluginRepositories>
+		<parent>
+		<groupId>org.jsystemtest</groupId>
+		<artifactId>jsystem-parent</artifactId>
+		<version>6.0.0.00-SNAPSHOT</version>
+		<relativePath>../../jsystem-parent</relativePath>
+	</parent>
 	<dependencies>
 		<dependency>
 			<groupId>org.jsystemtest</groupId>
 			<artifactId>jsystemApp</artifactId>
-			<version>6.0.00-SNAPSHOT</version>
+			<version>6.0.0.00-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -48,28 +41,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>org.jsystemtest</groupId>
-				<artifactId>jsystem-maven-plugin</artifactId>
-				<version>6.0.00-SNAPSHOT</version>
-				<dependencies>
-					<dependency>
-						<groupId>org.jsystemtest</groupId>
-						<artifactId>cli-tests</artifactId>
-						<version>6.0.00-SNAPSHOT</version>
-						<scope>runtime</scope>
-					</dependency>
-				</dependencies>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.5.1</version>
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-				</configuration>
-			</plugin>
+	
 			<plugin>
 				<artifactId>maven-clean-plugin</artifactId>
 				<version>2.5</version>
