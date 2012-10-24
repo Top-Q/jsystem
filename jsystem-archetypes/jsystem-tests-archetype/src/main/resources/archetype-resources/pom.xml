@@ -7,13 +7,13 @@
 	<repositories>
 		<repository>
 			<id>nexus</id>
-			<url>http://80.74.108.9:8081/nexus/content/groups/public</url>
+			<url>http://80.74.108.9/content/groups/public</url>
 		</repository>
 	</repositories>
 	<pluginRepositories>
 		<pluginRepository>
 			<id>Top-Q_plugin_repo</id>
-			<url>http://80.74.108.9:8081/nexus/content/groups/public</url>
+			<url>http://80.74.108.9/content/groups/public</url>
 		</pluginRepository>
 	</pluginRepositories>
 	<dependencies>
@@ -51,12 +51,12 @@
 			<plugin>
 				<groupId>org.jsystemtest</groupId>
 				<artifactId>jsystem-maven-plugin</artifactId>
-				<version>6.0.00-SNAPSHOT</version>
+				<version>${jsystem.dependency.version}</version>
 				<dependencies>
 					<dependency>
 						<groupId>\${groupId}</groupId>
 						<artifactId>\${artifactId}</artifactId>
-						<version>LATEST</version>
+						<version>\${version}</version>
 						<scope>runtime</scope>
 					</dependency>
 				</dependencies>

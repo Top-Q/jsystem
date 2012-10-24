@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.jsystemtest.archetypes</groupId>
 		<artifactId>jsystem-archetypes</artifactId>
-		<version>6.0.0.00-SNAPSHOT</version>
+		<version>6.1.1</version>
 		<relativePath>..</relativePath>
 	</parent>
 	<properties>
