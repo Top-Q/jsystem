@@ -3,12 +3,12 @@
 	<modelVersion>4.0.0</modelVersion>	
 	<artifactId>jsystem-archetypes</artifactId>
 	<groupId>org.jsystemtest.archetypes</groupId>
-	<version>6.0.0.00-SNAPSHOT</version>	
+	<version>6.0.00-SNAPSHOT</version>	
 	<packaging>pom</packaging>
     <parent>
 		<groupId>org.jsystemtest</groupId>
 		<artifactId>jsystem-parent</artifactId>
-		<version>6.0.0.00-SNAPSHOT</version>
+		<version>6.0.00-SNAPSHOT</version>
 		<relativePath>../jsystem-parent</relativePath>
 	</parent>
 	<properties>
