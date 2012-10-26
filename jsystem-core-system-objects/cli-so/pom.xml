@@ -13,6 +13,7 @@
 			<groupId>org.jsystemtest</groupId>
 			<artifactId>jsystemCommon</artifactId>
 			<version>${jsystem.version}</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>ch.ethz.ganymed</groupId>

@@ -2,8 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">		
 	<modelVersion>4.0.0</modelVersion>	
 	<artifactId>jsystem-archetypes</artifactId>
-	<groupId>org.jsystemtest.archetypes</groupId>
-	<version>6.0.00-SNAPSHOT</version>	
+	<groupId>org.jsystemtest.archetypes</groupId>	
 	<packaging>pom</packaging>
     <parent>
 		<groupId>org.jsystemtest</groupId>
