@@ -21,6 +21,7 @@ lib
 
 #JSystem files
 jsystem.properties
+!jsystem-assembly/jsystem-runner/src/main/etc/jsystem.properties
 jsystem.properties.bu
 runnerState.properties
 log

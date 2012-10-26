@@ -26,6 +26,7 @@ import jsystem.extensions.report.html.HtmlCodeWriter;
 import jsystem.extensions.report.html.HtmlTestReporter;
 import jsystem.extensions.report.html.LevelHtmlTestReporter;
 import jsystem.extensions.report.html.RepeatTestIndex;
+import jsystem.extensions.report.junit.JUnitReporter;
 import jsystem.extensions.report.xml.XmlReporter;
 import jsystem.framework.FrameworkOptions;
 import jsystem.framework.JSystemProperties;
@@ -203,7 +204,7 @@ public class RunnerListenersManager extends DefaultReporterImpl implements JSyst
 		String reporters = JSystemProperties.getInstance().getPreference(FrameworkOptions.REPORTERS_CLASSES);
 		if (reporters == null) {
 			reporters = LevelHtmlTestReporter.class.getName() + ";" + SystemOutTestReporter.class.getName() + ";"
-					+ XmlReporter.class.getName();
+					+ XmlReporter.class.getName() + ";" + JUnitReporter.class.getName();
 			JSystemProperties.getInstance().setPreference(FrameworkOptions.REPORTERS_CLASSES, reporters);
 		}
 		StringTokenizer st = new StringTokenizer(reporters, ";");
