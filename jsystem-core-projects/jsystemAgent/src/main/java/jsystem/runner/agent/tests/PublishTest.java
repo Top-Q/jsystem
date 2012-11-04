@@ -53,14 +53,13 @@ public class PublishTest extends SystemTestCase4 {
 	 */
 	public static final String VALUES_SEPARATOR = CommonResources.DELIMITER;
 
-	private static final String[] EMAIL_PARAMS = { "SendTo", "Attachments",
-			"SummaryAttachment", "MessageHeader", "MailSubject" };
+	private static final String[] EMAIL_PARAMS = { "SendTo", "Attachments", "SummaryAttachment", "MessageHeader",
+			"MailSubject" };
 
-	private static final String[] PUBLISH_PARAMS = { "ExecutionPropertiesStr",
-			"UploadLogs", "Description", "PublishOptions" };
+	private static final String[] PUBLISH_PARAMS = { "ExecutionPropertiesStr", "UploadLogs", "Description",
+			"PublishOptions" };
 
-	private static final String[] EMAIL_AND_PUBLISH_PARAMS = { "Build",
-			"Version" };
+	private static final String[] EMAIL_AND_PUBLISH_PARAMS = { "Build", "Version" };
 
 	/**
 	 * Notification type <br>
@@ -74,8 +73,7 @@ public class PublishTest extends SystemTestCase4 {
 	/**
 	 * Optional file for different publishing parameters
 	 */
-	private String valuesFile = System.getProperty("user.dir")
-			+ "\\publishEventOptions.properties";
+	private String valuesFile = System.getProperty("user.dir") + "\\publishEventOptions.properties";
 
 	private Properties valueProperties;
 
@@ -197,11 +195,8 @@ public class PublishTest extends SystemTestCase4 {
 			case publish:
 				setReportInfo(executionPropertiesMap);
 				setContainerProperties(executionPropertiesMap);
-				PublisherManager
-						.getInstance()
-						.getPublisher()
-						.publish(getDescription(), isUploadLogs(),
-								getPublishOptions());
+				PublisherManager.getInstance().getPublisher()
+						.publish(getDescription(), isUploadLogs(), getPublishOptions());
 				successful = true;
 				break;
 			case email:
@@ -214,11 +209,8 @@ public class PublishTest extends SystemTestCase4 {
 				setReportInfo(executionPropertiesMap);
 				setContainerProperties(executionPropertiesMap);
 				try {
-					PublisherManager
-							.getInstance()
-							.getPublisher()
-							.publish(getDescription(), isUploadLogs(),
-									getPublishOptions());
+					PublisherManager.getInstance().getPublisher()
+							.publish(getDescription(), isUploadLogs(), getPublishOptions());
 				} catch (Exception e) {
 					report.report("Failed to publish", e);
 				}
@@ -232,21 +224,19 @@ public class PublishTest extends SystemTestCase4 {
 				ListenerstManager.getInstance().initReporters();
 			}
 		} catch (IllegalStateException e) {
-			report.report("Operation aborted due to illegal state: " + e.getMessage(),Reporter.WARNING);
+			report.report("Operation aborted due to illegal state: " + e.getMessage(), Reporter.WARNING);
 		}
 
 	}
 
-	public void handleUIEvent(HashMap<String, Parameter> map, String methodName)
-			throws Exception {
+	public void handleUIEvent(HashMap<String, Parameter> map, String methodName) throws Exception {
 		if (!"publish".equals(methodName)) {
 			return;
 		}
 		Parameter param = map.get("ActionType");
 		param.setSection("General");
 
-		ActionType currentActionType = ActionType.valueOf(param
-				.getStringValue());
+		ActionType currentActionType = ActionType.valueOf(param.getStringValue());
 		switch (currentActionType) {
 		case init_reporters_only:
 			// init reports only
@@ -283,19 +273,16 @@ public class PublishTest extends SystemTestCase4 {
 		param = map.get("ExecutionProperties");
 	}
 
-	private void setParametersVisibility(
-			final HashMap<String, Parameter> params,
-			String[] parameterNamesToSet, final boolean visible) {
+	private void setParametersVisibility(final HashMap<String, Parameter> params, String[] parameterNamesToSet,
+			final boolean visible) {
 		Parameter param = null;
 		for (String paramName : parameterNamesToSet) {
 			param = params.get(paramName);
 			if (param != null) {
 				param.setVisible(visible);
 			} else {
-				System.err
-						.println("ERROR: PublishTest.setAllVisible() - there is no parameter with the name '"
-								+ paramName
-								+ "' within the map of test info parameters!");
+				System.err.println("ERROR: PublishTest.setAllVisible() - there is no parameter with the name '"
+						+ paramName + "' within the map of test info parameters!");
 			}
 		}
 
@@ -341,8 +328,7 @@ public class PublishTest extends SystemTestCase4 {
 
 	}
 
-	private void sendMail(String filesToAttach, boolean isPublished)
-			throws Exception {
+	private void sendMail(String filesToAttach, boolean isPublished) throws Exception {
 		/**
 		 * email clients addresses can contains more than one email client. if
 		 * we want send email to more than one client we should separate it with
@@ -372,17 +358,13 @@ public class PublishTest extends SystemTestCase4 {
 
 	final JSystemListeners listenersMngr = ListenerstManager.getInstance();
 
-	private void setContainerProperties(
-			final Map<String, String> executionPropertiesMap) {
+	private void setContainerProperties(final Map<String, String> executionPropertiesMap) {
 		if (executionPropertiesMap != null)
 			for (String key : executionPropertiesMap.keySet()) {
-				listenersMngr.setContainerProperties(Integer.MAX_VALUE, key,
-						executionPropertiesMap.get(key));
+				listenersMngr.setContainerProperties(Integer.MAX_VALUE, key, executionPropertiesMap.get(key));
 			}
-		listenersMngr.setContainerProperties(Integer.MAX_VALUE, "build",
-				getBuild());
-		listenersMngr.setContainerProperties(Integer.MAX_VALUE, "version",
-				getVersion());
+		listenersMngr.setContainerProperties(Integer.MAX_VALUE, "build", getBuild());
+		listenersMngr.setContainerProperties(Integer.MAX_VALUE, "version", getVersion());
 	}
 
 	/**
@@ -510,8 +492,7 @@ public class PublishTest extends SystemTestCase4 {
 	}
 
 	public String[] getPublishOptionsOptions() {
-		return PublisherManager.getInstance().getPublisher()
-				.getAllPublishOptions();
+		return PublisherManager.getInstance().getPublisher().getAllPublishOptions();
 	}
 
 	@ParameterProperties(description = "Implementation specific publish parameters", section = "Publish")
@@ -521,8 +502,7 @@ public class PublishTest extends SystemTestCase4 {
 
 	public String getSendTo() {
 		if (StringUtils.isEmpty(sendTo)) {
-			sendTo = JSystemProperties.getInstance().getPreference(
-					FrameworkOptions.MAIL_SEND_TO);
+			sendTo = JSystemProperties.getInstance().getPreference(FrameworkOptions.MAIL_SEND_TO);
 		}
 		return sendTo;
 	}
@@ -534,8 +514,7 @@ public class PublishTest extends SystemTestCase4 {
 
 	public String getAttachments() {
 		if (StringUtils.isEmpty(attachments)) {
-			attachments = JSystemProperties.getInstance().getPreference(
-					FrameworkOptions.MAIL_ATTACHMENTS);
+			attachments = JSystemProperties.getInstance().getPreference(FrameworkOptions.MAIL_ATTACHMENTS);
 		}
 		return attachments;
 	}
@@ -556,8 +535,7 @@ public class PublishTest extends SystemTestCase4 {
 
 	public String getMessageHeader() {
 		if (StringUtils.isEmpty(messageHeader)) {
-			messageHeader = JSystemProperties.getInstance().getPreference(
-					FrameworkOptions.MAIL_HEADER);
+			messageHeader = JSystemProperties.getInstance().getPreference(FrameworkOptions.MAIL_HEADER);
 		}
 		return messageHeader;
 	}
@@ -569,8 +547,7 @@ public class PublishTest extends SystemTestCase4 {
 
 	public String getMailSubject() {
 		if (StringUtils.isEmpty(mailSubject)) {
-			mailSubject = JSystemProperties.getInstance().getPreference(
-					FrameworkOptions.MAIL_SUBJECT);
+			mailSubject = JSystemProperties.getInstance().getPreference(FrameworkOptions.MAIL_SUBJECT);
 		}
 		return mailSubject;
 	}
