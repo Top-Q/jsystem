@@ -18,6 +18,7 @@ import javax.xml.parsers.SAXParserFactory;
 import jsystem.extensions.report.html.HtmlTestReporter;
 import jsystem.framework.FrameworkOptions;
 import jsystem.framework.JSystemProperties;
+import jsystem.framework.RunProperties;
 import jsystem.framework.report.ExtendTestListener;
 import jsystem.framework.report.ExtendTestReporter;
 import jsystem.framework.report.Reporter;
@@ -180,8 +181,8 @@ public class XmlReporter implements ExtendTestReporter, ExtendTestListener, SutL
 	public void init() {
 		// XML reporter takes some of it's data from the
 		// run properties. Deleting run properties when reporter is initialized.
-		//ITAI: I don't see any place that the reporter is using the runProperties so it's kind of silly to reset all the properties.
-//		RunProperties.getInstance().resetRunProperties();
+		//If this will be removed the scenario name and other parameters will not be published
+		RunProperties.getInstance().resetRunProperties();
 		fileCount = -1;
 		start();
 	}

@@ -9,6 +9,7 @@ package jsystem.extensions.report.xml;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -28,8 +29,8 @@ import javax.xml.transform.stream.StreamResult;
 import jsystem.framework.FrameworkOptions;
 import jsystem.framework.JSystemProperties;
 import jsystem.runner.agent.reportdb.TestInfo;
+import jsystem.utils.StringUtils;
 
-import org.apache.commons.digester.SetTopRule;
 import org.apache.xpath.XPathAPI;
 import org.jfree.util.Log;
 import org.w3c.dom.Document;
@@ -44,6 +45,8 @@ import org.xml.sax.SAXException;
  * 
  */
 public class XmlReportHandler implements ReportInformation {
+	private static final String PROPERTIES_SEPARATOR = "/SEP/";
+
 	private static Logger log = Logger.getLogger(XmlReportHandler.class.getName());
 
 	File xmlDirectory;
@@ -55,10 +58,6 @@ public class XmlReportHandler implements ReportInformation {
 	int numberOfTestsFail = 0;
 
 	int numberOfTestsWarning = 0;
-
-	String version = null;
-
-	String build = null;
 
 	String userName = null;
 
@@ -74,6 +73,8 @@ public class XmlReportHandler implements ReportInformation {
 
 	Vector<File> files;
 
+	Map<String, String> executionPropertiesMap;
+
 	private static XmlReportHandler instance;
 
 	/**
@@ -87,7 +88,7 @@ public class XmlReportHandler implements ReportInformation {
 		readXmlFiles();
 	}
 
-	public static XmlReportHandler getInstance() {
+	public synchronized static XmlReportHandler getInstance() {
 		if (null == instance) {
 			if (null == JSystemProperties.getInstance()) {
 				// Can't find the log folder
@@ -117,6 +118,8 @@ public class XmlReportHandler implements ReportInformation {
 		}
 
 	}
+	
+
 
 	private Document initDocument(final File f) throws ParserConfigurationException, SAXException, IOException {
 		files.addElement(f);
@@ -147,10 +150,13 @@ public class XmlReportHandler implements ReportInformation {
 			final Document doc = initDocument(f);
 
 			if (i == 0) {
+				executionPropertiesMap = propetiesStringToMap(((Element) doc.getFirstChild())
+						.getAttribute(XmlReporter.EXECUTION_PROPERTIES));
+				if (executionPropertiesMap == null) {
+					executionPropertiesMap = new HashMap<String, String>();
+				}
 				sutName = ((Element) doc.getFirstChild()).getAttribute(XmlReporter.SETUP);
-				version = ((Element) doc.getFirstChild()).getAttribute(XmlReporter.VERSION);
 				userName = ((Element) doc.getFirstChild()).getAttribute(XmlReporter.USER);
-				build = ((Element) doc.getFirstChild()).getAttribute(XmlReporter.BUILD);
 				scenarioName = ((Element) doc.getFirstChild()).getAttribute(XmlReporter.SCENARIO_NAME);
 				station = ((Element) doc.getFirstChild()).getAttribute(XmlReporter.STATION);
 				startTime = Long.parseLong(((Element) doc.getFirstChild()).getAttribute(XmlReporter.START_TIME));
@@ -161,6 +167,9 @@ public class XmlReportHandler implements ReportInformation {
 			 * Convert the xmls files to vector of TestInfo
 			 */
 			NodeList elements = (NodeList) XPathAPI.selectNodeList(doc, "/reports/test");
+			numberOfTests = 0;
+			numberOfTestsFail = 0;
+			numberOfTestsWarning = 0;
 			for (int index = 0; index < elements.getLength(); index++) {
 				if (elements.item(index) instanceof Element) {
 					numberOfTests++;
@@ -223,12 +232,12 @@ public class XmlReportHandler implements ReportInformation {
 
 	@Override
 	public String getVersion() {
-		return version;
+		return executionPropertiesMap.get(XmlReporter.VERSION);
 	}
 
 	@Override
 	public String getBuild() {
-		return build;
+		return executionPropertiesMap.get(XmlReporter.BUILD);
 	}
 
 	@Override
@@ -253,7 +262,7 @@ public class XmlReportHandler implements ReportInformation {
 			reportFile0 = getReportFile(0);
 			doc = initDocument(getReportFile(0));
 		} catch (Exception e) {
-			Log.error("Failed to update sut name", e);
+			Log.error("Failed to update property "+attributeName, e);
 			return;
 		}
 
@@ -288,27 +297,54 @@ public class XmlReportHandler implements ReportInformation {
 	}
 
 	public void setBuild(String build) {
-		setRootAttributeValue(XmlReporter.BUILD, build);
+		executionPropertiesMap.put(XmlReporter.BUILD, build);
+		setRootAttributeValue(XmlReporter.EXECUTION_PROPERTIES, mapToPropertiesString(executionPropertiesMap));
+
 	}
 
 	public void setVersion(String version) {
-		setRootAttributeValue(XmlReporter.VERSION, version);
+		executionPropertiesMap.put(XmlReporter.VERSION, version);
+		setRootAttributeValue(XmlReporter.EXECUTION_PROPERTIES, mapToPropertiesString(executionPropertiesMap));
 	}
 
 	public void setUser(String user) {
 		setRootAttributeValue(XmlReporter.USER, user);
 	}
+	
+	public void setDescription(String description) {
+		setRootAttributeValue(XmlReporter.DESCRIPTION, description);
+	}
 
-	public void setExecutionPropertiesMap(Map<String, String> executionPropertiesMap) {
-		if (executionPropertiesMap == null || executionPropertiesMap.size() == 0) {
+
+	public void addExecutionProperties(Map<String, String> executionPropertiesMapParam) {
+		if (executionPropertiesMapParam == null || executionPropertiesMapParam.size() == 0) {
 			return;
 		}
-		StringBuilder propsSb = new StringBuilder();
-		for (String key : executionPropertiesMap.keySet()) {
-			propsSb.append(key).append("=").append(executionPropertiesMap.get(key)).append("/SEP/");
-		}
-		setRootAttributeValue(XmlReporter.EXECUTION_PROPERTIES, propsSb.toString());
+		executionPropertiesMap.putAll(executionPropertiesMapParam);
+		setRootAttributeValue(XmlReporter.EXECUTION_PROPERTIES, mapToPropertiesString(executionPropertiesMap));
 
+	}
+
+	private static String mapToPropertiesString(Map<String, String> propertiesMap) {
+		StringBuilder sb = new StringBuilder();
+		for (String key : propertiesMap.keySet()) {
+			String keyValuePair = key + "=" + propertiesMap.get(key) + PROPERTIES_SEPARATOR;
+			sb.append(keyValuePair);
+		}
+		return sb.toString().replaceAll(PROPERTIES_SEPARATOR+"$", "");
+	}
+
+	private static Map<String, String> propetiesStringToMap(final String propertiesString) {
+		if (StringUtils.isEmpty(propertiesString)) {
+			return null;
+		}
+		final Map<String, String> map = new HashMap<String, String>();
+		for (String keyValuePair : propertiesString.split(PROPERTIES_SEPARATOR)) {
+			String key = keyValuePair.split("=")[0];
+			String value = keyValuePair.split("=")[1];
+			map.put(key, value);
+		}
+		return map;
 	}
 
 	@Override
@@ -365,15 +401,18 @@ public class XmlReportHandler implements ReportInformation {
 	}
 
 	public static void main(String[] args) {
-		try {
-			XmlReportHandler xml = new XmlReportHandler(new File(
-					"C:\\work\\projects\\automation\\jsystem\\log\\current"));
-			for (int i = 0; i < xml.getNumberOfTests(); i++) {
-				log.log(Level.INFO, xml.getTestInfo(i));
-			}
-		} catch (Exception e) {
-			log.log(Level.WARNING, "fail to publish to DB");
-		}
+		String s = "b=2/SEP/c=3/SEP/a=1/SEP/build=my build/SEP/Version=my version/SEP/";
+		System.out.println(s.replaceAll(PROPERTIES_SEPARATOR+"$", ""));
+		
+//		try {
+//			XmlReportHandler xml = new XmlReportHandler(new File(
+//					"C:\\work\\projects\\automation\\jsystem\\log\\current"));
+//			for (int i = 0; i < xml.getNumberOfTests(); i++) {
+//				log.log(Level.INFO, xml.getTestInfo(i));
+//			}
+//		} catch (Exception e) {
+//			log.log(Level.WARNING, "fail to publish to DB");
+//		}
 	}
 
 	@Override
@@ -395,5 +434,6 @@ public class XmlReportHandler implements ReportInformation {
 	public String getTestDocumentation(int testIndex) {
 		return ((TestInfo) tests.elementAt(testIndex)).getDocumentation();
 	}
+
 
 }

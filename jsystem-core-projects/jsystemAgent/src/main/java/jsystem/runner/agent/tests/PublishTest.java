@@ -324,7 +324,8 @@ public class PublishTest extends SystemTestCase4 {
 		handler.refresh();
 		handler.setBuild(getBuild());
 		handler.setVersion(getVersion());
-		handler.setExecutionPropertiesMap(executionPropertiesMap);
+		handler.setDescription(getDescription());
+		handler.addExecutionProperties(executionPropertiesMap);
 
 	}
 
