@@ -118,8 +118,6 @@ public class XmlReportHandler implements ReportInformation {
 		}
 
 	}
-	
-
 
 	private Document initDocument(final File f) throws ParserConfigurationException, SAXException, IOException {
 		files.addElement(f);
@@ -262,7 +260,7 @@ public class XmlReportHandler implements ReportInformation {
 			reportFile0 = getReportFile(0);
 			doc = initDocument(getReportFile(0));
 		} catch (Exception e) {
-			Log.error("Failed to update property "+attributeName, e);
+			Log.error("Failed to update property " + attributeName, e);
 			return;
 		}
 
@@ -310,11 +308,10 @@ public class XmlReportHandler implements ReportInformation {
 	public void setUser(String user) {
 		setRootAttributeValue(XmlReporter.USER, user);
 	}
-	
+
 	public void setDescription(String description) {
 		setRootAttributeValue(XmlReporter.DESCRIPTION, description);
 	}
-
 
 	public void addExecutionProperties(Map<String, String> executionPropertiesMapParam) {
 		if (executionPropertiesMapParam == null || executionPropertiesMapParam.size() == 0) {
@@ -331,7 +328,7 @@ public class XmlReportHandler implements ReportInformation {
 			String keyValuePair = key + "=" + propertiesMap.get(key) + PROPERTIES_SEPARATOR;
 			sb.append(keyValuePair);
 		}
-		return sb.toString().replaceAll(PROPERTIES_SEPARATOR+"$", "");
+		return sb.toString().replaceAll(PROPERTIES_SEPARATOR + "$", "");
 	}
 
 	private static Map<String, String> propetiesStringToMap(final String propertiesString) {
@@ -340,6 +337,9 @@ public class XmlReportHandler implements ReportInformation {
 		}
 		final Map<String, String> map = new HashMap<String, String>();
 		for (String keyValuePair : propertiesString.split(PROPERTIES_SEPARATOR)) {
+			if (!keyValuePair.contains("=")) {
+				continue;
+			}
 			String key = keyValuePair.split("=")[0];
 			String value = keyValuePair.split("=")[1];
 			map.put(key, value);
@@ -402,17 +402,17 @@ public class XmlReportHandler implements ReportInformation {
 
 	public static void main(String[] args) {
 		String s = "b=2/SEP/c=3/SEP/a=1/SEP/build=my build/SEP/Version=my version/SEP/";
-		System.out.println(s.replaceAll(PROPERTIES_SEPARATOR+"$", ""));
-		
-//		try {
-//			XmlReportHandler xml = new XmlReportHandler(new File(
-//					"C:\\work\\projects\\automation\\jsystem\\log\\current"));
-//			for (int i = 0; i < xml.getNumberOfTests(); i++) {
-//				log.log(Level.INFO, xml.getTestInfo(i));
-//			}
-//		} catch (Exception e) {
-//			log.log(Level.WARNING, "fail to publish to DB");
-//		}
+		System.out.println(s.replaceAll(PROPERTIES_SEPARATOR + "$", ""));
+
+		// try {
+		// XmlReportHandler xml = new XmlReportHandler(new File(
+		// "C:\\work\\projects\\automation\\jsystem\\log\\current"));
+		// for (int i = 0; i < xml.getNumberOfTests(); i++) {
+		// log.log(Level.INFO, xml.getTestInfo(i));
+		// }
+		// } catch (Exception e) {
+		// log.log(Level.WARNING, "fail to publish to DB");
+		// }
 	}
 
 	@Override
@@ -434,6 +434,5 @@ public class XmlReportHandler implements ReportInformation {
 	public String getTestDocumentation(int testIndex) {
 		return ((TestInfo) tests.elementAt(testIndex)).getDocumentation();
 	}
-
 
 }
