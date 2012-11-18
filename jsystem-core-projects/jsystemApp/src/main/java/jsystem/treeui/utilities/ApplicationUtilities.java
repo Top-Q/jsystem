@@ -54,7 +54,6 @@ public class ApplicationUtilities {
 	 * @return	null if path is incorrect or cancel was selected
 	 */
 	public static String chooseClassesDirectory(String path, boolean mustChooseProject) {
-		path = findClassesFolder(path);
 		if (verifyClassesDirectory(path)){
 			return path;
 		}
