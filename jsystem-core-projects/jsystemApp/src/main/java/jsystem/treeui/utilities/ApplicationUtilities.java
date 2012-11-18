@@ -4,10 +4,13 @@
 package jsystem.treeui.utilities;
 
 import java.io.File;
+import java.util.Collection;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+
+import org.apache.commons.io.filefilter.IOFileFilter;
 
 import jsystem.framework.FrameworkOptions;
 import jsystem.framework.JSystemProperties;
@@ -51,6 +54,7 @@ public class ApplicationUtilities {
 	 * @return	null if path is incorrect or cancel was selected
 	 */
 	public static String chooseClassesDirectory(String path, boolean mustChooseProject) {
+		path = findClassesFolder(path);
 		if (verifyClassesDirectory(path)){
 			return path;
 		}
@@ -88,6 +92,7 @@ public class ApplicationUtilities {
 			} else { // a directory was chosen in the file chooser
 				
 				newPath = fc.getSelectedFile().getPath();
+				newPath = findClassesFolder(newPath);
 				validDirectory = verifyClassesDirectory(newPath);
 				if (! validDirectory) {
 					ImageIcon icon = ImageCenter.getInstance().getImage(ImageCenter.ICON_WARNING);
@@ -114,6 +119,58 @@ public class ApplicationUtilities {
 		} // while
 		return newPath;
 	}
+	
+	/**
+	 * Find the classes folder in the given folder name or in one of the sub
+	 * folder.
+	 * 
+	 * @param classesFolderName
+	 * @return classes actual folder or null if not found
+	 */
+	private static String findClassesFolder(String classesFolderName) {
+		if (StringUtils.isEmpty(classesFolderName)) {
+			return null;
+		}
+		File potentialClassesFolder = new File(classesFolderName);
+		if (!potentialClassesFolder.exists() || !potentialClassesFolder.isDirectory()) {
+			return null;
+		}
+
+		Collection<File> files = org.apache.commons.io.FileUtils.listFilesAndDirs(potentialClassesFolder,
+				new IOFileFilter() {
+					@Override
+					public boolean accept(File dir, String name) {
+						return false;
+					}
+
+					@Override
+					public boolean accept(File file) {
+						return false;
+					}
+				}, new IOFileFilter() {
+
+					@Override
+					public boolean accept(File dir, String name) {
+						return false;
+					}
+
+					@Override
+					public boolean accept(File file) {
+						if (file.getName().equals("classes") || file.getName().equals("target")) {
+							return true;
+						}
+						return false;
+					}
+				});
+		for (File file : files) {
+			if (file.getName().equals("classes")) {
+				return file.getAbsolutePath();
+			}
+		}
+
+		return null;
+	}
+
 	
 	public static boolean verifyClassesDirectory(String path) {
 		if (path == null){
