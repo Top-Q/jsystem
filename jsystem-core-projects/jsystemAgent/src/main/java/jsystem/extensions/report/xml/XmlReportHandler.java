@@ -8,7 +8,9 @@ package jsystem.extensions.report.xml;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
@@ -271,13 +273,23 @@ public class XmlReportHandler implements ReportInformation {
 	}
 
 	private void writeToFile(final Document doc, final File reportFile) throws TransformerFactoryConfigurationError {
+		OutputStream os = null;
 		try {
 			Transformer transformer = TransformerFactory.newInstance().newTransformer();
-			Result output = new StreamResult(reportFile);
-			Source input = new DOMSource(doc);
+			os = new FileOutputStream(reportFile);
+			final Result output = new StreamResult(os);
+			final Source input = new DOMSource(doc);
 			transformer.transform(input, output);
 		} catch (Exception e) {
 			Log.error("Failed to update sut name", e);
+		} finally {
+			if (os != null) {
+				try {
+					os.close();
+				} catch (IOException e) {
+					log.warning("Failed closing report file");
+				}
+			}
 		}
 		refresh();
 	}
