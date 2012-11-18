@@ -13,7 +13,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.jsystemtest</groupId>
-			<artifactId>jsystemCore</artifactId>
+			<artifactId>jsystemCommon</artifactId>
 			<version>${jsystem.dependency.version}</version>
 			<scope>provided</scope>
 		</dependency>
@@ -33,6 +33,19 @@
 					<source>1.6</source>
 					<target>1.6</target>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.2</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
