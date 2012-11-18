@@ -56,7 +56,7 @@
 					<dependency>
 						<groupId>\${groupId}</groupId>
 						<artifactId>\${artifactId}</artifactId>
-						<version>\${version}</version>
+						<version>[0.0,]</version>
 						<scope>runtime</scope>
 					</dependency>
 				</dependencies>
