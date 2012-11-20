@@ -195,8 +195,12 @@ public class PublishTest extends SystemTestCase4 {
 			case publish:
 				setReportInfo(executionPropertiesMap);
 				setContainerProperties(executionPropertiesMap);
-				PublisherManager.getInstance().getPublisher()
-						.publish(getDescription(), isUploadLogs(), getPublishOptions());
+				try {
+					PublisherManager.getInstance().getPublisher()
+							.publish(getDescription(), isUploadLogs(), getPublishOptions());
+				} catch (Exception e){
+					report.report("Failed to publish", e);
+				}
 				successful = true;
 				break;
 			case email:
