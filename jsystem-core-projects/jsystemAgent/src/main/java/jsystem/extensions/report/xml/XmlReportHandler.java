@@ -349,11 +349,18 @@ public class XmlReportHandler implements ReportInformation {
 		}
 		final Map<String, String> map = new HashMap<String, String>();
 		for (String keyValuePair : propertiesString.split(PROPERTIES_SEPARATOR)) {
+			// check for non valid properties
 			if (!keyValuePair.contains("=")) {
 				continue;
 			}
-			String key = keyValuePair.split("=")[0];
-			String value = keyValuePair.split("=")[1];
+			// check for not set properties
+			String[] parts = keyValuePair.split("=");
+			if (parts.length != 2) {
+				continue;
+			}
+			// get the key and the value
+			String key = parts[0];
+			String value = parts[1];
 			map.put(key, value);
 		}
 		return map;
