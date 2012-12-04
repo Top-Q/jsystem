@@ -168,6 +168,7 @@ public class XmlReportHandler implements ReportInformation {
 			 */
 			NodeList elements = (NodeList) XPathAPI.selectNodeList(doc, "/reports/test");
 			numberOfTests = 0;
+			numberOfTestsPass = 0;
 			numberOfTestsFail = 0;
 			numberOfTestsWarning = 0;
 			for (int index = 0; index < elements.getLength(); index++) {
