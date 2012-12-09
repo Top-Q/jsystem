@@ -23,6 +23,7 @@ import jsystem.framework.report.JSystemListeners;
 import jsystem.framework.report.ListenerstManager;
 import jsystem.framework.report.Reporter;
 import jsystem.framework.scenario.Parameter;
+import jsystem.runner.agent.publisher.PublisherException;
 import jsystem.runner.agent.publisher.PublisherManager;
 import jsystem.utils.FileUtils;
 import jsystem.utils.StringUtils;
@@ -181,7 +182,6 @@ public class PublishTest extends SystemTestCase4 {
 	@TestProperties(name = "Send notification. type = ${ActionType}")
 	public void publish() throws Exception {
 		report.step("Notifying...");
-		boolean successful = false;
 		final Map<String, String> executionPropertiesMap = parseExecutionProperties();
 		// Just to make sure that all information is written to the reports
 		ListenerstManager.getInstance().flushReporters();
@@ -189,46 +189,44 @@ public class PublishTest extends SystemTestCase4 {
 
 			switch (actionType) {
 			case init_reporters_only:
-				successful = true;
 				// The init will be handled at the end of the method
 				break;
 			case publish:
 				setReportInfo(executionPropertiesMap);
 				setContainerProperties(executionPropertiesMap);
-				try {
-					PublisherManager.getInstance().getPublisher()
-							.publish(getDescription(), isUploadLogs(), getPublishOptions());
-				} catch (Exception e){
-					report.report("Failed to publish", e);
-				}
-				successful = true;
+				PublisherManager.getInstance().getPublisher()
+						.publish(getDescription(), isUploadLogs(), getPublishOptions());
 				break;
 			case email:
 				setReportInfo(executionPropertiesMap);
 				setContainerProperties(executionPropertiesMap);
-				sendMail(getAttachments(), false);
-				successful = true;
+				sendMail(getAttachments(), null, false);
 				break;
 			case publish_and_email:
 				setReportInfo(executionPropertiesMap);
 				setContainerProperties(executionPropertiesMap);
+				Map<String, String> publisherReturnedMap = null;
 				try {
-					PublisherManager.getInstance().getPublisher()
+					publisherReturnedMap = PublisherManager.getInstance().getPublisher()
 							.publish(getDescription(), isUploadLogs(), getPublishOptions());
-				} catch (Exception e) {
-					report.report("Failed to publish", e);
+				} finally {
+					// Even we didn't succeed publishing the reports, we still
+					// would like to send the mail.
+					sendMail(getAttachments(), publisherReturnedMap, true);
 				}
-				sendMail(getAttachments(), true);
-				successful = true;
 				break;
 			default:
 				break;
 			}
-			if (isInitReporter() && successful) {
+			if (isInitReporter()) {
 				ListenerstManager.getInstance().initReporters();
 			}
+		} catch (PublisherException e) {
+			report.report("Publishing process failed", StringUtils.getStackTrace(e), Reporter.WARNING);
 		} catch (IllegalStateException e) {
 			report.report("Operation aborted due to illegal state: " + e.getMessage(), Reporter.WARNING);
+		} catch (Exception e) {
+			report.report("Notification process failed", StringUtils.getStackTrace(e), Reporter.WARNING);
 		}
 
 	}
@@ -333,7 +331,8 @@ public class PublishTest extends SystemTestCase4 {
 
 	}
 
-	private void sendMail(String filesToAttach, boolean isPublished) throws Exception {
+	private void sendMail(String filesToAttach, Map<String, String> publisherReturnedMap, boolean isPublished)
+			throws Exception {
 		/**
 		 * email clients addresses can contains more than one email client. if
 		 * we want send email to more than one client we should separate it with
@@ -350,6 +349,7 @@ public class PublishTest extends SystemTestCase4 {
 		mailSender.setMessageHeader(getMessageHeader());
 		mailSender.setSendTo(getSendTo());
 		mailSender.setAddSummaryReport(isSummaryAttachment());
+		mailSender.setMailContentMap(publisherReturnedMap);
 		mailSender.sendMail(filesToAttach, isPublished);
 	}
 

@@ -1,16 +1,11 @@
 package jsystem.runner.agent.publisher;
 
-import jsystem.framework.report.ListenerstManager;
-import jsystem.framework.report.Reporter;
+import java.util.Map;
 
 public class EmptyPublisher implements Publisher {
 
-	private Reporter report = ListenerstManager.getInstance();
-
-
 	@Override
 	public boolean isUp() {
-		// report.report("No publisher was defined",2);
 		return true;
 	}
 
@@ -20,13 +15,14 @@ public class EmptyPublisher implements Publisher {
 	}
 
 	@Override
-	public void publish(String description,boolean uploadLogs) throws Exception {
+	public Map<String, String> publish(String description, boolean uploadLogs) throws PublisherException {
+		return null;
 	}
 
 	@Override
-	public void publish(String description, boolean uploadLogs, String[] publishOptions) throws Exception {
-		
+	public Map<String, String> publish(String description, boolean uploadLogs, String[] publishOptions)
+			throws PublisherException {
+		return null;
 	}
-
 
 }

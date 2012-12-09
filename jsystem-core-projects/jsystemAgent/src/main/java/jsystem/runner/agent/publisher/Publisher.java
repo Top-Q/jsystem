@@ -3,47 +3,45 @@
  */
 package jsystem.runner.agent.publisher;
 
+import java.util.Map;
+
 /**
  * The publisher is used to manage the output results. You can move them to an
- * Ftp server like FtpPublisher or put them in an SQL server ...
+ * Ftp server like FtpPublisher or put them in an SQL server or publish to a
+ * dedicated report server.
  * 
- * @author guy.arieli
+ * @author Itai.Agmon
  * 
  */
 public interface Publisher {
 
-	void publish(String description, boolean uploadLogs) throws Exception;
-	
+	Map<String, String> publish(String description, boolean uploadLogs) throws PublisherException;
+
 	/**
 	 * 
 	 * @param description
 	 *            Description of the execution
 	 * @param uploadLogs
 	 *            Publish also the logs
+	 * @return General purpose list of values. The most common usage of those
+	 *         values is adding them to the body of the mail.
 	 * @throws Exception
 	 */
-	void publish(String description, boolean uploadLogs, String[] publishOptions) throws Exception;
+	Map<String, String> publish(String description, boolean uploadLogs, String[] publishOptions)
+			throws PublisherException;
 
 	/**
-	 * This method will validate the publisher according to the setting received
-	 * from the DB settings dialog.
+	 * This method will validate that the publisher server is up. The publisher
+	 * settings can be kept in the jsystem.properties.
 	 * 
-	 * @param Object
-	 *            need to be cast to DBConnectionListener in case of
-	 *            DefaultPublisher else if report server publisher will not use
-	 *            this parameter. Passed as object due to dependency problem
-	 *            between agent and app;
-	 * @param dbSettingParams
-	 *            represents the following: (host, port, driver, type, dbHost,
-	 *            dbName, dbUser, dbPassword);
-	 * @return
+	 * @return true if and only if the server is up
 	 */
 	boolean isUp();
 
 	/**
 	 * Implementation specific publish options
 	 * 
-	 * @return
+	 * @return 
 	 */
 	String[] getAllPublishOptions();
 }

@@ -1,9 +1,9 @@
 package jsystem.runner.agent.tests;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -36,6 +36,7 @@ public class MailSender {
 	private String mailSubject;
 	private String sendTo;
 	private boolean addSummaryReport = true;
+	private Map<String, String> contentMap;
 
 	/**
 	 * Get the results of tests and initialize the data for sending e-mail
@@ -80,7 +81,7 @@ public class MailSender {
 		report.step("Sending mail to " + sendTo);
 		messageHeader = messageHeader == null ? "" : messageHeader;
 		report.report("Message header is " + messageHeader);
-		if (!StringUtils.isEmpty(password)){
+		if (!StringUtils.isEmpty(password)) {
 			mail.setPassword(decryptPassword(password));
 		}
 
@@ -106,7 +107,7 @@ public class MailSender {
 			}
 		}
 
-		//Filter non existing files
+		// Filter non existing files
 		if (!StringUtils.isEmpty(filesToAttach)) {
 			String[] filesToAttachArr = filesToAttach.split(CommonResources.DELIMITER);
 			StringBuilder existingFilesToAttach = new StringBuilder();
@@ -177,6 +178,13 @@ public class MailSender {
 			sb.append("This scenario wasn't published to the reports system").append(EOL);
 		}
 
+		if (contentMap != null) {
+			sb.append(EOL);
+			for (String key : contentMap.keySet()) {
+				sb.append(key).append(": ").append(contentMap.get(key)).append(EOL);
+			}
+		}
+
 		return sb.toString();
 	}
 
@@ -215,6 +223,11 @@ public class MailSender {
 	 */
 	public void setAddSummaryReport(boolean addSummaryReport) {
 		this.addSummaryReport = addSummaryReport;
+	}
+
+	public void setMailContentMap(Map<String, String> contentMap) {
+		this.contentMap = contentMap;
+
 	}
 
 }
