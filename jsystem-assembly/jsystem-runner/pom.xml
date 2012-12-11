@@ -201,6 +201,7 @@
 						<id>create-runner</id>
 						<phase>package</phase>
 						<configuration>
+							<finalName>runner</finalName>
 							<appendAssemblyId>false</appendAssemblyId>
 							<descriptors>
 								<descriptor>src/main/assembly/runner.xml</descriptor>

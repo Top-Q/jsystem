@@ -26,6 +26,7 @@ jsystem.properties
 testtimes.properties
 jsystem-core-projects/jsystemCore/file.properties
 !jsystem-assembly/jsystem-runner/src/main/etc/jsystem.properties
+!jsystem-assembly/jsystem-runner/src/main/etc/.project
 jsystem.properties.bu
 runnerState.properties
 log
