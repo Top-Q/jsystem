@@ -15,11 +15,6 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>jsystem-launcher</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>ant-contrib</groupId>
 			<artifactId>ant-contrib</artifactId>
 		</dependency>

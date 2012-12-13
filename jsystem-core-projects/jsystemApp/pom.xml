@@ -11,11 +11,6 @@
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>jsystemCommon</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
 			<artifactId>jsystemAgent</artifactId>
 			<version>${project.version}</version>
 		</dependency>
