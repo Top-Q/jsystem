@@ -71,6 +71,9 @@
 				<exclude>*:filters:*</exclude>
 				<exclude>*:commons-compress:*</exclude>
 				<exclude>*:xz:*</exclude>
+				
+				<!-- The project artifact should not be in the lib folder because it should be read from the classes folder-->
+				<exclude>*:${project.name}:*</exclude>
 			</excludes>
 		</dependencySet>
 
