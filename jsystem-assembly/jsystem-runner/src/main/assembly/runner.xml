@@ -145,8 +145,21 @@
 		<fileSet>
 			<outputDirectory></outputDirectory>
 			<directory>src/main/etc</directory>
+			<excludes>
+			    <exclude>run</exclude>
+			    <exclude>runBase</exclude>
+			</excludes>
 		</fileSet>
-
+		<fileSet>
+			<outputDirectory></outputDirectory>
+			<directory>src/main/etc</directory>
+			<fileMode>755</fileMode>
+			<includes>
+			    <include>run</include>
+			    <include>runBase</include>
+			</includes>
+		</fileSet>
+		
 	</fileSets>
 
 </assembly>
