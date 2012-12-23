@@ -70,7 +70,7 @@
 			</includes>
 		</dependencySet>
 		<dependencySet>
-			<outputDirectory>thirdparty/commonlib</outputDirectory>
+			<outputDirectory>thirdparty/commonLib</outputDirectory>
 			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
 			<includes>
 				<include>*:ant:*</include>
@@ -150,6 +150,7 @@
 			<excludes>
 			    <exclude>run</exclude>
 			    <exclude>runBase</exclude>
+			    <exclude>runAgent</exclude>
 			</excludes>
 		</fileSet>
 		<fileSet>
@@ -159,6 +160,7 @@
 			<includes>
 			    <include>run</include>
 			    <include>runBase</include>
+			    <include>runAgent</include>
 			</includes>
 		</fileSet>
 		
