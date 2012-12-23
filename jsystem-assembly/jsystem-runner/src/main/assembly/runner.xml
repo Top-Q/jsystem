@@ -10,6 +10,8 @@
 		<dependencySet>
 			<outputDirectory>thirdparty</outputDirectory>
 			<unpack>true</unpack>
+			<directoryMode>774</directoryMode>
+			<fileMode>774</fileMode>
 			<includes>
 				<include>ant:ant-full:*</include>
 			</includes>
@@ -153,7 +155,7 @@
 		<fileSet>
 			<outputDirectory></outputDirectory>
 			<directory>src/main/etc</directory>
-			<fileMode>755</fileMode>
+			<fileMode>775</fileMode>
 			<includes>
 			    <include>run</include>
 			    <include>runBase</include>
