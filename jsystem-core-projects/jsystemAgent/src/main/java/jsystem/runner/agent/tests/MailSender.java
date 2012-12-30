@@ -135,7 +135,7 @@ public class MailSender {
 	 * @return true if and only if all mail properties were defined by user
 	 */
 	private boolean isMailFrameworkOptionsDefined() {
-		final FrameworkOptions[] optionsToCheck = new FrameworkOptions[] { FrameworkOptions.MAIL_FROM_USER_NAME,
+		final FrameworkOptions[] optionsToCheck = new FrameworkOptions[] { 
 				FrameworkOptions.MAIL_HOST, FrameworkOptions.MAIL_SMTP_PORT, FrameworkOptions.MAIL_FROM_ACCOUNT_NAME };
 		for (FrameworkOptions option : optionsToCheck) {
 			if (JSystemProperties.getInstance().getPreference(option) == null) {
