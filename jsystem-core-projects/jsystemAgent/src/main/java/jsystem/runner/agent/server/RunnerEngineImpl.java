@@ -6,6 +6,7 @@ package jsystem.runner.agent.server;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.net.URL;
 import java.util.Iterator;
@@ -59,7 +60,12 @@ public class RunnerEngineImpl implements RunnerEngine {
 	 */
 	public static void setTestsPath(String testClassesPath) {
 		JSystemProperties.getInstance().setPreference(FrameworkOptions.TESTS_CLASS_FOLDER, testClassesPath);
-		File parent = new File(testClassesPath).getParentFile();
+		File parent = null;
+		try {
+			parent = new File(testClassesPath).getCanonicalFile().getParentFile();
+		} catch (IOException e) {
+			log.log(Level.WARNING,"Failed to get parent of " + testClassesPath);
+		}
 		if (parent != null) {
 			File testsSrcFolder = new File(parent, "tests");
 			File resourcesSrcFolder = new File(parent,"tests");
