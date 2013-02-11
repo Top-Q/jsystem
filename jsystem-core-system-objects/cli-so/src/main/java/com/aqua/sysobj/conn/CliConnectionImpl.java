@@ -6,6 +6,7 @@
 package com.aqua.sysobj.conn;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -23,6 +24,7 @@ import systemobject.terminal.InOutInputStream;
 import systemobject.terminal.Prompt;
 import systemobject.terminal.RS232;
 import systemobject.terminal.SSH;
+import systemobject.terminal.SSHWithRSA;
 import systemobject.terminal.Telnet;
 import systemobject.terminal.Terminal;
 import systemobject.terminal.VT100FilterInputStream;
@@ -40,7 +42,8 @@ public abstract class CliConnectionImpl extends SystemObjectImpl implements CliC
 		COM("com"),
 		RS232("rs232"),
 		TELNET("telnet"),
-		SSH("ssh");
+		SSH("ssh"),
+		SSH_RSA("ssh-rsa");
 		EnumConnectionType(String value) {
 			this.value = value;
 		}
@@ -131,7 +134,11 @@ public abstract class CliConnectionImpl extends SystemObjectImpl implements CliC
     
     private String charSet = "ASCII";
 
-    
+	/**
+	 * SSH2 private key -RSA (ppk or pem file)
+	 */
+	private File privateKey;
+
 	public boolean isConnectOnInit() {
 		return connectOnInit;
 	}
@@ -248,6 +255,9 @@ public abstract class CliConnectionImpl extends SystemObjectImpl implements CliC
 		}
 		// Terminal t;
 		boolean isRs232 = false;
+
+
+    	boolean isRsa = false;
 		if (host.toLowerCase().startsWith(EnumConnectionType.COM.value()) || protocol.toLowerCase().equals(EnumConnectionType.RS232.value())) { 
 			// syntax for serial connection found
 			isRs232 = true;
@@ -259,6 +269,13 @@ public abstract class CliConnectionImpl extends SystemObjectImpl implements CliC
 					.parseInt(params[4]));
 		} else if (protocol.toLowerCase().equals(EnumConnectionType.SSH.value())) {
 			terminal = new SSH(host, user, password);
+		} else if (protocol.toLowerCase().equals(
+				EnumConnectionType.SSH_RSA.value())) {
+			terminal = new SSHWithRSA(host, user, password, privateKey);
+			prompts.add(new Prompt("$", false, true));
+			prompts.add(new Prompt("]$", false, true));
+			
+			isRsa = true;
 		} else {
 			terminal = new Telnet(host, port, useTelnetInputStream);
 			if (dump) {
@@ -293,7 +310,9 @@ public abstract class CliConnectionImpl extends SystemObjectImpl implements CliC
 		}
 		if (isRs232 || leadingEnter) {
 			cli.command("");
-		} else {
+		}else if (isRsa){
+			cli.login();
+		}else {
 			cli.login(60000, delayedTyping);
 		}
 		connected = true;
@@ -803,5 +822,13 @@ public abstract class CliConnectionImpl extends SystemObjectImpl implements CliC
 	public String getCharSet() {
 		return charSet;
 	}
-	
+
+	public File getPrivateKey() {
+		return privateKey;
+	}
+
+	public void setPrivateKey(File privateKey) {
+		this.privateKey = privateKey;
+	}
+
 }

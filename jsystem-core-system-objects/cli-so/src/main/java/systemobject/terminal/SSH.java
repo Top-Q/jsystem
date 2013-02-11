@@ -3,7 +3,10 @@
  */
 package systemobject.terminal;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+
 import ch.ethz.ssh2.Connection;
 import ch.ethz.ssh2.InteractiveCallback;
 import ch.ethz.ssh2.LocalPortForwarder;
@@ -14,24 +17,24 @@ import ch.ethz.ssh2.Session;
  */
 public class SSH extends Terminal {
 	
-	private String hostname;
+	protected String hostname;
 
-	private String username;
+	protected String username;
 
-	private String password;
+	protected String password;
+	
+	protected Connection conn = null;
 
-	private Connection conn = null;
-
-	private Session sess = null;
+	protected Session sess = null;
 	
 	//ssh port forwarding
-	private LocalPortForwarder lpf = null;
+	protected LocalPortForwarder lpf = null;
 
-	private int sourcePort = -1;
+	protected int sourcePort = -1;
 
-	private int destinationPort = -1;
+	protected int destinationPort = -1;
 	
-	boolean xtermTerminal = true;
+	protected boolean xtermTerminal = true;
 	
 	public SSH(String hostnameP, String usernameP, String passwordP) {
 		this(hostnameP, usernameP, passwordP, -1, -1, true);
@@ -64,9 +67,11 @@ public class SSH extends Terminal {
 
 		// Check what connection options are available to us
 		String[] authMethods = conn.getRemainingAuthMethods(username);
+		System.out.println("The supported auth Methods are:");
 		for(String method: authMethods) {
 			System.out.println(method);
 		}
+		boolean privateKeyAuthentication = false;
 		boolean passAuthentication = false;
 		for (int i = 0; i < authMethods.length; i++) {
 			if (authMethods[i].equalsIgnoreCase("password")) {
@@ -74,6 +79,11 @@ public class SSH extends Terminal {
 				passAuthentication = true;
 			}
 		}
+		if(Arrays.asList(authMethods).contains("publickey")){
+			// we can authenticate with a RSA private key
+			privateKeyAuthentication=true;
+		}
+		
 		/* Authenticate */
 		if (passAuthentication) {
 			try {
@@ -206,4 +216,8 @@ public class SSH extends Terminal {
 	protected void setDestinationPort(int destinationPort) {
 		this.destinationPort = destinationPort;
 	}
+
+
+
+	
 }
