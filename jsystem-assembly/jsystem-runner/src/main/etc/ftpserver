@@ -1,0 +1,5 @@
+#!/bin/sh
+# ftp client user name: aqua
+# ftp client user password: aqua
+# use com.aqua.filetransfer.ftp.ftpserver=server_ip to control the ip on which the server listens for ftp requests
+java -Xms256m -Xmx512m -classpath "./thirdparty/commonLib/ftpserver-dev.jar:./thirdparty/commonLib/commons-logging-1.0.4.jar:./thirdparty/commonLib/commons-net.jar:./thirdparty/commonLib/xalan.jar:./thirdparty/commonLib/commons-io-1.3.1.jar:./lib/filetransfer.jar:./lib/jsystemCore.jar:./lib/jsystemCommon.jar:./thirdparty/commonLib/junit.jar" com.aqua.filetransfer.ftp.FTPServer
