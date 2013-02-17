@@ -1048,7 +1048,7 @@ public class RunnerTest implements JTest, UIHandler {
 				 * work only with single parameter setter
 				 */
 				if (parametersType.length != 1) {
-					log.log(Level.FINE, "Number of setter param is bigger then 1 for: " + methodName);
+					log.log(Level.FINE, "Number of setter parameter is not 1 for: " + methodName);
 					continue;
 				}
 				Class<?> type = parametersType[0];
