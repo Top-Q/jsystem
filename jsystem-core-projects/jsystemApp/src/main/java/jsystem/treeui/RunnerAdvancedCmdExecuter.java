@@ -104,6 +104,16 @@ public class RunnerAdvancedCmdExecuter implements ExecutionListener {
 				ArrayList<RunnerCmd> runCommands = new ArrayList<RunnerCmd>();
 				
 				// Parse the input file
+				if (null == currentFile){
+					log.warning("File to parse is null. Skipping");
+					continue;
+				}
+				
+				if (!currentFile.exists()){
+					log.warning("File "+currentFile.getAbsolutePath()+" does not exist. Skipping");
+					continue;
+				}
+				log.fine("About to open file "+currentFile.getAbsolutePath()+" for parsing");
 				Document doc = XmlUtils.getDocumentBuilder().parse(
 						new ReaderInputStream(
 								new FileReader(currentFile)));
