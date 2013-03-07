@@ -31,7 +31,7 @@ launch(){
 	echo "the DEBUG variable = "$DEBUG
 	echo "remove the remark on the DEBUG variable to debug the runner."
 	DEBUG=""
-	#set DEBUG="-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n"
+	#DEBUG="-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n"
 	$_JAVACMD $DEBUG -Xms256m -Xmx512m $JMX -Djsystem.main=$JSYSTEM_MAIN -DentityExpansionLimit=1280000 -classpath ./lib/jsystem-launcher.jar  $SPLASH jsystem.framework.launcher.Launcher2 ${PARAMS[1]} ${PARAMS[2]} ${PARAMS[3]} ${PARAMS[4]} ${PARAMS[5]} ${PARAMS[6]}
 }
 
