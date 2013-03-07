@@ -45,14 +45,16 @@ import junit.framework.Test;
 public class ScenarioHelpers {
 
 	private static Map<String, Properties> propertiesCache;
-	private static Logger log = Logger.getLogger(ScenarioHelpers.class.getName());
+	private static Logger log = Logger.getLogger(ScenarioHelpers.class
+			.getName());
 
 	static {
 		resetCache();
 	}
 
 	public synchronized static void resetCache() {
-		propertiesCache = Collections.synchronizedMap(new HashMap<String, Properties>());
+		propertiesCache = Collections
+				.synchronizedMap(new HashMap<String, Properties>());
 	}
 
 	/**
@@ -104,7 +106,8 @@ public class ScenarioHelpers {
 	 * @throws Exception
 	 * 
 	 */
-	public static Scenario findPath(ArrayList<Integer> containersPath, JTestContainer pointer) throws Exception {
+	public static Scenario findPath(ArrayList<Integer> containersPath,
+			JTestContainer pointer) throws Exception {
 		if (!(pointer instanceof Scenario)) {
 			JTestContainer parent = pointer.getParent();
 			int index = parent.getRootIndex(pointer);
@@ -132,7 +135,8 @@ public class ScenarioHelpers {
 	 * @param list
 	 *            the vector of sub-scenarios to return
 	 */
-	private static void addChildScenarios(JTestContainer root, List<Scenario> list) {
+	private static void addChildScenarios(JTestContainer root,
+			List<Scenario> list) {
 		if (root instanceof Scenario) {
 			list.add((Scenario) root);
 		}
@@ -157,7 +161,8 @@ public class ScenarioHelpers {
 	 */
 	public static Properties getScenarioParameters(JTestContainer scenario) {
 		String scenarioFileName = scenario.getName();
-		String rootScenarioFile = ScenariosManager.getInstance().getCurrentScenario().getName();
+		String rootScenarioFile = ScenariosManager.getInstance()
+				.getCurrentScenario().getName();
 		Properties rootProp = getScenarioProperties(rootScenarioFile);
 		if (scenario.isRoot()) {
 			return rootProp;
@@ -171,7 +176,8 @@ public class ScenarioHelpers {
 			Object key = e.nextElement();
 			if (key.toString().startsWith(uuid)) {
 				Object val = rootProp.get(key);
-				scenarioProp.put(key.toString().substring(uuid.length() + 1), val);
+				scenarioProp.put(key.toString().substring(uuid.length() + 1),
+						val);
 			}
 		}
 		return scenarioProp;
@@ -193,7 +199,8 @@ public class ScenarioHelpers {
 	 * @param fileName
 	 * @return
 	 */
-	public static synchronized Properties getScenarioProperties(String scenarioName, boolean ignoreCache) {
+	public static synchronized Properties getScenarioProperties(
+			String scenarioName, boolean ignoreCache) {
 		Properties prop = null;
 		String scenarioPropsFile = getScenarioPropertiesFile(scenarioName);
 		prop = propertiesCache.get(normalizeScenarioName(scenarioName));
@@ -222,8 +229,10 @@ public class ScenarioHelpers {
 	 * @param key
 	 * @return
 	 */
-	public static String getScenarioParametersValue(String scenarioPathString, String scenarioFullUuid, String key) {
-		String[][] namesAndIds = convertScenariosNameAndIds(scenarioPathString, scenarioFullUuid);
+	public static String getScenarioParametersValue(String scenarioPathString,
+			String scenarioFullUuid, String key) {
+		String[][] namesAndIds = convertScenariosNameAndIds(scenarioPathString,
+				scenarioFullUuid);
 		Properties myProperties = getScenarioProperties(namesAndIds[0][0]);
 		String myValue = myProperties.getProperty(key);
 		if (myValue == null) {
@@ -261,7 +270,8 @@ public class ScenarioHelpers {
 	 *            a Full unique ID
 	 * @return
 	 */
-	private static String[][] convertScenariosNameAndIds(String names, String fullId) {
+	private static String[][] convertScenariosNameAndIds(String names,
+			String fullId) {
 		String mySplit = "--MY SPLIT--";
 		String[] allNames = splitScenarioFullName(names);
 		String[] allIds = fullId.replace(".", mySplit).split(mySplit);
@@ -285,7 +295,8 @@ public class ScenarioHelpers {
 	 * @return
 	 */
 	private static String[] splitScenarioFullName(String scenarioFullName) {
-		String[] splitRes = scenarioFullName.split(CommonResources.SCENARIOS_FOLDER_NAME + "/");
+		String[] splitRes = scenarioFullName
+				.split(CommonResources.SCENARIOS_FOLDER_NAME + "/");
 		ArrayList<String> res = new ArrayList<String>();
 		for (String s : splitRes) {
 			if (StringUtils.isEmpty(s)) {
@@ -306,10 +317,12 @@ public class ScenarioHelpers {
 	 * @param namesAndIds
 	 * @return
 	 */
-	private static String[] getAllFullUuid(String rootScenarioName, String[][] namesAndIds) {
+	private static String[] getAllFullUuid(String rootScenarioName,
+			String[][] namesAndIds) {
 		ArrayList<String> list = new ArrayList<String>();
 		for (int i = 0; i < namesAndIds.length; i++) {
-			String fullUuid = getFullUUIDPath(namesAndIds[i][0], rootScenarioName, namesAndIds);
+			String fullUuid = getFullUUIDPath(namesAndIds[i][0],
+					rootScenarioName, namesAndIds);
 			list.add(fullUuid);
 		}
 		return list.toArray(new String[0]);
@@ -323,7 +336,8 @@ public class ScenarioHelpers {
 	 * @param key
 	 * @return
 	 */
-	public static String getScenarioParametersValue(JTestContainer current, String key) {
+	public static String getScenarioParametersValue(JTestContainer current,
+			String key) {
 		Properties myProperties = getScenarioProperties(current.getName());
 		String myValue = myProperties.getProperty(key);
 		if (myValue == null) {
@@ -341,7 +355,8 @@ public class ScenarioHelpers {
 			Properties prop = getScenarioProperties(currentRoot);
 			String[][] relativeNameAndId = getAllFullUUID(current, currentRoot);
 			for (int j = 0; j < relativeNameAndId.length; j++) {
-				String idAndKey = (i == j) ? key : relativeNameAndId[j][1] + "." + key;
+				String idAndKey = (i == j) ? key : relativeNameAndId[j][1]
+						+ "." + key;
 				value = prop.getProperty(idAndKey);
 				if (value != null) {
 					return value;
@@ -382,10 +397,12 @@ public class ScenarioHelpers {
 	 * @param current
 	 * @return
 	 */
-	private static String[][] getAllFullUUID(JTestContainer current, String scenarioRoot) {
+	private static String[][] getAllFullUUID(JTestContainer current,
+			String scenarioRoot) {
 		ArrayList<String[]> list = new ArrayList<String[]>();
 		while (current != null) {
-			list.add(new String[] { current.getName(), getFullUUIDPath(current, scenarioRoot) });
+			list.add(new String[] { current.getName(),
+					getFullUUIDPath(current, scenarioRoot) });
 			current = (JTestContainer) current.getParent();
 		}
 		return list.toArray(new String[0][0]);
@@ -396,7 +413,8 @@ public class ScenarioHelpers {
 	 * scenario name
 	 * 
 	 */
-	public static String getFullUUIDPath(JTestContainer scenario, String scenarioRoot) {
+	public static String getFullUUIDPath(JTestContainer scenario,
+			String scenarioRoot) {
 		String[][] nameAndUuid = getAllUID(scenario);
 		String s = "";
 		for (int i = 0; i < nameAndUuid.length; i++) {
@@ -420,7 +438,8 @@ public class ScenarioHelpers {
 	 * get the full UUID string for the current scenario, till the given
 	 * scenario name The array is from root to current
 	 */
-	private static String getFullUUIDPath(String scenarioName, String scenarioRoot, String[][] namesAndIds) {
+	private static String getFullUUIDPath(String scenarioName,
+			String scenarioRoot, String[][] namesAndIds) {
 		String s = "";
 		boolean start = false;
 		// since the first is root and last is the last son the loop is reversed
@@ -456,8 +475,9 @@ public class ScenarioHelpers {
 	 * @return
 	 */
 	public static String getScenarioPropertiesFile(String scenarioName) {
-		return JSystemProperties.getInstance().getPreference(FrameworkOptions.TESTS_CLASS_FOLDER) + "/" + scenarioName
-				+ ".properties";
+		return JSystemProperties.getInstance().getPreference(
+				FrameworkOptions.TESTS_CLASS_FOLDER)
+				+ "/" + scenarioName + ".properties";
 	}
 
 	/**
@@ -468,8 +488,9 @@ public class ScenarioHelpers {
 	 * @return
 	 */
 	public static String getScenarioSrcPropertiesFile(String scenarioName) {
-		return JSystemProperties.getInstance().getPreference(FrameworkOptions.RESOURCES_SOURCE_FOLDER) + "/" + scenarioName
-				+ ".properties";
+		return JSystemProperties.getInstance().getPreference(
+				FrameworkOptions.RESOURCES_SOURCE_FOLDER)
+				+ "/" + scenarioName + ".properties";
 	}
 
 	/**
@@ -480,8 +501,9 @@ public class ScenarioHelpers {
 	 * @return
 	 */
 	public static String getScenarioFile(String scenarioName) {
-		return JSystemProperties.getInstance().getPreference(FrameworkOptions.TESTS_CLASS_FOLDER) + "/" + scenarioName
-				+ ".xml";
+		return JSystemProperties.getInstance().getPreference(
+				FrameworkOptions.TESTS_CLASS_FOLDER)
+				+ "/" + scenarioName + ".xml";
 	}
 
 	/**
@@ -492,8 +514,9 @@ public class ScenarioHelpers {
 	 * @return
 	 */
 	public static String getScenarioSrcFile(String scenarioName) {
-		return JSystemProperties.getInstance().getPreference(FrameworkOptions.RESOURCES_SOURCE_FOLDER) + "/" + scenarioName
-				+ ".xml";
+		return JSystemProperties.getInstance().getPreference(
+				FrameworkOptions.RESOURCES_SOURCE_FOLDER)
+				+ "/" + scenarioName + ".xml";
 	}
 
 	/**
@@ -506,10 +529,13 @@ public class ScenarioHelpers {
 	 * @param recursive
 	 *            if True then also apply to all sub-scenarios
 	 */
-	public static void saveScenarioParametersToFile(Parameter[] params, Scenario scenario, boolean recursive,
-			boolean onlyCache) throws Exception {
-		String rootScenario = ScenariosManager.getInstance().getCurrentScenario().getName();
-		String fileName = ScenarioHelpers.getScenarioPropertiesFile(rootScenario);
+	public static void saveScenarioParametersToFile(Parameter[] params,
+			Scenario scenario, boolean recursive, boolean onlyCache)
+			throws Exception {
+		String rootScenario = ScenariosManager.getInstance()
+				.getCurrentScenario().getName();
+		String fileName = ScenarioHelpers
+				.getScenarioPropertiesFile(rootScenario);
 		Properties prop = new Properties();
 		ArrayList<Scenario> scenarios = new ArrayList<Scenario>();
 		if (recursive) {
@@ -524,9 +550,11 @@ public class ScenarioHelpers {
 
 		for (Parameter p : params) {
 			for (Scenario current : scenarios) {
-				Properties actualParameters = convertParametersToProperties(current.getScenarioParameters(true, true));
+				Properties actualParameters = convertParametersToProperties(current
+						.getScenarioParameters(true, true));
 				String uuid = getFullUUIDPath(current, rootScenario);
-				String uuidString = (StringUtils.isEmpty(uuid)) ? "" : uuid + ".";
+				String uuidString = (StringUtils.isEmpty(uuid)) ? "" : uuid
+						+ ".";
 
 				if (!actualParameters.containsKey(p.getName())) {
 					continue;
@@ -540,8 +568,8 @@ public class ScenarioHelpers {
 		saveScenarioPropertiesToSrcAndClass(prop, rootScenario, onlyCache);
 	}
 
-	public static void addScenarioPropertyToFile(String scenarioName, String key, String value, boolean onlyCache)
-			throws Exception {
+	public static void addScenarioPropertyToFile(String scenarioName,
+			String key, String value, boolean onlyCache) throws Exception {
 		Properties p = getScenarioProperties(scenarioName);
 		p.setProperty(key, value);
 		saveScenarioPropertiesToSrcAndClass(p, scenarioName, onlyCache);
@@ -556,12 +584,15 @@ public class ScenarioHelpers {
 	 * @param scenarioName
 	 *            the scenario properties file to save to
 	 */
-	public static synchronized void saveScenarioPropertiesToSrcAndClass(Properties p, String scenarioName,
-			boolean onlyCache) throws Exception {
+	public static synchronized void saveScenarioPropertiesToSrcAndClass(
+			Properties p, String scenarioName, boolean onlyCache)
+			throws Exception {
 		if (!onlyCache) {
 			removeRunningPropsWithDefaultValues(p);
-			String classFileName = ScenarioHelpers.getScenarioPropertiesFile(scenarioName);
-			String srcFileName = ScenarioHelpers.getScenarioSrcPropertiesFile(scenarioName);
+			String classFileName = ScenarioHelpers
+					.getScenarioPropertiesFile(scenarioName);
+			String srcFileName = ScenarioHelpers
+					.getScenarioSrcPropertiesFile(scenarioName);
 			File srcFile = new File(srcFileName);
 			if (srcFile.getParent() != null && srcFile.getParentFile().exists()) {
 				FileUtils.saveSortedPropertiesToFile(p, srcFileName, false); // copy
@@ -588,7 +619,8 @@ public class ScenarioHelpers {
 	 * @author itai_a
 	 * @param properties
 	 */
-	private static void removeRunningPropsWithDefaultValues(Properties properties) {
+	private static void removeRunningPropsWithDefaultValues(
+			Properties properties) {
 		Enumeration<Object> e = properties.keys();
 		while (e.hasMoreElements()) {
 			final Object key = e.nextElement();
@@ -610,9 +642,8 @@ public class ScenarioHelpers {
 			// key.toString().endsWith(RunningProperties.MARKED_AS_KNOWN_ISSUE)
 			// ||
 			// key.toString().endsWith(RunningProperties.MARKED_AS_NEGATIVE_TEST)
-			// ||
-			// key.toString().endsWith(RunningProperties.SCENARIO_AS_TEST_TAG)
-			) {
+					|| key.toString().endsWith(
+							RunningProperties.SCENARIO_AS_TEST_TAG)) {
 				properties.remove(key);
 			}
 		}
@@ -640,8 +671,10 @@ public class ScenarioHelpers {
 	 *            the scenario to get path for
 	 */
 	public static synchronized void deletePropertiesFile(String scenarioName) {
-		File classesFile = new File(ScenarioHelpers.getScenarioPropertiesFile(scenarioName));
-		File srcFile = new File(ScenarioHelpers.getScenarioSrcPropertiesFile(scenarioName));
+		File classesFile = new File(
+				ScenarioHelpers.getScenarioPropertiesFile(scenarioName));
+		File srcFile = new File(
+				ScenarioHelpers.getScenarioSrcPropertiesFile(scenarioName));
 		if (classesFile.exists() && classesFile.isFile()) {
 			classesFile.delete();
 		}
@@ -656,7 +689,8 @@ public class ScenarioHelpers {
 	 */
 	public static String removeScenarioHeader(String scenarioName) {
 		if (scenarioName.startsWith(CommonResources.SCENARIOS_FOLDER_NAME)) {
-			return scenarioName.substring(CommonResources.SCENARIOS_FOLDER_NAME.length() + 1);
+			return scenarioName.substring(CommonResources.SCENARIOS_FOLDER_NAME
+					.length() + 1);
 		}
 		return scenarioName;
 	}
@@ -676,7 +710,8 @@ public class ScenarioHelpers {
 	 * Iterates over all offsprings of <code>s</code> for each offspring,
 	 * invokes the <code>visitor</code>
 	 */
-	public static void iterateContainer(JTestContainer s, JTestContainerVisitor visitor) throws Exception {
+	public static void iterateContainer(JTestContainer s,
+			JTestContainerVisitor visitor) throws Exception {
 		Vector<JTest> rootElements = s.getRootTests();
 		Iterator<JTest> iter = rootElements.iterator();
 		while (iter.hasNext()) {
@@ -705,7 +740,8 @@ public class ScenarioHelpers {
 	 * Searches for test with id <code>id</code> in <code>root</code><br>
 	 * If test is found it is returned, otherwise <code>null</code> is returned.
 	 */
-	public static JTest getTestById(final JTestContainer root, final String id) throws Exception {
+	public static JTest getTestById(final JTestContainer root, final String id)
+			throws Exception {
 		class TestFinder implements JTestContainerVisitor {
 			private JTest foundTest;
 			private String idToFind;
@@ -732,7 +768,8 @@ public class ScenarioHelpers {
 	 * Searches for test with id <code>id</code> in <code>root</code><br>
 	 * If test is found it is returned, otherwise <code>null</code> is returned.
 	 */
-	public static JTest getFlowElementById(final JTestContainer root, final String id) throws Exception {
+	public static JTest getFlowElementById(final JTestContainer root,
+			final String id) throws Exception {
 
 		class TestFinder implements JTestContainerVisitor {
 			private JTest foundTest;
@@ -763,7 +800,8 @@ public class ScenarioHelpers {
 	 * Returns current scenario properties.
 	 */
 	public static Properties getRootProperties() throws Exception {
-		String rootScenario = ScenariosManager.getInstance().getCurrentScenario().getName();
+		String rootScenario = ScenariosManager.getInstance()
+				.getCurrentScenario().getName();
 		Properties prop = getScenarioProperties(rootScenario);
 		return prop;
 	}
@@ -772,7 +810,8 @@ public class ScenarioHelpers {
 	 * Returns a map with all offsprings <code>root</code><br>
 	 * The returned map key is test uuid, value is the test.
 	 */
-	public static Map<String, JTest> getAllElements(JTestContainer root) throws Exception {
+	public static Map<String, JTest> getAllElements(JTestContainer root)
+			throws Exception {
 		class AllTestsGraber implements JTestContainerVisitor {
 			public Map<String, JTest> m = new HashMap<String, JTest>();
 
@@ -794,7 +833,8 @@ public class ScenarioHelpers {
 	 * <code>t</code> is <code>null</code>, returns null.
 	 */
 	public static Scenario getFirstScenarioAncestor(JTest t) {
-		if ((t instanceof Scenario || t == null) && !isScenarioAsTestAndNotRoot(t)) {
+		if ((t instanceof Scenario || t == null)
+				&& !isScenarioAsTestAndNotRoot(t)) {
 			return (Scenario) t;
 		}
 		JTest toRet = t.getParent();
@@ -841,8 +881,8 @@ public class ScenarioHelpers {
 	 *            scenario to copy properties to
 	 * @throws IOException
 	 */
-	public static void copyScenarioPropertiesFileToNewScenario(String oldScenarioName, String newScenarioName)
-			throws IOException {
+	public static void copyScenarioPropertiesFileToNewScenario(
+			String oldScenarioName, String newScenarioName) throws IOException {
 		String oldPropertiesFilePath = getScenarioSrcPropertiesFile(oldScenarioName);
 		if (!new File(oldPropertiesFilePath).exists()) {
 			return;
@@ -855,7 +895,8 @@ public class ScenarioHelpers {
 
 	public static String getScenarioFullUuid(String testFullUuid) {
 		int lastIndex = testFullUuid.lastIndexOf(".");
-		String scenarioFullUuid = lastIndex < 0 ? "" : testFullUuid.substring(0, lastIndex);
+		String scenarioFullUuid = lastIndex < 0 ? "" : testFullUuid.substring(
+				0, lastIndex);
 		return scenarioFullUuid;
 	}
 
@@ -869,70 +910,84 @@ public class ScenarioHelpers {
 		String defaultName = "scenarios" + File.separator + "default";
 		long time = System.currentTimeMillis();
 		String newName = defaultName + "_" + time;
-		File scenarioDirectoryFile = ScenariosManager.getInstance().getScenariosDirectoryFiles();
-		String defaultClassFile = new File(scenarioDirectoryFile, defaultName + ".xml").getAbsolutePath();
-		String scenariosSrc = JSystemProperties.getInstance().getPreference(FrameworkOptions.RESOURCES_SOURCE_FOLDER);
+		File scenarioDirectoryFile = ScenariosManager.getInstance()
+				.getScenariosDirectoryFiles();
+		String defaultClassFile = new File(scenarioDirectoryFile, defaultName
+				+ ".xml").getAbsolutePath();
+		String scenariosSrc = JSystemProperties.getInstance().getPreference(
+				FrameworkOptions.RESOURCES_SOURCE_FOLDER);
 		copyScenarioPropertiesFileToNewScenario(defaultName, newName);
-		FileUtils.copyFile(defaultClassFile, new File(scenariosSrc, newName + ".xml").getAbsolutePath());
-		FileUtils.copyFile(defaultClassFile, new File(scenarioDirectoryFile, newName + ".xml").getAbsolutePath());
-		FileUtils.deleteFile(new File(scenariosSrc, defaultName + ".xml").getAbsolutePath());
+		FileUtils.copyFile(defaultClassFile, new File(scenariosSrc, newName
+				+ ".xml").getAbsolutePath());
+		FileUtils.copyFile(defaultClassFile, new File(scenarioDirectoryFile,
+				newName + ".xml").getAbsolutePath());
+		FileUtils.deleteFile(new File(scenariosSrc, defaultName + ".xml")
+				.getAbsolutePath());
 		FileUtils.deleteFile(defaultClassFile);
 		return newName;
 	}
 
 	public static boolean isPackedScenario(String scenarioName) {
-		String value = getScenarioProperties(scenarioName).getProperty(RunningProperties.SCENARIO_AS_TEST_TAG);
+		String value = getScenarioProperties(scenarioName).getProperty(
+				RunningProperties.SCENARIO_AS_TEST_TAG);
 		return (value != null && value.toLowerCase().equals("true"));
 	}
 
 	public static boolean isMarkedAsKnownIssue(String uuid, String scenarioName) {
-		return "true".equals(getTestProperty(uuid, scenarioName, RunningProperties.MARKED_AS_KNOWN_ISSUE));
+		return "true".equals(getTestProperty(uuid, scenarioName,
+				RunningProperties.MARKED_AS_KNOWN_ISSUE));
 	}
 
-	public static boolean isMarkedAsNegativeTest(String uuid, String scenarioName) {
-		return "true".equals(getTestProperty(uuid, scenarioName, RunningProperties.MARKED_AS_NEGATIVE_TEST));
+	public static boolean isMarkedAsNegativeTest(String uuid,
+			String scenarioName) {
+		return "true".equals(getTestProperty(uuid, scenarioName,
+				RunningProperties.MARKED_AS_NEGATIVE_TEST));
 	}
 
 	public static boolean isHiddenInHTML(String uuid, String scenarioName) {
-		return "true".equals(getTestProperty(uuid, scenarioName, RunningProperties.HIDDEN_IN_HTML));
+		return "true".equals(getTestProperty(uuid, scenarioName,
+				RunningProperties.HIDDEN_IN_HTML));
 	}
 
 	/**
 	 * Get parameter from all hierarchical levels
 	 */
-	public static boolean isMarkedAsKnownIssue(String fullUuid, Scenario rootScenario) {
-		return "true".equals(getParameterValueFromProperties(fullUuid, rootScenario,
-				RunningProperties.MARKED_AS_KNOWN_ISSUE, null));
+	public static boolean isMarkedAsKnownIssue(String fullUuid,
+			Scenario rootScenario) {
+		return "true".equals(getParameterValueFromProperties(fullUuid,
+				rootScenario, RunningProperties.MARKED_AS_KNOWN_ISSUE, null));
 	}
 
 	/**
 	 * Get parameter from all hierarchical levels
 	 */
-	public static boolean isMarkedAsNegativeTest(String fullUuid, Scenario rootScenario) {
-		return "true".equals(getParameterValueFromProperties(fullUuid, rootScenario,
-				RunningProperties.MARKED_AS_NEGATIVE_TEST, null));
+	public static boolean isMarkedAsNegativeTest(String fullUuid,
+			Scenario rootScenario) {
+		return "true".equals(getParameterValueFromProperties(fullUuid,
+				rootScenario, RunningProperties.MARKED_AS_NEGATIVE_TEST, null));
 	}
 
 	/**
 	 * Get parameter from all hierarchical levels
 	 */
 	public static boolean isHiddenInHTML(String fullUuid, Scenario rootScenario) {
-		return "true".equals(getParameterValueFromProperties(fullUuid, rootScenario, RunningProperties.HIDDEN_IN_HTML,
-				null));
+		return "true".equals(getParameterValueFromProperties(fullUuid,
+				rootScenario, RunningProperties.HIDDEN_IN_HTML, null));
 	}
 
 	/**
 	 * 
 	 */
 	public static boolean isParentScenarioPackedScenario(String uuid) {
-		String mainScenarioName = System.getProperty(RunningProperties.CURRENT_SCENARIO_NAME);
+		String mainScenarioName = System
+				.getProperty(RunningProperties.CURRENT_SCENARIO_NAME);
 		int lastIndexOfDot = uuid.lastIndexOf('.');
 		String parentScenarioUUID = "";
 		if (lastIndexOfDot > 0) {
 			parentScenarioUUID = uuid.substring(0, lastIndexOfDot);
 		}
-		String value = ScenarioHelpers.getTestProperty(parentScenarioUUID, mainScenarioName,
-				RunningProperties.SCENARIO_AS_TEST_TAG);
+		String value = ScenarioHelpers.getTestProperty(parentScenarioUUID,
+				mainScenarioName, RunningProperties.SCENARIO_AS_TEST_TAG);
 		return (value != null && value.toLowerCase().equals("true"));
 	}
 
@@ -943,14 +998,15 @@ public class ScenarioHelpers {
 	 * @param rootScenarioName
 	 * @param onlyCache
 	 */
-	public static void updateTestProperties(JTest t, String rootScenarioName, boolean onlyCache) {
+	public static void updateTestProperties(JTest t, String rootScenarioName,
+			boolean onlyCache) {
 		Parameter[] params = t.getParameters();
 		String uniqueId = t.getFullUUID() + ".";
 		updateTestProperties(uniqueId, params, rootScenarioName, onlyCache);
 	}
 
-	public static synchronized void updateTestProperties(String uniqueId, Parameter[] params, String rootScenarioName,
-			boolean onlyCache) {
+	public static synchronized void updateTestProperties(String uniqueId,
+			Parameter[] params, String rootScenarioName, boolean onlyCache) {
 		Properties props = getScenarioProperties(rootScenarioName);
 		for (Parameter p : params) {
 			if (p.getValue() == null || !p.shouldBeSaved()) {
@@ -960,7 +1016,8 @@ public class ScenarioHelpers {
 			props.put(key, p.getStringValue());
 		}
 		try {
-			saveScenarioPropertiesToSrcAndClass(props, rootScenarioName, onlyCache);
+			saveScenarioPropertiesToSrcAndClass(props, rootScenarioName,
+					onlyCache);
 			for (Parameter p : params) {
 				p.signalNotToSave(); // since it is now saved
 			}
@@ -1007,10 +1064,11 @@ public class ScenarioHelpers {
 		}
 	}
 
-	public static String getParameterValueFromProperties(String testFullUuid, Scenario rootScenario, String key,
-			String currentValue) {
+	public static String getParameterValueFromProperties(String testFullUuid,
+			Scenario rootScenario, String key, String currentValue) {
 		JTest test = rootScenario.getTestByFullId(testFullUuid);
-		return getParameterValueFromProperties(test, testFullUuid, key, currentValue);
+		return getParameterValueFromProperties(test, testFullUuid, key,
+				currentValue);
 	}
 
 	/**
@@ -1022,8 +1080,8 @@ public class ScenarioHelpers {
 	 * @param currentValue
 	 * @return
 	 */
-	public static String getParameterValueFromProperties(JTest test, String testFullUuid, String key,
-			String currentValue) {
+	public static String getParameterValueFromProperties(JTest test,
+			String testFullUuid, String key, String currentValue) {
 		Scenario s = test.getMyScenario();
 		String toReturn = currentValue;
 		while (s != null) {
@@ -1059,13 +1117,15 @@ public class ScenarioHelpers {
 	 * @return all properties relevant to the test
 	 * @throws Exception
 	 */
-	public static Properties getTestPropertiesFromScenarioProps(String scenariosNameString, String fullUUID)
-			throws Exception {
-		String[][] namesAndIds = convertScenariosNameAndIds(scenariosNameString, fullUUID);
+	public static Properties getTestPropertiesFromScenarioProps(
+			String scenariosNameString, String fullUUID) throws Exception {
+		String[][] namesAndIds = convertScenariosNameAndIds(
+				scenariosNameString, fullUUID);
 		Properties props = new Properties();
 		for (int i = namesAndIds.length - 1; i >= 0; i--) {
 			String[] scenario = namesAndIds[i];
-			String uuid = fullUUID.substring(fullUUID.indexOf(scenario[1]) + scenario[1].length());
+			String uuid = fullUUID.substring(fullUUID.indexOf(scenario[1])
+					+ scenario[1].length());
 			while (uuid.startsWith(".")) {
 				uuid = uuid.substring(1);
 			}
@@ -1110,8 +1170,10 @@ public class ScenarioHelpers {
 	 * 
 	 * @return
 	 */
-	public static Properties getAllTestPropertiesFromAllScenarios(String fullUuid, boolean ignoreCache) {
-		RunnerTest rt = ScenariosManager.getInstance().getCurrentScenario().getRunnerTestByFullId(fullUuid);
+	public static Properties getAllTestPropertiesFromAllScenarios(
+			String fullUuid, boolean ignoreCache) {
+		RunnerTest rt = ScenariosManager.getInstance().getCurrentScenario()
+				.getRunnerTestByFullId(fullUuid);
 		return getAllTestPropertiesUpTo(rt, null, ignoreCache);
 	}
 
@@ -1125,13 +1187,15 @@ public class ScenarioHelpers {
 	 *            True will go to filesystem instead of cache HashMap
 	 * @return
 	 */
-	public static Properties getAllTestPropertiesUpTo(JTest test, Scenario toStopAt, boolean ignoreCache) {
+	public static Properties getAllTestPropertiesUpTo(JTest test,
+			Scenario toStopAt, boolean ignoreCache) {
 		Properties props = new Properties();
 
 		// check from closest Scenario up
 		Scenario parent = test.getMyScenario();
 		while (parent != null && !parent.equals(toStopAt)) {
-			Properties prop = getScenarioProperties(parent.getName(), ignoreCache);
+			Properties prop = getScenarioProperties(parent.getName(),
+					ignoreCache);
 			String fullUUIDUpTo = test.getUUIDUpTo(parent);
 			for (Object key : prop.keySet()) {
 				if (key.toString().startsWith(fullUUIDUpTo)) {
@@ -1151,7 +1215,8 @@ public class ScenarioHelpers {
 		return props;
 	}
 
-	public static void removePropertiesFromScenarioProps(String rootScenarioName, String fullUUID, boolean onlyCache)
+	public static void removePropertiesFromScenarioProps(
+			String rootScenarioName, String fullUUID, boolean onlyCache)
 			throws Exception {
 		Properties props = getScenarioProperties(rootScenarioName);
 		Properties propsClone = (Properties) props.clone();
@@ -1175,7 +1240,8 @@ public class ScenarioHelpers {
 	 * @return True if disabled, false otherwise
 	 * @throws Exception
 	 */
-	public static boolean testHasDisabledProperty(String fullUUID, String rootScenarioName) throws Exception {
+	public static boolean testHasDisabledProperty(String fullUUID,
+			String rootScenarioName) throws Exception {
 		if (StringUtils.isEmpty(rootScenarioName)) {
 			return false;
 		}
@@ -1194,10 +1260,12 @@ public class ScenarioHelpers {
 	 * @return True if disabled, false otherwise
 	 * @throws Exception
 	 */
-	public static boolean isTestDisabled(String fullUUID, String rootScenarioName) {
+	public static boolean isTestDisabled(String fullUUID,
+			String rootScenarioName) {
 		Properties allProps = getScenarioProperties(rootScenarioName);
 		String key = fullUUID + "." + RunningProperties.IS_DISABLED;
-		String val = allProps.get(key) == null ? "" : allProps.get(key).toString();
+		String val = allProps.get(key) == null ? "" : allProps.get(key)
+				.toString();
 		return "true".equals(val);
 	}
 
@@ -1213,12 +1281,14 @@ public class ScenarioHelpers {
 	 * @param onlyCache
 	 *            if True then change will not be saved to the file system
 	 */
-	public static void setTestDisabled(String fullUUID, String rootScenarioName, boolean disabled, boolean onlyCache) {
+	public static void setTestDisabled(String fullUUID,
+			String rootScenarioName, boolean disabled, boolean onlyCache) {
 		Properties allProps = getScenarioProperties(rootScenarioName);
 		String key = fullUUID + "." + RunningProperties.IS_DISABLED;
 		allProps.put(key, "" + disabled);
 		try {
-			saveScenarioPropertiesToSrcAndClass(allProps, rootScenarioName, onlyCache);
+			saveScenarioPropertiesToSrcAndClass(allProps, rootScenarioName,
+					onlyCache);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -1239,14 +1309,17 @@ public class ScenarioHelpers {
 	 * @param onlyCache
 	 *            if True then change will not be saved to the file system
 	 */
-	public static void setTestProperty(String fullUUID, String rootScenarioName, String property, String value,
+	public static void setTestProperty(String fullUUID,
+			String rootScenarioName, String property, String value,
 			boolean onlyCache) {
 		Properties allProps = getScenarioProperties(rootScenarioName);
 
-		String key = StringUtils.isEmpty(fullUUID) ? property : fullUUID + "." + property;
+		String key = StringUtils.isEmpty(fullUUID) ? property : fullUUID + "."
+				+ property;
 		allProps.put(key, value);
 		try {
-			saveScenarioPropertiesToSrcAndClass(allProps, rootScenarioName, onlyCache);
+			saveScenarioPropertiesToSrcAndClass(allProps, rootScenarioName,
+					onlyCache);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -1260,16 +1333,19 @@ public class ScenarioHelpers {
 	 * @param p
 	 * @param onlyCache
 	 */
-	public static void setTestInnerProperty(String fullUUID, String rootScenarioName, Properties p, boolean onlyCache) {
+	public static void setTestInnerProperty(String fullUUID,
+			String rootScenarioName, Properties p, boolean onlyCache) {
 		Properties allProps = getScenarioProperties(rootScenarioName);
 
 		for (Object o : p.keySet()) {
-			String key = StringUtils.isEmpty(fullUUID) ? o.toString() : fullUUID + "." + o;
+			String key = StringUtils.isEmpty(fullUUID) ? o.toString()
+					: fullUUID + "." + o;
 			setProperty(allProps, key, p.getProperty(o.toString()));
 		}
 
 		try {
-			saveScenarioPropertiesToSrcAndClass(allProps, rootScenarioName, onlyCache);
+			saveScenarioPropertiesToSrcAndClass(allProps, rootScenarioName,
+					onlyCache);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -1301,9 +1377,11 @@ public class ScenarioHelpers {
 	 *            the property name
 	 * @return the property value or null if doesn't exist
 	 */
-	public static String getTestProperty(String fullUUID, String rootScenarioName, String property) {
+	public static String getTestProperty(String fullUUID,
+			String rootScenarioName, String property) {
 		Properties allProps = getScenarioProperties(rootScenarioName);
-		String key = StringUtils.isEmpty(fullUUID) ? property : fullUUID + "." + property;
+		String key = StringUtils.isEmpty(fullUUID) ? property : fullUUID + "."
+				+ property;
 		return (String) allProps.get(key);
 	}
 
@@ -1329,7 +1407,8 @@ public class ScenarioHelpers {
 	 *            The scenario to clean entries from
 	 * @throws Exception
 	 */
-	public static void cleanScenarioPropertiesFromRedundantEntries(Scenario s) throws Exception {
+	public static void cleanScenarioPropertiesFromRedundantEntries(Scenario s)
+			throws Exception {
 		Properties props = getScenarioProperties(s.getName(), true);
 		Properties propsClone = (Properties) props.clone();
 		String[] idsSet = gatherFullUUID(s).toArray(new String[0]);
@@ -1371,7 +1450,8 @@ public class ScenarioHelpers {
 		if (properyKey.contains(".jsystem.")) {
 			return properyKey.substring(0, properyKey.indexOf(".jsystem."));
 		} else {
-			Pattern pattern = Pattern.compile("([\\d\\w\\-\\.]+\\-[\\d\\w]+)\\.");
+			Pattern pattern = Pattern
+					.compile("([\\d\\w\\-\\.]+\\-[\\d\\w]+)\\.");
 			Matcher matcher = pattern.matcher(properyKey);
 			if (matcher.find()) {
 				return matcher.group(1);
@@ -1437,7 +1517,8 @@ public class ScenarioHelpers {
 	/**
 	 * Utility method for getTestHierarchyInPresentableFormat(JTest test)
 	 */
-	private static void getTestHierarchyInPresentableFormat(JTest test, StringBuffer sb) {
+	private static void getTestHierarchyInPresentableFormat(JTest test,
+			StringBuffer sb) {
 		if (test.getParent() == null) {
 			sb.append(test.getTestName());
 			return;
@@ -1458,7 +1539,8 @@ public class ScenarioHelpers {
 		if (test instanceof ScenarioAsTest) {
 			runnerTest = ((ScenarioAsTest) test).getCurrentRunnerTest();
 		} else {
-			runnerTest = ScenariosManager.getInstance().getCurrentScenario().findRunnerTest(test);
+			runnerTest = ScenariosManager.getInstance().getCurrentScenario()
+					.findRunnerTest(test);
 		}
 		return runnerTest;
 	}
@@ -1469,23 +1551,27 @@ public class ScenarioHelpers {
 	 * @param scenarioAsTestUUID
 	 *            Scenario unique id
 	 */
-	public static boolean signalScenarioAsTestStart(boolean isScenarioAsTest, String scenarioAsTestUUID) {
+	public static boolean signalScenarioAsTestStart(boolean isScenarioAsTest,
+			String scenarioAsTestUUID) {
 		try {
-			String value = RunProperties.getInstance().getRunProperty(RunningProperties.SCENARIO_AS_TEST_START);
-			if (value == null || (value != null && !scenarioAsTestUUID.startsWith(value))) { // second
-																								// condition
-																								// is
-																								// for
-																								// edge
-																								// case
-																								// in
-																								// which
-																								// flag
-																								// was
-																								// not
-																								// deleted!
+			String value = RunProperties.getInstance().getRunProperty(
+					RunningProperties.SCENARIO_AS_TEST_START);
+			if (value == null
+					|| (value != null && !scenarioAsTestUUID.startsWith(value))) { // second
+																					// condition
+																					// is
+																					// for
+																					// edge
+																					// case
+																					// in
+																					// which
+																					// flag
+																					// was
+																					// not
+																					// deleted!
 				if (isScenarioAsTest) {
-					RunProperties.getInstance().setRunProperty(RunningProperties.SCENARIO_AS_TEST_START,
+					RunProperties.getInstance().setRunProperty(
+							RunningProperties.SCENARIO_AS_TEST_START,
 							scenarioAsTestUUID);
 					return true;
 				}
@@ -1509,7 +1595,8 @@ public class ScenarioHelpers {
 	 */
 	public static void removeScenarioAsTestFlag() {
 		try {
-			RunProperties.getInstance().removeRunProperty(RunningProperties.SCENARIO_AS_TEST_START);
+			RunProperties.getInstance().removeRunProperty(
+					RunningProperties.SCENARIO_AS_TEST_START);
 			removeFailFlag();
 		} catch (Exception e1) {
 			log.warning("failed updating scenario as test flag");
@@ -1523,15 +1610,17 @@ public class ScenarioHelpers {
 	 * @return True if test should be skipped
 	 */
 	public static boolean shouldTestBeSkipped() {
-		return isFailFlagUp() && shouldTerminateOnFail() && insideScenarioAsTest();
+		return isFailFlagUp() && shouldTerminateOnFail()
+				&& insideScenarioAsTest();
 	}
 
 	private static boolean shouldTerminateOnFail() {
-		String isScenarioTerminateOnFail = JSystemProperties.getInstance().getPreference(
-				FrameworkOptions.SCEANRIO_AS_TEST_TERMINATE_ON_FAIL);
+		String isScenarioTerminateOnFail = JSystemProperties.getInstance()
+				.getPreference(
+						FrameworkOptions.SCEANRIO_AS_TEST_TERMINATE_ON_FAIL);
 		if (null == isScenarioTerminateOnFail) {
-			isScenarioTerminateOnFail = FrameworkOptions.SCEANRIO_AS_TEST_TERMINATE_ON_FAIL.getDefaultValue()
-					.toString();
+			isScenarioTerminateOnFail = FrameworkOptions.SCEANRIO_AS_TEST_TERMINATE_ON_FAIL
+					.getDefaultValue().toString();
 		}
 		return "true".equalsIgnoreCase(isScenarioTerminateOnFail);
 	}
@@ -1543,7 +1632,8 @@ public class ScenarioHelpers {
 	public static void updateFailFlag() {
 		if (lastTestFailed() && insideScenarioAsTest()) {
 			try {
-				RunProperties.getInstance().setRunProperty(RunningProperties.SCENARIO_AS_TEST_FAILURE, "true");
+				RunProperties.getInstance().setRunProperty(
+						RunningProperties.SCENARIO_AS_TEST_FAILURE, "true");
 			} catch (IOException e) {
 				log.warning("failed updating scenario as test FAIL flag");
 			}
@@ -1552,7 +1642,8 @@ public class ScenarioHelpers {
 
 	private static boolean isFailFlagUp() {
 		try {
-			return RunProperties.getInstance().getRunProperty(RunningProperties.SCENARIO_AS_TEST_FAILURE) != null;
+			return RunProperties.getInstance().getRunProperty(
+					RunningProperties.SCENARIO_AS_TEST_FAILURE) != null;
 		} catch (IOException e) {
 			log.warning("failed checking scenario as test FAIL flag");
 			return false;
@@ -1561,7 +1652,8 @@ public class ScenarioHelpers {
 
 	private static void removeFailFlag() {
 		try {
-			RunProperties.getInstance().removeRunProperty(RunningProperties.SCENARIO_AS_TEST_FAILURE);
+			RunProperties.getInstance().removeRunProperty(
+					RunningProperties.SCENARIO_AS_TEST_FAILURE);
 		} catch (IOException e) {
 			log.warning("failed updating scenario as test FAIL flag");
 		}
@@ -1569,7 +1661,8 @@ public class ScenarioHelpers {
 
 	private static boolean insideScenarioAsTest() {
 		try {
-			return RunProperties.getInstance().getRunProperty(RunningProperties.SCENARIO_AS_TEST_START) != null;
+			return RunProperties.getInstance().getRunProperty(
+					RunningProperties.SCENARIO_AS_TEST_START) != null;
 		} catch (IOException e) {
 			log.fine("failed checking scenario as test flag");
 			return false;
@@ -1600,11 +1693,14 @@ public class ScenarioHelpers {
 	public static void setScenarioAbortFlag(String uuid, boolean abort) {
 		try {
 			if (abort) {
-				RunProperties.getInstance().setRunProperty(RunningProperties.ABORT_CURRENT_SCENARIO_EXECUTION, uuid);
+				RunProperties.getInstance().setRunProperty(
+						RunningProperties.ABORT_CURRENT_SCENARIO_EXECUTION,
+						uuid);
 			} else {
 				if (uuid.equals(RunProperties.getInstance().getRunProperty(
 						RunningProperties.ABORT_CURRENT_SCENARIO_EXECUTION))) {
-					RunProperties.getInstance().setRunProperty(RunningProperties.ABORT_CURRENT_SCENARIO_EXECUTION,
+					RunProperties.getInstance().setRunProperty(
+							RunningProperties.ABORT_CURRENT_SCENARIO_EXECUTION,
 							"false");
 				}
 			}
@@ -1618,8 +1714,10 @@ public class ScenarioHelpers {
 	 */
 	public static void abortCurrentScenario() {
 		try {
-			RunProperties.getInstance().setRunProperty(RunningProperties.ABORT_CURRENT_SCENARIO_EXECUTION, "true");
-			ListenerstManager.getInstance().report("Scenario abort flag was raised");
+			RunProperties.getInstance().setRunProperty(
+					RunningProperties.ABORT_CURRENT_SCENARIO_EXECUTION, "true");
+			ListenerstManager.getInstance().report(
+					"Scenario abort flag was raised");
 		} catch (IOException e) {
 			log.fine("Problem checking scenario as test flag");
 		}
@@ -1633,10 +1731,12 @@ public class ScenarioHelpers {
 	 * @return True if values were moved from XML to Properties file
 	 * @throws Exception
 	 */
-	public static boolean moveParamsFromXmlToPropFile(Scenario scenario) throws Exception {
+	public static boolean moveParamsFromXmlToPropFile(Scenario scenario)
+			throws Exception {
 		File scenarioXml = scenario.getScenarioFile();
 		String scenarioName = scenario.getName();
-		String propFile = scenarioXml.getAbsolutePath().replace(".xml", ".properties");
+		String propFile = scenarioXml.getAbsolutePath().replace(".xml",
+				".properties");
 
 		if (!(FileUtils.exists(scenarioXml.getAbsolutePath()))) { // No scenario
 																	// file
@@ -1653,7 +1753,8 @@ public class ScenarioHelpers {
 			doc = db.parse(fis);
 			root = doc.getDocumentElement();
 		} catch (Exception e) {
-			log.log(Level.SEVERE, "fail to load scenario from file " + scenarioXml, e);
+			log.log(Level.SEVERE, "fail to load scenario from file "
+					+ scenarioXml, e);
 			throw e;
 		} finally {
 			fis.close();
@@ -1671,14 +1772,17 @@ public class ScenarioHelpers {
 			oldProp = FileUtils.loadPropertiesFromFile(propFile);
 		}
 
-		ArrayList<Element> tergetsList = XmlUtils.getElementsByTag(RunningProperties.ANT_TARGET, root);
+		ArrayList<Element> tergetsList = XmlUtils.getElementsByTag(
+				RunningProperties.ANT_TARGET, root);
 		// For all tests
 		for (int i = 0; i < tergetsList.size(); i++) {
 			Element target = tergetsList.get(i);
 			if (XmlUtils.getElementsByTag("test", target).size() > 0) {
 
-				ArrayList<Element> sysproperties = XmlUtils.getElementsByTag("sysproperty", target);
-				ArrayList<Element> propeties = XmlUtils.getElementsByTag("property", target);
+				ArrayList<Element> sysproperties = XmlUtils.getElementsByTag(
+						"sysproperty", target);
+				ArrayList<Element> propeties = XmlUtils.getElementsByTag(
+						"property", target);
 
 				// for all tests sysproperty
 				Properties testsXmlProp = new Properties();
@@ -1686,12 +1790,19 @@ public class ScenarioHelpers {
 				for (int j = 0; j < sysproperties.size(); j++) {
 
 					Element sysproperty = sysproperties.get(j);
-					if (sysproperty.getAttribute("key").equals(RunningProperties.UUID_TAG)) {
+					if (sysproperty.getAttribute("key").equals(
+							RunningProperties.UUID_TAG)) {
 						uuid = sysproperty.getAttribute("value");
 					} else {
-						if (sysproperty.getAttribute("key").startsWith(RunningProperties.PARAM_PREFIX)) {
-							testsXmlProp.put(sysproperty.getAttribute("key")
-									.replace(RunningProperties.PARAM_PREFIX, ""), sysproperty.getAttribute("value"));
+						if (sysproperty.getAttribute("key").startsWith(
+								RunningProperties.PARAM_PREFIX)) {
+							testsXmlProp
+									.put(sysproperty
+											.getAttribute("key")
+											.replace(
+													RunningProperties.PARAM_PREFIX,
+													""), sysproperty
+											.getAttribute("value"));
 						}
 					}
 				}
@@ -1710,7 +1821,8 @@ public class ScenarioHelpers {
 					Element property = propeties.get(j);
 					if ((property.getAttribute("name").endsWith("isdisabled"))
 							&& (property.getAttribute("value").equals("true"))) {
-						oldProp.put(uuid + "." + RunningProperties.IS_DISABLED, "true");
+						oldProp.put(uuid + "." + RunningProperties.IS_DISABLED,
+								"true");
 						werePropMovedFromXmlTpPropFile = true;
 					}
 				}

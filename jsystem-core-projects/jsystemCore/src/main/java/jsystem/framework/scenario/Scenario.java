@@ -464,13 +464,20 @@ public class Scenario extends JTestContainer {
 	}
 
 	private static boolean loadScenarioAsTest(Scenario s) throws Exception {
-		String value = ScenarioHelpers.getTestProperty(s.getFullUUID(), ((Scenario) s.getRoot()).getName(),
+		String scenarioAsTest = ScenarioHelpers.getTestProperty(null, ((Scenario) s).getName(),
 				RunningProperties.SCENARIO_AS_TEST_TAG);
-		if (value == null) {
-			value = ScenarioHelpers.getScenarioProperties(s.getName()).getProperty(
-					RunningProperties.SCENARIO_AS_TEST_TAG);
+		Scenario parentScenario = s.getParentScenario();
+		
+		//Searching for the top most level on which the property is set on
+		while (parentScenario != null) {
+			String tempScenarioAsTest;
+			if ((tempScenarioAsTest = ScenarioHelpers.getTestProperty(s.getUUIDUpTo(parentScenario),
+					parentScenario.getName(), RunningProperties.SCENARIO_AS_TEST_TAG)) != null) {
+				scenarioAsTest = tempScenarioAsTest;
+			}
+			parentScenario = parentScenario.getParentScenario();
 		}
-		return (value != null && value.toLowerCase().equals("true"));
+		return (scenarioAsTest != null && scenarioAsTest.toLowerCase().equals("true"));
 	}
 
 	private static String loadExternalId(Scenario s) throws Exception {
