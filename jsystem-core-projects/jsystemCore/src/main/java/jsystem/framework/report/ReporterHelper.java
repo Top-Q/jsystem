@@ -6,6 +6,7 @@ package jsystem.framework.report;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 
 import jsystem.utils.FileUtils;
 import jsystem.utils.StringUtils;
@@ -15,6 +16,10 @@ import jsystem.utils.StringUtils;
  * @author goland
  */
 public class ReporterHelper {
+	
+	private ReporterHelper(){
+		// Static class
+	}
 	
 	/**
 	 * Creates a URL link from given file name
@@ -121,5 +126,74 @@ public class ReporterHelper {
 		}
 		String link = "<a href=\"" + url  + "\">"+title + "</a>";
 		reporter.report(link);
+	}
+	
+	/**
+	 * Reports all the report elements that were reported by the specified
+	 * originator. This is usually useful when used with the <br>
+	 * report.startBufferingReports(); <br>
+	 * report.stopBufferingReports(); <br>
+	 * calls <br>
+	 * <br>
+	 * Before calling this method, don't forget to call the stopBufferingReport;
+	 * If not, you will not see the reports.
+	 * 
+	 * @param report
+	 * @param originators
+	 *            If null all the report elements will be reported
+	 * 
+	 * @author itaiag
+	 */
+	public static void reportByOriginator(Reporter report, final String[] originators) {
+		List<ReportElement> reportElements = report.getReportsBuffer();
+		if (null == reportElements) {
+			return;
+		}
+		// Important: Do not change this to iterator. From some reason
+		// iterator is not synchronized so you will get
+		// ConcurrentModificationException
+		for (int i = 0; i < reportElements.size(); i++) {
+			final ReportElement element = reportElements.get(i);
+			if (null == originators) {
+				report.report(element);
+			} else {
+				for (String originator : originators) {
+					if (element.getOriginator().equals(originator)) {
+						report.report(element);
+					}
+
+				}
+			}
+		}
+	}
+
+	/**
+	 * Deletes all the report elements that were created by the specified
+	 * <code>originators</code>
+	 * 
+	 * @param report
+	 * @param originators
+	 * 
+	 * @author itaiag
+	 */
+	public static void deleteReportsByOriginator(Reporter report, final String[] originators) {
+		if (originators == null || originators.length == 0) {
+			throw new IllegalArgumentException("Originators can't be empty");
+		}
+		List<ReportElement> reportElements = report.getReportsBuffer();
+		if (null == reportElements) {
+			return;
+		}
+		for (int i = 0; i < reportElements.size(); i++) {
+			final ReportElement element = reportElements.get(i);
+			for (String originator : originators) {
+				if (element.getOriginator().equals(originator)) {
+					reportElements.remove(element);
+					i--;
+				}
+			}
+
+		}
+
 	}
 }
