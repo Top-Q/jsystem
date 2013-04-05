@@ -216,8 +216,7 @@ public class Reader {
 
 	public void addExecutionProperty(String key, String value) {
 		if (null == executionProperties) {
-			main.setAttribute("Properties", "");
-			return;
+			properties = new Properties();
 		}
 
 		executionProperties.setProperty(key, value);
