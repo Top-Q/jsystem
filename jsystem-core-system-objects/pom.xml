@@ -11,7 +11,7 @@
 	<groupId>org.jsystemtest.systemobjects</groupId>
 	<packaging>pom</packaging>
 	<properties>
-		<jsystem.version>6.0.00-SNAPSHOT</jsystem.version>
+		<jsystem.version>6.0.01-SNAPSHOT</jsystem.version>
 	</properties>
 	<modules>
 		<module>cli-so</module>
