@@ -137,6 +137,8 @@ public class ReporterHelper {
 	 * <br>
 	 * Before calling this method, don't forget to call the stopBufferingReport;
 	 * If not, you will not see the reports.
+	 * <br>
+	 * This method will also delete the report elements that were reported.
 	 * 
 	 * @param report
 	 * @param originators
@@ -165,6 +167,7 @@ public class ReporterHelper {
 				}
 			}
 		}
+		deleteReportsByOriginator(report, originators);
 	}
 
 	/**
@@ -176,7 +179,7 @@ public class ReporterHelper {
 	 * 
 	 * @author itaiag
 	 */
-	public static void deleteReportsByOriginator(Reporter report, final String[] originators) {
+	private static void deleteReportsByOriginator(Reporter report, final String[] originators) {
 		if (originators == null || originators.length == 0) {
 			throw new IllegalArgumentException("Originators can't be empty");
 		}
