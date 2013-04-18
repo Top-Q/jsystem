@@ -7,7 +7,7 @@
 	<repositories>
 		<repository>
 			<id>nexus</id>
-			<url>http://80.74.108.9/content/groups/public</url>
+			<url>http://maven.top-q.co.il/content/groups/public</url>
 		</repository>
 	</repositories>
 	<dependencies>

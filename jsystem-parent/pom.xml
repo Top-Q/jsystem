@@ -4,7 +4,7 @@
 
 	<groupId>org.jsystemtest</groupId>
 	<artifactId>jsystem-parent</artifactId>
-	<version>6.0.01-SNAPSHOT</version>
+	<version>6.0.01</version>
 	<packaging>pom</packaging>
 
 	<name>jsystem-parent</name>
@@ -187,7 +187,7 @@
 
 	</dependencyManagement>
 	<build>
-		<!--<finalName>${project.artifactId}</finalName> -->		
+		<!--<finalName>${project.artifactId}</finalName> -->
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -216,11 +216,11 @@
 	</build>
 	<modules>
 		<module>../jsystem-core-projects</module>
-		<module>../jsystem-core-system-objects</module>		
-		<module>../jsystem-archetypes</module>			
-		<module>../jsystem-miscellaneous/jsystem-maven-plugin</module>		
+		<module>../jsystem-core-system-objects</module>
+		<module>../jsystem-archetypes</module>
+		<module>../jsystem-miscellaneous/jsystem-maven-plugin</module>
 		<module>../jsystem-miscellaneous/jsystem-services-so</module>
-		<module>../jsystem-miscellaneous/jsystem-services-tests</module>		
+		<module>../jsystem-miscellaneous/jsystem-services-tests</module>
 	</modules>
 	<repositories>
 		<repository>
@@ -229,6 +229,11 @@
 		</repository>
 	</repositories>
 	<distributionManagement>
+		<repository>
+			<id>topq</id>
+			<name>RepositoryProxy</name>
+			<url>${topq.repository.rootUrl}/content/repositories/releases</url>
+		</repository>
 		<snapshotRepository>
 			<id>topq</id>
 			<name>RepositoryProxy</name>
