@@ -6,14 +6,14 @@
 		<parent>
 		<groupId>org.jsystemtest</groupId>
 		<artifactId>jsystem-parent</artifactId>
-		<version>6.0.01</version>
+		<version>6.0.02-SNAPSHOT</version>
 		<relativePath>../../jsystem-parent</relativePath>
 	</parent>
 	<dependencies>
 		<dependency>
 			<groupId>org.jsystemtest</groupId>
 			<artifactId>jsystemApp</artifactId>
-			<version>6.0.01</version>
+			<version>6.0.02-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 	<build>

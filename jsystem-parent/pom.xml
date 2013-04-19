@@ -4,7 +4,7 @@
 
 	<groupId>org.jsystemtest</groupId>
 	<artifactId>jsystem-parent</artifactId>
-	<version>6.0.01</version>
+	<version>6.0.02-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>jsystem-parent</name>
