@@ -6,7 +6,7 @@
 	<version>\${version}</version>
 	<repositories>
 		<repository>
-			<id>nexus</id>
+			<id>top-q</id>
 			<url>http://maven.top-q.co.il/content/groups/public</url>
 		</repository>
 	</repositories>
