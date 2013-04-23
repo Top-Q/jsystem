@@ -52,7 +52,7 @@
 				<exclude>*:commons-logging-api:*</exclude>
 				<exclude>*:looks:*</exclude>
 				<exclude>javax.mail:mail:*</exclude>
-				<exclude>*:poi:*</exclude>
+				<exclude>*:poi-ooxml:*</exclude>
 				<exclude>*:tftp4java-server:*</exclude>
 				<exclude>*:tftp4java-client:*</exclude>
 				<exclude>*:commons-net:*</exclude>
