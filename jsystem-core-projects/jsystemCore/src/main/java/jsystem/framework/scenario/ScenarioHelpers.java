@@ -30,6 +30,7 @@ import jsystem.framework.RunProperties;
 import jsystem.framework.common.CommonResources;
 import jsystem.framework.report.ListenerstManager;
 import jsystem.framework.scenario.flow_control.AntFlowControl;
+import jsystem.framework.scenario.flow_control.AntForLoop;
 import jsystem.utils.FileUtils;
 import jsystem.utils.StringUtils;
 import jsystem.utils.XmlUtils;
@@ -1391,7 +1392,13 @@ public class ScenarioHelpers {
 		class TestUUIDCollector implements JTestContainerVisitor {
 			@Override
 			public void visitScenarioElement(JTest t1) throws Exception {
-				String uuid = t1.getFullUUID();
+				String uuid = null;
+				if (t1 instanceof AntForLoop){
+					uuid = ((AntForLoop)t1).getFlowFullUUID();
+				} else {
+					uuid = t1.getFullUUID();
+					
+				}
 				ret.add(uuid);
 			};
 		}

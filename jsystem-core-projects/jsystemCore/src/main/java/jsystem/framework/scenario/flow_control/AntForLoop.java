@@ -28,6 +28,8 @@ import org.w3c.dom.NodeList;
  * http://ant-contrib.sourceforge.net/ant-contrib/manual/tasks/for.html
  */
 public class AntForLoop extends AntFlowControl {
+	private static final String DEFAULT_PARAM_VALUE = "myVar";
+	private static final String DEFAULT_LIST_VALUE = "a;b;c;d";
 	public static String OLD_XML_TAG = "for";
 	public static String XML_TAG = CommonResources.JSYSTEM_FOR;
 	public static String XML_CONTAINER_TAG = "sequential";
@@ -78,7 +80,7 @@ public class AntForLoop extends AntFlowControl {
 		super("For", parent, id);
 		
 		list.setType(Parameter.ParameterType.STRING);
-		setLoopValuesList("a;b;c;d");
+		setLoopValuesList(DEFAULT_LIST_VALUE);
 		list.setName("list");
 		list.setDescription("Semicolon separated list of values to loop over");
 		// TODO: sync section with comment/name
@@ -97,7 +99,7 @@ public class AntForLoop extends AntFlowControl {
 
 		//TODO: get the values from the tests inside, use "enum" maybe ? Ask Nizan
 		param.setType(Parameter.ParameterType.STRING);
-		param.setValue("myVar");
+		param.setValue(DEFAULT_PARAM_VALUE);
 		param.setName("loop value");
 		param.setDescription("Select the property to change in each iteration");
 		// TODO: sync section with comment/name
@@ -115,8 +117,9 @@ public class AntForLoop extends AntFlowControl {
 	
 	public Element addExecutorXml(Element targetScenario, Document doc) {
 		Element forElement = doc.createElement(XML_TAG);
-		forElement.setAttribute("list", list.getValue().toString());
-		forElement.setAttribute("param", param.getValue().toString());
+		//ITAI: The actual values are set in the properties file and not in the XML file
+		forElement.setAttribute("list", DEFAULT_LIST_VALUE);
+		forElement.setAttribute("param", DEFAULT_PARAM_VALUE);
 		forElement.setAttribute("delimiter", CommonResources.DELIMITER);
 		addPropertiesToElement(forElement);
 		appendAdditionalData(forElement);
@@ -278,6 +281,10 @@ public class AntForLoop extends AntFlowControl {
 		return param.getValue()+"";
 	}
 	
+	public void setLoopParamName(String loopParamName){
+		param.setValue(loopParamName);
+	}
+	
 	public boolean isValuesReferenceParameter(){
 		return ParametersManager.isReferenceValue(list.getValue());
 	}
@@ -312,6 +319,7 @@ public class AntForLoop extends AntFlowControl {
 	@Override
 	protected void loadParameters() {
 		setLoopValuesList(ScenarioHelpers.getParameterValueFromProperties(this,getFlowFullUUID(),"list",list.getValue().toString()));
+		setLoopParamName(ScenarioHelpers.getParameterValueFromProperties(this,getFlowFullUUID(),"loop value",param.getValue().toString()));
 		loadAndSetUserDocumentation();
 	}
 }
