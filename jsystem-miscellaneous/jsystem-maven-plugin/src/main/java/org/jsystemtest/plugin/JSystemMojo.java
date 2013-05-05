@@ -105,37 +105,47 @@ public class JSystemMojo extends AbstractMojo {
 		// Make sure that the JUnit reporter is in the reporter.classes
 		String reporterName = JUnitReporter.class.getName();
 		if (null == reporters) {
-			JSystemProperties.getInstance().setPreference(FrameworkOptions.REPORTERS_CLASSES,
-					DEFAULT_REPORTERS + ";" + reporterName);
+			JSystemProperties.getInstance().setPreference(FrameworkOptions.REPORTERS_CLASSES, DEFAULT_REPORTERS + ";" + reporterName);
 		} else if (!reporters.contains(reporterName)) {
 			reporters += ";" + reporterName;
 			JSystemProperties.getInstance().setPreference(FrameworkOptions.REPORTERS_CLASSES, reporters);
 		}
 
-		// Configure all other required parameters.
+		// Configure all other required parameters:
+		
+		//Scenario 
 		JSystemProperties.getInstance().setPreference(FrameworkOptions.CURRENT_SCENARIO, scenario);
 
+		//SUT
 		JSystemProperties.getInstance().setPreference(FrameworkOptions.USED_SUT_FILE, sut);
+		
+		//Class Folder
 		JSystemProperties.getInstance().setPreference(FrameworkOptions.TESTS_CLASS_FOLDER,
 				mavenProject.getBasedir().getAbsolutePath() + File.separator + "target" + File.separator + "classes");
-		JSystemProperties.getInstance().setPreference(
-				FrameworkOptions.TESTS_SOURCE_FOLDER,
-				mavenProject.getBasedir().getAbsolutePath() + File.separator + "src" + File.separator + "main"
-						+ File.separator + "java");
+		
+		//Test Source 
+		JSystemProperties.getInstance().setPreference(FrameworkOptions.TESTS_SOURCE_FOLDER,
+				mavenProject.getBasedir().getAbsolutePath() + File.separator + "src" + File.separator + "main" + File.separator + "java");
+		
+		//resources folder. 
 		JSystemProperties.getInstance().setPreference(
 				FrameworkOptions.RESOURCES_SOURCE_FOLDER,
-				mavenProject.getBasedir().getAbsolutePath() + File.separator + "src" + File.separator + "main"
-						+ File.separator + "resources");
+				mavenProject.getBasedir().getAbsolutePath() + File.separator + "src" + File.separator + "main" + File.separator
+						+ "resources");
 
 	}
 
 	private void executeScenario(final File scenarioFile, final Project p) {
-		getLog().info("------------------------------------------------------------------------");
+		
+		getLog().info("------------------------Jsystem Maven Plugin---------------------");
 		getLog().info("About to execute scenario " + scenarioFile.getName());
+		getLog().info("of project=" + p.getBaseDir());
 		getLog().info("------------------------------------------------------------------------");
 
+		
 		p.fireBuildStarted();
 		p.init();
+		
 		ProjectHelper helper = ProjectHelper.getProjectHelper();
 		p.addReference("ant.projectHelper", helper);
 		helper.parse(p, scenarioFile);
@@ -145,8 +155,8 @@ public class JSystemMojo extends AbstractMojo {
 		getLog().info("------------------------------------------------------------------------");
 		getLog().info("Execution of scenario " + scenarioFile.getName() + " ended ");
 		getLog().info(
-				"Reports can be found in " + mavenProject.getBasedir().getAbsolutePath() + File.separator + "log"
-						+ File.separator + "current");
+				"Reports can be found in " + mavenProject.getBasedir().getAbsolutePath() + File.separator + "log" + File.separator
+						+ "current");
 		getLog().info("------------------------------------------------------------------------");
 	}
 
