@@ -68,5 +68,6 @@
 			</plugin>
 		</plugins>
 	</build>
+	<groupId>org.jsystemtest.systemobjects</groupId>
 </project>
 
