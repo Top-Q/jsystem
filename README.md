@@ -1,7 +1,8 @@
 # JSystem Framework #
 
-[JSystem Site](http://www.jsystem.org/)</br>
-[JSystem Release Notes](https://github.com/Top-Q/jsystem/wiki/Release-Notes)</br>
+## [JSystem Site](http://www.jsystem.org/)</br>
+
+## [JSystem Release Notes](https://github.com/Top-Q/jsystem/wiki/Release-Notes)</br>
 
 JSystem is a professional open-source framework for writing and managing automated system tests.
 
