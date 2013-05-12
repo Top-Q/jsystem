@@ -162,6 +162,7 @@ public abstract class AntFlowControl extends JTestContainer {
 				continue;
 			}
 			Object value = givenParameter.getValue();
+			originalParameter.signalToSave();
 			originalParameter.setValue(value);
 		}
 	}

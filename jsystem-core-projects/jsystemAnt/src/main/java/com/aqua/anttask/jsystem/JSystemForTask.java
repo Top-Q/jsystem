@@ -6,7 +6,6 @@ package com.aqua.anttask.jsystem;
 import java.util.Properties;
 
 import jsystem.utils.StringUtils;
-import net.sf.antcontrib.logic.ForTask;
 
 import org.apache.tools.ant.BuildException;
 
