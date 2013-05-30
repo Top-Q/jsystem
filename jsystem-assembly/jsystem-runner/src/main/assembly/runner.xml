@@ -105,8 +105,6 @@
 				<include>*:commons-io:*</include>
 				<include>*:commons-compress:*</include>
 				<include>*:looks:*</include>
-				<include>javax.mail:mail:*</include>
-				<include>*:poi:*</include>
 				<include>*:tftp4java-server:*</include>
 				<include>*:tftp4java-client:*</include>
 				<include>*:commons-net:*</include>

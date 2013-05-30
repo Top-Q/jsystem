@@ -85,11 +85,4 @@ public class MyTest extends SystemTestCase implements DIR {
 		report.report("hello world ����", "��� ���", true);
 	}
 	
-	public void testExcle() throws Exception{
-		ExcelFile excel = ExcelFile.getInstance("MyExcel.xls", true);
-		excel.addHeader(new String[] {"Packet size", "Rate"});
-		excel.addRow(new String[]{"3", "4"});
-		excel.addRow(new String[]{"3", "4"});
-		report.addLink("my excel", "MyExcel.xls");
-	}
 }
