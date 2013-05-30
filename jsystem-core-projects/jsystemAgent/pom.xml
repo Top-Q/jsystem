@@ -10,7 +10,7 @@
 	<artifactId>jsystemAgent</artifactId>
 	<dependencies>
 	<dependency>
-			<groupId>${project.groupId}</groupId>
+			<groupId>org.jsystemtest</groupId>
 			<artifactId>jsystemCommon</artifactId>
 			<version>${project.version}</version>
 		</dependency>
