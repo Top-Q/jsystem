@@ -211,7 +211,8 @@
 		<profile>
 			<id>dist</id>
 			<properties>
-				<assembly.format>tar.gz</assembly.format>
+				<assembly.linux.format>tar.gz</assembly.linux.format>
+				<assembly.windows.format>zip</assembly.windows.format>
 			</properties>
 		</profile>
 	</profiles>
