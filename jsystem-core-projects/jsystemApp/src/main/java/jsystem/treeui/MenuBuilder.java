@@ -48,6 +48,7 @@ import jsystem.treeui.actionItems.ToggleAgentToolbarAction;
 import jsystem.treeui.actionItems.ToggleFlowControlToolbarAction;
 import jsystem.treeui.actionItems.ToggleMainToolbarAction;
 import jsystem.treeui.actionItems.ToggleSourceControlToolbarAction;
+import jsystem.treeui.actionItems.ViewDocumentationAction;
 import jsystem.treeui.actionItems.ViewLogAction;
 import jsystem.treeui.actionItems.ViewTestCodeAction;
 
@@ -174,6 +175,9 @@ public class MenuBuilder {
 		JMenu helpMenu = new JMenu("Help");
 		helpMenu.setMnemonic(KeyEvent.VK_H);
 		menuBar.add(helpMenu);
+		
+		helpMenu.add(ViewDocumentationAction.getInstance());
+
 		menuItemAboutVersion = new JMenuItem("About Version");
 		menuItemAboutVersion.addActionListener(actionListenr);
 		helpMenu.add(menuItemAboutVersion);
