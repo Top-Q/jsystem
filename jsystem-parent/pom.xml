@@ -245,7 +245,7 @@
 	</organization>
 	<profiles>
 		<profile>
-			<id>runtime</id>
+			<id>dist</id>
 			<modules>
 				<module>../jsystem-assembly/jsystem-runner</module>
 			</modules>

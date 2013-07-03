@@ -178,8 +178,8 @@
 			<version>${project.version}</version>
 			<classifier>sources</classifier>
 		</dependency>
-		
-		
+
+
 	</dependencies>
 
 	<packaging>jar</packaging>
@@ -207,13 +207,4 @@
 			</plugin>
 		</plugins>
 	</build>
-	<profiles>
-		<profile>
-			<id>dist</id>
-			<properties>
-				<assembly.linux.format>tar.gz</assembly.linux.format>
-				<assembly.windows.format>zip</assembly.windows.format>
-			</properties>
-		</profile>
-	</profiles>
 </project>
