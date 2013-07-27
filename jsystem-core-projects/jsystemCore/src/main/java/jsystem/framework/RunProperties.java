@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+import org.apache.log4j.Level;
+
 import jsystem.framework.common.CommonResources;
 import jsystem.framework.report.Summary;
 import jsystem.utils.FileUtils;
@@ -26,6 +28,7 @@ public class RunProperties {
 
 	private RunProperties() {
 		// singleton
+		log.info("create run properties at :"+runPropertiesFile.getAbsolutePath());
 	}
 
 	public static RunProperties getInstance() {
@@ -45,6 +48,7 @@ public class RunProperties {
 	 * DO NOT SYNCHRONIZE THIS METHOD - COULD CAUSE DEADLOCKS WITH SUMMARY CLASS!!!
 	 */
 	public void resetRunProperties() {
+		log.info("Reset the Run properties file");
 		if (!runPropertiesFile.delete() && runPropertiesFile.exists()){
 			log.warning("Failed deleting .run.properties file");
 		}
@@ -107,8 +111,11 @@ public class RunProperties {
 	 */
 	private synchronized Properties loadProperties() throws IOException{
 		Properties p = new Properties();
-		if (runPropertiesFile.exists()) {
+		if (runPropertiesFile.getAbsoluteFile().exists()) {
 			p = FileUtils.loadPropertiesFromFile(runPropertiesFile.getAbsolutePath());
+			log.log(java.util.logging.Level.CONFIG,"load run properties at :"+runPropertiesFile.getAbsolutePath());
+		}else{
+			log.log(java.util.logging.Level.CONFIG,"the run properties doesn't exist,return new Properties object");
 		}
 		return p;
 	}

@@ -59,6 +59,8 @@ public class JSystemMojo extends AbstractMojo {
 	/**
 	 */
 	public void execute() throws MojoExecutionException, MojoFailureException {
+		
+		getLog().info("change user working dir to: "+mavenProject.getBasedir().getAbsolutePath());
 		// This line is for setting the current folder to the project root
 		// folder. This is very important if we want to run the plug-in from the
 		// parent folder.
