@@ -682,18 +682,20 @@ public class RunnerListenersManager extends DefaultReporterImpl implements JSyst
 			((SystemTest) test).clearFailCause();
 			((SystemTest) test).clearSteps();
 
-			// if test is ran not from the runner\ANT (eclipse for example), the
-			// flags are currently not supported
-			if (!JSystemProperties.getInstance().isExecutedFromIDE()) {
-				Properties properties = ScenarioHelpers.getAllTestPropertiesFromAllScenarios(
-						((SystemTest) test).getFullUUID(), false);
-				String testMarkedAsKnownIssueStr = properties.getProperty(RunningProperties.MARKED_AS_KNOWN_ISSUE);
-				String testMarkedAsNegativeTestStr = properties.getProperty(RunningProperties.MARKED_AS_NEGATIVE_TEST);
-				testMarkedAsKnownIssue = testMarkedAsKnownIssueStr != null
-						&& Boolean.parseBoolean(testMarkedAsKnownIssueStr);
-				testMarkedNegativeTest = testMarkedAsNegativeTestStr != null
-						&& Boolean.parseBoolean(testMarkedAsNegativeTestStr);
-			}
+		
+		}
+		
+		// if test is ran not from the runner\ANT (eclipse for example), the
+		// flags are currently not supported
+		if (!JSystemProperties.getInstance().isExecutedFromIDE() && test instanceof NamedTest) {
+			Properties properties = ScenarioHelpers.getAllTestPropertiesFromAllScenarios(
+					((NamedTest) test).getFullUUID(), false);
+			String testMarkedAsKnownIssueStr = properties.getProperty(RunningProperties.MARKED_AS_KNOWN_ISSUE);
+			String testMarkedAsNegativeTestStr = properties.getProperty(RunningProperties.MARKED_AS_NEGATIVE_TEST);
+			testMarkedAsKnownIssue = testMarkedAsKnownIssueStr != null
+					&& Boolean.parseBoolean(testMarkedAsKnownIssueStr);
+			testMarkedNegativeTest = testMarkedAsNegativeTestStr != null
+					&& Boolean.parseBoolean(testMarkedAsNegativeTestStr);
 		}
 		runningTests.addElement(test);
 		testsCount++;
