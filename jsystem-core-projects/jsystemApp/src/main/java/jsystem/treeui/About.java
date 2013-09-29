@@ -120,13 +120,13 @@ public class About extends JDialog {
 		labelPanel.add(versionLabel);
 
 		// Add copyright
-		final JLabel copyrightLabel = new JLabel("<html> Copyright 2005-2012 <a href=\"www.top-q.co.il\">Top-Q</a>. All rights reserved.</html>");
+		final JLabel copyrightLabel = new JLabel("<html> Copyright 2005-2013 <a href=\"www.top-q.co.il\">Top-Q</a>.</html>");
 		copyrightLabel.setOpaque(false);
 		copyrightLabel.setBorder(BorderFactory.createEmptyBorder(2, 4, 8, 4));
 		copyrightLabel.setFont(new Font("sansserif", Font.PLAIN, 12));
 		labelPanel.add(copyrightLabel);
 		
-		// Add link to Ignis URL
+		// Add link to Top-Q URL
 		copyrightLabel.addMouseListener(new MouseAdapter() {
 			public void mouseEntered(MouseEvent me) {
 				copyrightLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));  
@@ -140,30 +140,24 @@ public class About extends JDialog {
 					try {
 						desktop.browse(new URI("http://www.top-q.co.il"));
 					} catch (Exception e) {
-						log.log(Level.WARNING, "Failed openning browser to Ignis website: " + e.getMessage());
+						log.log(Level.WARNING, "Failed opening browser to Top-Q website: " + e.getMessage());
 					}
 				}
 			}  
 		});		
 
-		// Add contribution notification
-		JLabel contributionLable1 = new JLabel("JSystem is developed using other open source projects.");
-		contributionLable1.setOpaque(false);
-		contributionLable1.setBorder(BorderFactory.createEmptyBorder(8, 4, 2, 4));
-		contributionLable1.setFont(new Font("sansserif", Font.PLAIN, 12));
-		labelPanel.add(contributionLable1);
-		JLabel contributionLable2 = new JLabel("For a complete list go to");
+		JLabel contributionLable2 = new JLabel("For version release notes go to:");
 		contributionLable2.setOpaque(false);
 		contributionLable2.setBorder(BorderFactory.createEmptyBorder(2, 4, 2, 4));
 		contributionLable2.setFont(new Font("sansserif", Font.PLAIN, 12));
 		labelPanel.add(contributionLable2);
-		final JLabel contributionLable3 = new JLabel("<html><a href=\"http://trac.jsystemtest.org/wiki/DetailedOSProjectsList\">http://trac.jsystemtest.org</a></html>");
+		final JLabel contributionLable3 = new JLabel("<html><a href=\"https://github.com/Top-Q/jsystem/wiki/Release-Notes\">https://github.com/Top-Q/jsystem/wiki/Release-Notes</a></html>");
 		contributionLable3.setOpaque(false);
 		contributionLable3.setBorder(BorderFactory.createEmptyBorder(2, 4, 16, 4));
 		contributionLable3.setFont(new Font("sansserif", Font.PLAIN, 12));
 		labelPanel.add(contributionLable3);
 		
-		// Add link to JSystem URL
+		// Add link to release notes URL
 		contributionLable3.addMouseListener(new MouseAdapter() {
 			public void mouseEntered(MouseEvent me) {
 				contributionLable3.setCursor(new Cursor(Cursor.HAND_CURSOR));  
@@ -175,9 +169,9 @@ public class About extends JDialog {
 				if (Desktop.isDesktopSupported()) {
 					Desktop desktop = Desktop.getDesktop();
 					try {
-						desktop.browse(new URI("http://trac.jsystemtest.org/wiki/DetailedOSProjectsList"));
+						desktop.browse(new URI("https://github.com/Top-Q/jsystem/wiki/Release-Notes"));
 					} catch (Exception e) {
-						log.log(Level.WARNING, "Failed openning browser to JSystem website: " + e.getMessage());
+						log.log(Level.WARNING, "Failed openning browser to JSystem wiki: " + e.getMessage());
 					}
 				}
 			}  
