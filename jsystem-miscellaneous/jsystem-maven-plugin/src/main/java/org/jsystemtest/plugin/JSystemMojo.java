@@ -10,6 +10,7 @@ import jsystem.framework.FrameworkOptions;
 import jsystem.framework.JSystemProperties;
 import jsystem.framework.scenario.RunningProperties;
 import jsystem.runner.AntExecutionListener;
+import jsystem.utils.StringUtils;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -18,6 +19,7 @@ import org.apache.maven.project.MavenProject;
 import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
+import org.jsystemtest.plugin.MultipleScenarioSuitExecutionFileParser.Execution;
 
 /**
  * 
@@ -49,15 +51,18 @@ public class JSystemMojo extends AbstractMojo {
 
 	/**
 	 * @parameter expression="${scenario}"
-	 * @required
 	 */
 	private String scenario;
 
 	/**
 	 * @parameter expression="${sut}"
-	 * @required
 	 */
 	private String sut;
+
+	/**
+	 * @parameter expression="${xmlFile}"
+	 */
+	private String xmlFile;
 
 	/**
 	 */
@@ -69,14 +74,21 @@ public class JSystemMojo extends AbstractMojo {
 		// parent folder.
 		System.setProperty("user.dir", mavenProject.getBasedir().getAbsolutePath());
 
-		// Collect parameters that required for the execution
 		final File scenariosPath = new File(mavenProject.getBasedir(), SCENARIO_PATH);
+		// Collect parameters that are required for the execution
+		if (!StringUtils.isEmpty(xmlFile)) {
+			xmlFileToParameters();
+		}
+
 		final File[] sutFilesArr = sutParameterToFileArray();
 		final File[] scenarioFilesArr = scenarioParameterToFileArray(scenariosPath);
-		
+
 		// Check input correction
+		if (sutFilesArr == null || sutFilesArr.length == 0 || scenarioFilesArr == null || scenarioFilesArr.length == 0) {
+			throw new MojoFailureException("Sut or scenario parameters was not specified");
+		}
+
 		if (sutFilesArr.length != scenarioFilesArr.length) {
-			getLog().error("Number of scenarios must be equals to the number of sut files");
 			throw new MojoFailureException("Number of scenarios must be equals to the number of sut files");
 		}
 
@@ -90,13 +102,13 @@ public class JSystemMojo extends AbstractMojo {
 		}
 
 		getLog().info("--------------------------Jsystem Maven Plugin--------------------------");
-		getLog().info("About to execute scenarios " + scenario);
+		getLog().info("About to execute scenarios " + scenario + " with sut files " + sut);
 		getLog().info("of project=" + mavenProject.getBasedir());
 		getLog().info("------------------------------------------------------------------------");
 
 		for (int i = 0; i < scenarioFilesArr.length; i++) {
 			final Project p = createNewAntProject(scenariosPath, scenarioFilesArr[i], scenario.split(DELIMITER)[i],
-					scenario.split(DELIMITER)[i]);
+					sut.split(DELIMITER)[i]);
 
 			updateJSystemProperties(sutFilesArr[i], sut.split(DELIMITER)[i], scenarioFilesArr[i],
 					scenario.split(DELIMITER)[i]);
@@ -110,8 +122,26 @@ public class JSystemMojo extends AbstractMojo {
 
 	}
 
+	private void xmlFileToParameters() throws MojoFailureException {
+		try {
+			MultipleScenarioSuitExecutionFileParser parser = new MultipleScenarioSuitExecutionFileParser(new File(
+					xmlFile));
+			parser.parse();
+			StringBuilder scenarioSb = new StringBuilder();
+			StringBuilder sutSb = new StringBuilder();
+			for (Execution execution : parser.getExecutions()) {
+				scenarioSb.append(execution.getScenario().replaceFirst("\\.xml", "")).append(",");
+				sutSb.append(execution.getSut().replaceFirst("sut\\\\", "")).append(",");
+			}
+			scenario = scenarioSb.toString();
+			sut = sutSb.toString();
+		} catch (IOException e) {
+			throw new MojoFailureException(e.getMessage());
+		}
+	}
+
 	private void executeSingleScenario(final File scenarioFile, final Project p) {
-		getLog().info("Executing scenario " + scenarioFile.getName());
+		getLog().info("Executing scenario " + scenarioFile.getName() + " with sut " + p.getProperty("sutFile"));
 		try {
 			p.fireBuildStarted();
 			p.init();
@@ -125,7 +155,9 @@ public class JSystemMojo extends AbstractMojo {
 		} finally {
 			p.fireBuildFinished(null);
 		}
-		getLog().info("Execution of scenario " + scenarioFile.getName() + " ended");
+		getLog().info(
+				"Execution of scenario " + scenarioFile.getName() + " with sut " + p.getProperty("sutFile")
+						+ " has ended");
 		getLog().info("------------------------------------------------------------------------");
 	}
 
