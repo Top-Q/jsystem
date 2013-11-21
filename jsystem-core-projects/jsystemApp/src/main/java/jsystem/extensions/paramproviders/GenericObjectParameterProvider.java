@@ -4,7 +4,6 @@
 package jsystem.extensions.paramproviders;
 
 import jsystem.framework.scenario.Parameter;
-import jsystem.framework.scenario.ParameterProvider;
 import jsystem.framework.scenario.RunnerTest;
 import jsystem.framework.scenario.Scenario;
 import jsystem.runner.loader.LoadersManager;
@@ -18,7 +17,6 @@ import java.awt.*;
 import java.awt.Dialog.ModalityType;
 import java.io.IOException;
 import java.io.StringReader;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Properties;
@@ -26,7 +24,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class GenericObjectParameterProvider implements ParameterProvider{
+public class GenericObjectParameterProvider extends AbstractSerializingParameterProvider{
 
 	private static Logger log = Logger.getLogger(GenericObjectParameterProvider.class.getName());
 	
@@ -43,13 +41,11 @@ public class GenericObjectParameterProvider implements ParameterProvider{
 			return (String)o;
 		}
 
-        StringBuilder buf = new StringBuilder();
-		// append the class name then ';'
-		buf.append(o.getClass().getName());buf.append(';');
+
 		ArrayList<BeanElement> beanElements = BeanUtils.getBeans(o.getClass(), true, true, BeanUtils.getBasicTypes());
 		
 		// build properties object from the given object
-		Properties propertier = new Properties();
+		Properties properties = new Properties();
 		for(BeanElement be: beanElements){
 			if(be.getGetMethod() == null){
 				continue;
@@ -58,23 +54,16 @@ public class GenericObjectParameterProvider implements ParameterProvider{
 				Object value = be.getGetMethod().invoke(o, new Object[0]);
 				if(value != null){
 					String propertyValue = StringUtils.advancedToString(value);
-					propertier.setProperty(be.getName(), propertyValue);
+					properties.setProperty(be.getName(), propertyValue);
 				}
 			} catch (Exception e) {
 				log.log(Level.WARNING,"Fail to invoke the getter: " + be.getName(), e);
 			}
 		}
-		StringWriter writer = new StringWriter();
-		try {
-			propertier.store(writer, null);
-		} catch (IOException e) {
-			log.log(Level.WARNING, "Fail to store the property object to the StringWriter", e);
-		}
-		// append the properties string
-		buf.append(writer.getBuffer().toString());
 		
-		return buf.toString();
+		return propetiesToString(o.getClass().getName(), properties);
 	}
+
 
 	@Override
 	public Object getFromString(String stringRepresentation) throws Exception {

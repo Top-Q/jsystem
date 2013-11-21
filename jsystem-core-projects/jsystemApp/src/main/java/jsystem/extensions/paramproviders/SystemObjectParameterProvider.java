@@ -44,6 +44,9 @@ public class SystemObjectParameterProvider implements ParameterProvider {
 		if(o == null){
 			return "<sut></sut>";
 		}
+		if (!o.toString().contains("\r\n")){
+			return o.toString().replace("\n", "\r\n");
+		}
 		return o.toString();
 	}
 

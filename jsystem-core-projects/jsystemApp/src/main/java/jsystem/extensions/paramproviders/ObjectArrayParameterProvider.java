@@ -15,14 +15,13 @@ import java.awt.*;
 import java.awt.Dialog.ModalityType;
 import java.io.IOException;
 import java.io.StringReader;
-import java.io.StringWriter;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ObjectArrayParameterProvider implements ParameterProvider {
+public class ObjectArrayParameterProvider extends AbstractSerializingParameterProvider {
 
 	private static Logger log = Logger
 			.getLogger(ObjectArrayParameterProvider.class.getName());
@@ -46,15 +45,11 @@ public class ObjectArrayParameterProvider implements ParameterProvider {
 
 		Object[] array = (Object[]) o;
 
-		StringBuffer buf = new StringBuffer();
-		// append the class name then ';'
-		buf.append(o.getClass().getComponentType().getName());
-		buf.append(';');
 		ArrayList<BeanElement> beanElements = BeanUtils.getBeans(o.getClass()
 				.getComponentType(), true, true, BeanUtils.getBasicTypes());
 
 		// build properties object from the given object
-		Properties propertier = new Properties();
+		Properties properties = new Properties();
 		for (int i = 0; i < array.length; i++) {
 			for (BeanElement be : beanElements) {
 				if (be.getGetMethod() == null) {
@@ -64,7 +59,7 @@ public class ObjectArrayParameterProvider implements ParameterProvider {
 					Object value = be.getGetMethod().invoke(array[i],
 							new Object[0]);
 					if (value != null) {
-						propertier.setProperty(i + "." + be.getName(), StringUtils.advancedToString(value)								);
+						properties.setProperty(i + "." + be.getName(), StringUtils.advancedToString(value)								);
 					}
 				} catch (Exception e) {
 					log.log(Level.WARNING, "Fail to invoke the getter: "
@@ -72,17 +67,7 @@ public class ObjectArrayParameterProvider implements ParameterProvider {
 				}
 			}
 		}
-		StringWriter writer = new StringWriter();
-		try {
-			propertier.store(writer, null);
-		} catch (IOException e) {
-			log.log(Level.WARNING,
-					"Fail to store the property object to the StringWriter", e);
-		}
-		// append the properties string
-		buf.append(writer.getBuffer().toString());
-
-		return buf.toString();
+		return propetiesToString(o.getClass().getComponentType().getName(), properties);
 	}
 
 	@Override
@@ -143,7 +128,7 @@ public class ObjectArrayParameterProvider implements ParameterProvider {
 				.getComponentType(), true,true, BeanUtils.getBasicTypes());
 
 		ArrayList<LinkedHashMap<String, String>> multiMap = new ArrayList<LinkedHashMap<String, String>>();
-		String[] properties = getProeprties(beanElements);
+
 		if (object != null) {
 			Object[] array = null;
 			try{
@@ -202,13 +187,6 @@ public class ObjectArrayParameterProvider implements ParameterProvider {
 		return object;
 	}
 
-	private static String[] getProeprties(ArrayList<BeanElement> beanElements) {
-		String[] properties = new String[beanElements.size()];
-		for (int i = 0; i < beanElements.size(); i++) {
-			properties[i] = beanElements.get(i).getName();
-		}
-		return properties;
-	}
 
 	private static LinkedHashMap<String, String> propertiesToMap(
 			Properties properties) {
