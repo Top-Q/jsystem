@@ -72,14 +72,22 @@ public class JUnitReporter implements ExtendTestReporter, ExtendTestListener {
 
 	}
 
-	@Override
-	public void startTest(TestInfo testInfo) {
-		TestCase testCase = new TestCase();
-		testCase.setName(testInfo.methodName);
-		testCase.setClassName(testInfo.className);
-		testStart = System.currentTimeMillis();
-		testSuite.addTestCase(testCase);
-	}
+ 	@Override
+ 	public void startTest(TestInfo testInfo) {
+ 		TestCase testCase = new TestCase();
+
+		String methodName = testInfo.methodName;
+	
+		// if this field is null read basicName
+		// to fix "Mark scenario as Test" bug #184
+		if ( methodName == null ) 
+			methodName = testInfo.basicName;
+
+		testCase.setName(methodName);		
+ 		testCase.setClassName(testInfo.className);
+ 		testStart = System.currentTimeMillis();
+ 		testSuite.addTestCase(testCase);
+ 	}
 
 	@Override
 	public void addError(Test arg0, Throwable arg1) {
