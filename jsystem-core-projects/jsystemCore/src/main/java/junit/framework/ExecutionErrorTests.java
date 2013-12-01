@@ -2,8 +2,6 @@ package junit.framework;
 
 import org.junit.Test;
 
-import jsystem.framework.report.Reporter;
-
 public class ExecutionErrorTests extends SystemTestCase4{
 	
 	/**
@@ -12,8 +10,7 @@ public class ExecutionErrorTests extends SystemTestCase4{
 	 * Usage can be found in: junit.framework.JUnit4TestAdapterForJSystem.run(TestResult)
 	 */
 	@Test
-	public void testNotFound(){
-		report.report("Test not found", Reporter.WARNING);
-	
+	public void testNotFound() throws Exception{
+		throw new Exception("Test not found");
 	}
 }
