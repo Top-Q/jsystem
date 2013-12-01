@@ -81,10 +81,10 @@ public class JSystemJUnit4ClassRunner extends JUnit4ClassRunner {
 		
 		public TestInfo(Description description) {
 			// Get our special annotation object with the info we need
-			TestInfoAnnotation testInfo = (TestInfoAnnotation)description.getAnnotation(TestInfoAnnotation.class);
-			if (testInfo != null){
-				className = testInfo.getClassName();
-				methodName = testInfo.getMethodName();
+			TestInfoAnnotation testInfo = (TestInfoAnnotation) description.getAnnotation(TestInfoAnnotation.class);
+			if (testInfo != null) {
+				className = description.getClassName();
+				methodName = description.getMethodName();
 				test.setName(methodName);
 			}
 		}
@@ -159,6 +159,7 @@ public class JSystemJUnit4ClassRunner extends JUnit4ClassRunner {
 
 		@Override
 		public void testFinished(Description description) throws Exception {
+			description = fixDescriptionIfExecutionError(description);
 			super.testFinished(description);
 			testListener.endTest(new TestInfo(description));
 			jsystemEndTest();
@@ -166,10 +167,31 @@ public class JSystemJUnit4ClassRunner extends JUnit4ClassRunner {
 
 		@Override
 		public void testStarted(Description description) throws Exception {
+			description = fixDescriptionIfExecutionError(description);
 			super.testStarted(description);
 			TestInfo info = new TestInfo(description);
 			methodName = info.getMethodName();
 			testListener.startTest(info);
+		}
+		
+		/**
+		 * This handles the case in which a test was not found and it was
+		 * replaced with test from ExecutionErrorTests class. Since we don't
+		 * want that the test that appears in the report would the inner one
+		 * (ExecutionErrorTests.testNotFoune), we are replacing it with the
+		 * original one. this affects only execution with one JVM
+		 * 
+		 * @param description
+		 *            Test description
+		 * @return unchanged description or a new one.
+		 * @author Itai Agmon
+		 */
+		private Description fixDescriptionIfExecutionError(Description description) {
+			if (description.getClassName().equals(ExecutionErrorTests.class.getName())) {
+				description = Description.createTestDescription(testClass, methodName, description.getAnnotations()
+						.toArray(new Annotation[] {}));
+			}
+			return description;
 		}
 	}
 	
@@ -209,8 +231,14 @@ public class JSystemJUnit4ClassRunner extends JUnit4ClassRunner {
 	 */
 	@Override
 	public void run(RunNotifier notifier) {
-		testClass = getTestClass().getJavaClass();
-		
+		if (notifier instanceof JsystemRunNotifier) {
+			testClass = ((JsystemRunNotifier) notifier).getTestClass();
+			methodName = ((JsystemRunNotifier) notifier).getMethodName();
+		} else {
+			//ITAI : This was the original line before I added the first block.
+			//I am not sure if this is still needs to be here
+			testClass = getTestClass().getJavaClass();
+		}
 		notifier.addListener(new TestListenerAdapter(ListenerstManager.getInstance()));
 		this.notifier = notifier;
 		super.run(notifier);
