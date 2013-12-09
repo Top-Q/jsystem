@@ -143,9 +143,9 @@ public class MultiPropertiesDialog extends JDialog implements ActionListener, Li
 		selectFirstRow();
 		pack();
 
-		//ITAI: We create this tableCellListener so we 
-		//could provide events to our listeners every 
-		//time a value in the list is changed
+		// ITAI: We create this tableCellListener so we
+		// could provide events to our listeners every
+		// time a value in the list is changed
 		new TableCellListener(table, new AbstractAction() {
 			private static final long serialVersionUID = 1L;
 
@@ -182,6 +182,11 @@ public class MultiPropertiesDialog extends JDialog implements ActionListener, Li
 		return approved;
 	}
 
+	/**
+	 * Boradcast to all the listeners that event occured.
+	 * 
+	 * @param e
+	 */
 	private void broadcastAction(ActionEvent e) {
 		for (ParameterProviderListener listener : listenersList) {
 			listener.actionPerformed(this, e);
