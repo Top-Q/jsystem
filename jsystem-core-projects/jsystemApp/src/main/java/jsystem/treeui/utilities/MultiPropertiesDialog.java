@@ -142,6 +142,17 @@ public class MultiPropertiesDialog extends JDialog implements ActionListener, Li
 		table.setEnabled(isEnabled);
 		selectFirstRow();
 		pack();
+
+		//ITAI: We create this tableCellListener so we 
+		//could provide events to our listeners every 
+		//time a value in the list is changed
+		new TableCellListener(table, new AbstractAction() {
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(ActionEvent e) {
+				broadcastAction(e);
+			}
+		});
 	}
 
 	private void selectFirstRow() {
@@ -171,11 +182,16 @@ public class MultiPropertiesDialog extends JDialog implements ActionListener, Li
 		return approved;
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
+	private void broadcastAction(ActionEvent e) {
 		for (ParameterProviderListener listener : listenersList) {
 			listener.actionPerformed(this, e);
 		}
+
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		broadcastAction(e);
 		gce.stopCellEditing();
 		if (okButton.equals(e.getSource())) {
 			approved = true;
