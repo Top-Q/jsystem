@@ -67,10 +67,19 @@ public class JUnit4TestAdapterForJSystem implements Test {
 		Request request = Request.classWithoutSuiteMethod(testClass);
 		request = request.filterWith(new MethodFilter(testClass, methodName));
 		Runner runner = request.getRunner();
-		if(runner instanceof ErrorReportingRunner ){
-			if (isInitializationError((ErrorReportingRunner)runner)){
+		if (runner instanceof ErrorReportingRunner ){
+			try {
+				if (isInitializationError((ErrorReportingRunner)runner)){
+					request = Request.classWithoutSuiteMethod(junit.framework.ExecutionErrorTests.class);
+					request = request.filterWith(new MethodFilter(junit.framework.ExecutionErrorTests.class, "testNotFound"));
+					runner = request.getRunner();
+				}
+				
+			} catch (NullPointerException e){
+				//This happens when there is a failure in finding class
+				//Failed to initialize class
 				request = Request.classWithoutSuiteMethod(junit.framework.ExecutionErrorTests.class);
-				request = request.filterWith(new MethodFilter(junit.framework.ExecutionErrorTests.class, "testNotFound"));
+				request = request.filterWith(new MethodFilter(junit.framework.ExecutionErrorTests.class, "classNotFound"));
 				runner = request.getRunner();
 			}
 		}

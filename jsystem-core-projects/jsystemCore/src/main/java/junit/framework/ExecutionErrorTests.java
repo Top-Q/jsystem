@@ -13,4 +13,13 @@ public class ExecutionErrorTests extends SystemTestCase4{
 	public void testNotFound() throws Exception{
 		throw new Exception("Test not found");
 	}
+	
+	/**
+	 * This test is used when we fail to create an instance of the test class.  
+	 * Usage can be found in: junit.framework.JUnit4TestAdapterForJSystem.run(TestResult)
+	 */
+	@Test
+	public void classNotFound() throws Exception{
+		throw new Exception("Class not found");
+	}
 }

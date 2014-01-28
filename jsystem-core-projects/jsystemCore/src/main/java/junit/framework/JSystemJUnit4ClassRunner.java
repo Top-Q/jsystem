@@ -187,10 +187,16 @@ public class JSystemJUnit4ClassRunner extends JUnit4ClassRunner {
 		 * @author Itai Agmon
 		 */
 		private Description fixDescriptionIfExecutionError(Description description) {
-			if (description.getClassName().equals(ExecutionErrorTests.class.getName())) {
-				description = Description.createTestDescription(testClass, methodName, description.getAnnotations()
-						.toArray(new Annotation[] {}));
+			Class<?> testClassForDescripton = testClass;
+			//ITAI: If we failed to initialize the test class than it could be null
+			//In this stage and would cause the createTestDescription to fail on
+			//null pointer exception. To avoid it we replace it with a different 
+			//test class.
+			if (null == testClassForDescripton){
+				testClassForDescripton = ExecutionErrorTests.class;
 			}
+			description = Description.createTestDescription(testClassForDescripton, methodName, description.getAnnotations()
+					.toArray(new Annotation[] {}));
 			return description;
 		}
 	}
