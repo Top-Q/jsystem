@@ -120,7 +120,7 @@ public class About extends JDialog {
 		labelPanel.add(versionLabel);
 
 		// Add copyright
-		final JLabel copyrightLabel = new JLabel("<html> Copyright 2005-2013 <a href=\"www.top-q.co.il\">Top-Q</a>.</html>");
+		final JLabel copyrightLabel = new JLabel("<html> Copyright 2005-2014 <a href=\"www.top-q.co.il\">Top-Q</a>.</html>");
 		copyrightLabel.setOpaque(false);
 		copyrightLabel.setBorder(BorderFactory.createEmptyBorder(2, 4, 8, 4));
 		copyrightLabel.setFont(new Font("sansserif", Font.PLAIN, 12));
