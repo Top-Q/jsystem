@@ -307,11 +307,11 @@ public class AntIfCondition extends AntFlowControl implements UIHandler{
 		}
 		return canMoveDown;
 	}
+	
 
 	protected Element getScriptConditionElement(Document doc){
 		Element scriptCondition = doc.createElement(CommonResources.SCRIPT_CONDITION);
 		scriptCondition.setAttribute("value", "false");
-		
 //		if (test.getCompareOption() == CompareOptions.CUSTOM){
 //			if (test.getScriptFile() == null){
 //				scriptCondition.setAttribute("src", "");

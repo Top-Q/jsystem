@@ -1393,11 +1393,15 @@ public class ScenarioHelpers {
 			@Override
 			public void visitScenarioElement(JTest t1) throws Exception {
 				String uuid = null;
-				if (t1 instanceof AntForLoop){
-					uuid = ((AntForLoop)t1).getFlowFullUUID();
+				// ITAI: This is a disgusting hacking used for flow controls.
+				// Without it the gathering of the uuid's would be wrong
+				// When cleaning redundant parameters and the parameters
+				// Would be deleted from the properties files.
+				if (t1 instanceof AntFlowControl) {
+					uuid = ((AntFlowControl) t1).getFlowFullUUID();
 				} else {
 					uuid = t1.getFullUUID();
-					
+
 				}
 				ret.add(uuid);
 			};

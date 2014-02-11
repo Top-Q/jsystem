@@ -96,6 +96,7 @@ import jsystem.framework.scenario.ScenarioListener;
 import jsystem.framework.scenario.ScenariosManager;
 import jsystem.framework.scenario.SenarioEditorManager;
 import jsystem.framework.scenario.TestsContainer;
+import jsystem.framework.scenario.flow_control.AntDataDriven;
 import jsystem.framework.scenario.flow_control.AntFlowControl;
 import jsystem.framework.scenario.flow_control.AntForLoop;
 import jsystem.framework.scenario.flow_control.AntIfCondition;
@@ -124,6 +125,7 @@ import jsystem.treeui.actionItems.MoveDownAction;
 import jsystem.treeui.actionItems.MoveToBottomAction;
 import jsystem.treeui.actionItems.MoveToTopAction;
 import jsystem.treeui.actionItems.MoveUpAction;
+import jsystem.treeui.actionItems.NewDataDrivenAction;
 import jsystem.treeui.actionItems.NewElseIfAction;
 import jsystem.treeui.actionItems.NewForLoopAction;
 import jsystem.treeui.actionItems.NewIfConditionAction;
@@ -699,7 +701,7 @@ public class TestsTableController extends Observable implements TestStatusListen
 	 * Actions that can be performed on the scenarios tree
 	 */
 	public enum ActionType {
-		DOWN, UP, DELETE, NEW_FOR_LOOP, NEW_SWITCH, NEW_SWITH_CASE, NEW_IF_CONDITION, NEW_ELSE_IF, TO_BOTTOM, TO_TOP;
+		DOWN, UP, DELETE, NEW_FOR_LOOP, NEW_SWITCH, NEW_SWITH_CASE, NEW_IF_CONDITION, NEW_ELSE_IF, NEW_DATA_DRIVEN, TO_BOTTOM, TO_TOP;
 	}
 
 	public void setTestsTreeControler(TestsTreeController controler) {
@@ -899,7 +901,10 @@ public class TestsTableController extends Observable implements TestStatusListen
 			((AntIfCondition) condition).addTest(new AntIfElse(condition, null));
 		} else if (type.equals(ActionType.NEW_ELSE_IF)) {
 			condition = new AntIfElseIf();
-		} else {
+		} else if (type.equals(ActionType.NEW_DATA_DRIVEN)) {
+			condition = new AntDataDriven();
+		}
+		else {
 			// error
 		}
 		oneCondition.add(condition);
@@ -2673,6 +2678,7 @@ public class TestsTableController extends Observable implements TestStatusListen
 		toolBar.add(NewSwitchCaseAction.getInstance());
 		toolBar.add(NewIfConditionAction.getInstance());
 		toolBar.add(NewElseIfAction.getInstance());
+		toolBar.add(NewDataDrivenAction.getInstance());
 	}
 
 	private void addSourceControlButtons(JToolBar toolBar) {

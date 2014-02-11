@@ -46,7 +46,7 @@ public class Launcher2 {
 	 *                if the URLs required for the classloader cannot be
 	 *                created.
 	 */
-	private void run(String[] args) throws Exception {
+	public void run(String[] args) throws Exception {
 		if (isRunFromJar()) { // if running from jar change the user.dir to
 			// the parent dir
 			File cd = new File(System.getProperty("user.dir"));

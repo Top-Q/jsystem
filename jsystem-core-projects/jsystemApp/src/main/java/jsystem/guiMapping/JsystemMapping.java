@@ -304,6 +304,7 @@ public class JsystemMapping  {
 	public String getCaseButton(){return returnStringProperties("CASE_BUTTON");}
 	public String getIfButton(){return returnStringProperties("IF_BUTTON");}
 	public String getElseIfButton(){return returnStringProperties("ELSEIF_BUTTON");}
+	public String getDataDrivenButton(){return returnStringProperties("DATA_DRIVEN_BUTTON");}
 	
 	
 	/*

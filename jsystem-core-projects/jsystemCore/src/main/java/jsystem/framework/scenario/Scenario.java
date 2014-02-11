@@ -697,6 +697,11 @@ public class Scenario extends JTestContainer {
 		jsystemForTaskAntTaskdef.setAttribute("name", CommonResources.JSYSTEM_FOR);
 		jsystemForTaskAntTaskdef.setAttribute("classname", "com.aqua.anttask.jsystem.JSystemForTask");
 		getRootElement().appendChild(jsystemForTaskAntTaskdef);
+		
+		Element jsystemDataDrivenTaskAntTaskdef = doc.createElement("taskdef");
+		jsystemDataDrivenTaskAntTaskdef.setAttribute("name", CommonResources.JSYSTEM_DATADRIVEN);
+		jsystemDataDrivenTaskAntTaskdef.setAttribute("classname", "com.aqua.anttask.jsystem.JSystemDataDrivenTask");
+		getRootElement().appendChild(jsystemDataDrivenTaskAntTaskdef);
 
 		Element jsystemSetAntProperties = doc.createElement("taskdef");
 		jsystemSetAntProperties.setAttribute("name", CommonResources.SET_ANT_PROPERTIES);

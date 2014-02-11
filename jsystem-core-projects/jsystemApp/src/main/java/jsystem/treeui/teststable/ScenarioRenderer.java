@@ -23,6 +23,7 @@ import jsystem.framework.scenario.RunnerScript;
 import jsystem.framework.scenario.RunnerTest;
 import jsystem.framework.scenario.Scenario;
 import jsystem.framework.scenario.ScenariosManager;
+import jsystem.framework.scenario.flow_control.AntDataDriven;
 import jsystem.framework.scenario.flow_control.AntForLoop;
 import jsystem.framework.scenario.flow_control.AntIfCondition;
 import jsystem.framework.scenario.flow_control.AntIfElse;
@@ -110,6 +111,8 @@ public class ScenarioRenderer implements TreeCellRenderer {
 			if (node.getTest().getClass() == AntForLoop.class) { // FOR LOOP
 				panel.label.setIcon(ImageCenter.getInstance().getImage(ImageCenter.ICON_FOR_LOOP));
 				panel.setToolTipText(((AntForLoop) test).defaultComment(true));
+			} else if (node.getTest().getClass() == AntDataDriven.class) { //  DATA DRIVEN
+				panel.label.setIcon(ImageCenter.getInstance().getImage(ImageCenter.ICON_DATA_DRIVEN));
 			} else if (node.getTest().getClass() == AntSwitch.class) { // SWITCH
 				panel.label.setIcon(ImageCenter.getInstance().getImage(ImageCenter.ICON_SWITCH));
 			} else if (node.getTest().getClass() == AntSwitchDefault.class) { // SWITCH

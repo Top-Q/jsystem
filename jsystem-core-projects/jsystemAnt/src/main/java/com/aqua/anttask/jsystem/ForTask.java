@@ -149,7 +149,16 @@ public class ForTask extends Task {
 	public void setParam(String param) {
 		this.param = param;
 	}
+	
 
+	protected String getParam() {
+		return param;
+	}
+	
+	protected MacroDef getMacroDef() {
+		return macroDef;
+	}
+	
 	private Path getOrCreatePath() {
 		if (currPath == null) {
 			currPath = new Path(getProject());
@@ -260,7 +269,7 @@ public class ForTask extends Task {
 		}
 	}
 
-	private void doSequentialIteration(String val) {
+	protected void doSequentialIteration(String val) {
 		MacroInstance instance = new MacroInstance();
 		instance.setProject(getProject());
 		instance.setOwningTarget(getOwningTarget());

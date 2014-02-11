@@ -156,6 +156,8 @@ public class CommonResources {
 	
 	public static final String JSYSTEM_SWITCH = "jsystemswitch";
 	
+	public static final String JSYSTEM_DATADRIVEN = "jsystemdatadriven";
+	
 	public static final String JSYSTEM_FOR = "jsystemfor";
 	
 	public static final String SET_ANT_PROPERTIES = "jsystemsetantproperties";

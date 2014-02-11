@@ -17,6 +17,7 @@ import javax.mail.MethodNotSupportedException;
 
 import jsystem.framework.scenario.UpgradeAndBackwardCompatibility.AntElement;
 import jsystem.framework.scenario.UpgradeAndBackwardCompatibility.Version;
+import jsystem.framework.scenario.flow_control.AntDataDriven;
 import jsystem.framework.scenario.flow_control.AntFlowControl;
 import jsystem.framework.scenario.flow_control.AntForLoop;
 import jsystem.framework.scenario.flow_control.AntIfCondition;
@@ -128,7 +129,9 @@ public abstract class JTestContainer implements JTest {
 					newContainer = AntForLoop.fromElement(this, element);
 				} else if (tag.equals(AntIfCondition.XML_TAG)) {
 					newContainer = AntIfCondition.fromElement(this, element);
-				} else if (tag.equals(AntIfElse.XML_TAG)) {
+				}else if (tag.equals(AntDataDriven.XML_TAG)) {
+					newContainer = AntDataDriven.fromElement(this, element);
+				}else if (tag.equals(AntIfElse.XML_TAG)) {
 					newContainer = AntIfElse.fromElement(this, element);
 				} else if (tag.equals(AntIfElseIf.XML_TAG)) {
 					newContainer = AntIfElseIf.fromElement(this, element);
