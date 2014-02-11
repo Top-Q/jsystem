@@ -15,13 +15,11 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jsystem.extensions.report.html.HtmlTestReporter;
 import jsystem.framework.FrameworkOptions;
 import jsystem.framework.JSystemProperties;
 import jsystem.framework.common.JSystemInnerTests;
 import jsystem.framework.report.Reporter;
 import jsystem.framework.report.Summary;
-import jsystem.framework.sut.SutFactory;
 import jsystem.utils.SortedProperties;
 import jsystem.utils.StringUtils;
 
@@ -87,24 +85,6 @@ public class HtmlSummaryReporter implements Serializable{
 		Tag body = new Tag("body");
 		body.add(new Tag("H1", null, "JSystem summary report"));
 		
-		String link = null;
-		if (link != null) {
-			if (HtmlTestReporter.isImage(link)) {
-				try {
-					File setupFile = new File(currentDir, "setup.html");
-					FileWriter writer = new FileWriter(setupFile);
-					writer.write("<html><body><img src=\"" + link + "\"></body></html>");
-					writer.close();
-					body.add(new Tag("a", "href=\"setup.html\"", "sut: "
-							+ SutFactory.getInstance().getSutInstance().getSetupName()));
-				} catch (Exception e) {
-				}
-			} else {
-				body.add(new Tag("a", "href=\"" + link + "\"", "sut: "
-						+ SutFactory.getInstance().getSutInstance().getSetupName()));
-			}
-			body.add(new Tag("p", false));
-		}
 		html.add(body);
 		main = new Tag("div", "align=left");
 		main.add(new Tag("p", false));
