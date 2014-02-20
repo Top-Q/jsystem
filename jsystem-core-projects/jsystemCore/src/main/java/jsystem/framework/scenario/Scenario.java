@@ -463,23 +463,6 @@ public class Scenario extends JTestContainer {
 		return (value != null && value.toLowerCase().equals("true"));
 	}
 
-	private static boolean loadScenarioAsTest(Scenario s) throws Exception {
-		String scenarioAsTest = ScenarioHelpers.getTestProperty(null, ((Scenario) s).getName(),
-				RunningProperties.SCENARIO_AS_TEST_TAG);
-		Scenario parentScenario = s.getParentScenario();
-		
-		//Searching for the top most level on which the property is set on
-		while (parentScenario != null) {
-			String tempScenarioAsTest;
-			if ((tempScenarioAsTest = ScenarioHelpers.getTestProperty(s.getUUIDUpTo(parentScenario),
-					parentScenario.getName(), RunningProperties.SCENARIO_AS_TEST_TAG)) != null) {
-				scenarioAsTest = tempScenarioAsTest;
-			}
-			parentScenario = parentScenario.getParentScenario();
-		}
-		return (scenarioAsTest != null && scenarioAsTest.toLowerCase().equals("true"));
-	}
-
 	private static String loadExternalId(Scenario s) throws Exception {
 		String value = ScenarioHelpers.getTestProperty(s.getFullUUID(), ((Scenario) s.getRoot()).getName(),
 				RunningProperties.SCENARIO_EXTERNAL_ID);
@@ -491,35 +474,31 @@ public class Scenario extends JTestContainer {
 				RunningProperties.SCENARIO_PROJECT_NAME);
 		return value;
 	}
+	
+	private static boolean getPropertyUpTo(Scenario scenario,String property){
+		String value  = ScenarioHelpers.getAllTestPropertiesUpTo(scenario, null, false).getProperty(property);
+		return (value != null && value.toLowerCase().equals("true"));		
+	}
+	
+	private static boolean loadScenarioAsTest(Scenario s) throws Exception {
+		return getPropertyUpTo(s, RunningProperties.SCENARIO_AS_TEST_TAG);
+	}
 
 	private static boolean loadMarkedAsKnownIssue(Scenario s) throws Exception {
-		String value = ScenarioHelpers.getTestProperty(s.getFullUUID(), ((Scenario) s.getRoot()).getName(),
-				RunningProperties.MARKED_AS_KNOWN_ISSUE);
-		if (value == null) {
-			value = ScenarioHelpers.getScenarioProperties(s.getName()).getProperty(
-					RunningProperties.MARKED_AS_KNOWN_ISSUE);
-		}
-		return (value != null && value.toLowerCase().equals("true"));
+		return getPropertyUpTo(s, RunningProperties.MARKED_AS_KNOWN_ISSUE);
 	}
 
 	private static boolean loadMarkedAsNegativeTest(Scenario s) throws Exception {
-		String value = ScenarioHelpers.getTestProperty(s.getFullUUID(), ((Scenario) s.getRoot()).getName(),
-				RunningProperties.MARKED_AS_NEGATIVE_TEST);
-		if (value == null) {
-			value = ScenarioHelpers.getScenarioProperties(s.getName()).getProperty(
-					RunningProperties.MARKED_AS_NEGATIVE_TEST);
-		}
-		return (value != null && value.toLowerCase().equals("true"));
+		return getPropertyUpTo(s, RunningProperties.MARKED_AS_NEGATIVE_TEST);
 	}
 
 	private static boolean loadHiddenInHTML(Scenario s) throws Exception {
-		return ScenarioHelpers.isHiddenInHTML(s.getFullUUID(), ((Scenario) s.getRoot()).getName());
+		return getPropertyUpTo(s, RunningProperties.HIDDEN_IN_HTML);
+//		return ScenarioHelpers.isHiddenInHTML(s.getFullUUID(), ((Scenario) s.getRoot()).getName());
 	}
 
 	private static boolean loadDisable(Scenario s) throws Exception {
-		String value = ScenarioHelpers.getTestProperty(s.getFullUUID(), ((Scenario) s.getRoot()).getName(),
-				RunningProperties.IS_DISABLED);
-		return (value != null && value.toLowerCase().equals("true"));
+		return getPropertyUpTo(s, RunningProperties.IS_DISABLED);
 	}
 
 	/**
