@@ -1191,6 +1191,12 @@ public class ScenarioHelpers {
 	public static Properties getAllTestPropertiesUpTo(JTest test,
 			Scenario toStopAt, boolean ignoreCache) {
 		Properties props = new Properties();
+		if (null == test){
+			//ITAI: This can happen in case which we failed to initialize the test
+			//Class. We would report on it later on but we need to pass
+			//This part. See issue #193
+			return props;
+		}
 
 		// check from closest Scenario up
 		Scenario parent = test.getMyScenario();

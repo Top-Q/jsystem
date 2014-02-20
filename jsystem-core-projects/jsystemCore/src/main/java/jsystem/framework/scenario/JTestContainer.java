@@ -1068,7 +1068,11 @@ public abstract class JTestContainer implements JTest {
 			if (allTests.elementAt(i) instanceof RunnerTest) {
 				RunnerTest rt = (RunnerTest) allTests.elementAt(i);
 				if (test instanceof SystemTest) {
-					if (((SystemTest) test).getFullUUID().equals(rt.getFullUUID())) {
+					//ITAI: There are cases in which the test is without uuid. 
+					//This can happen if we failed to initialize it. It would be
+					//Handled later on in the flow so don't worry about it.
+					if (((SystemTest) test).getFullUUID() == null
+							|| ((SystemTest) test).getFullUUID().equals(rt.getFullUUID())) {
 						return rt;
 					}
 				}

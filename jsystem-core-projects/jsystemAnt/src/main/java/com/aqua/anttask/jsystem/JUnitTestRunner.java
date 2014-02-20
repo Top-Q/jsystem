@@ -357,12 +357,17 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
 	                                                  loader);
 	                    }
                     } catch (ClassNotFoundException e1){
-                    	throw e;
+						// ITAI: In this case, we will continue with a null
+						// testClass. This would be handled and reported
+						// Later on in the flow. Please do not throw exception
+						// in this stage!
                     }
                 	
                 }
                 if(methodName != null){
-                	if (TestCase.class.isAssignableFrom(testClass)) {
+					// The testClass can be null if we failed to initialize it
+					// before. We will continue for now
+                	if (testClass != null && TestCase.class.isAssignableFrom(testClass)) {
                 		// Method from a JUnit3 test case (Gooli)
                 		suite = (TestCase)testClass.newInstance();
                 		((TestCase)suite).setName(methodName);
