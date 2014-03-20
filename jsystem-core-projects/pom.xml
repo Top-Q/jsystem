@@ -4,13 +4,13 @@
 	<parent>
 		<groupId>org.jsystemtest</groupId>
 		<artifactId>jsystem-parent</artifactId>
-		<version>6.1.00</version>		
+		<version>6.1.01-SNAPSHOT</version>		
 		<relativePath>../jsystem-parent</relativePath>
 	</parent>
 	<artifactId>jsystem-core-projects</artifactId>
 	<packaging>pom</packaging>
 	<properties>
-		<jsystem.version>6.1.00</jsystem.version>
+		<jsystem.version>6.1.01-SNAPSHOT</jsystem.version>
 	</properties>
 	<modules>
 		<module>jsystem-launcher</module>
