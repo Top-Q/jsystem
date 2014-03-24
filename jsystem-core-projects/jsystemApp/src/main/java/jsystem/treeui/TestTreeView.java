@@ -3,6 +3,51 @@
  */
 package jsystem.treeui;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Frame;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.File;
+import java.lang.reflect.Constructor;
+import java.util.StringTokenizer;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.swing.BoxLayout;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
+import javax.swing.JToolBar;
+import javax.swing.UIDefaults;
+import javax.swing.UIManager;
+import javax.swing.WindowConstants;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.plaf.ColorUIResource;
+import javax.swing.plaf.basic.BasicComboBoxRenderer;
+
 import jsystem.framework.FrameworkOptions;
 import jsystem.framework.JSystemProperties;
 import jsystem.framework.TestRunnerFrame;
@@ -18,13 +63,35 @@ import jsystem.guiMapping.JsystemMapping;
 import jsystem.runner.ErrorLevel;
 import jsystem.runner.agent.server.RunnerEngine;
 import jsystem.runner.loader.LoadersManager;
-import jsystem.treeui.actionItems.*;
+import jsystem.treeui.actionItems.CheckStatusAction;
+import jsystem.treeui.actionItems.ClearScenarioAction;
+import jsystem.treeui.actionItems.CopyScenarioAction;
+import jsystem.treeui.actionItems.EditSutAction;
+import jsystem.treeui.actionItems.ExitAction;
+import jsystem.treeui.actionItems.ExportProjectAction;
+import jsystem.treeui.actionItems.ImportProjectAction;
+import jsystem.treeui.actionItems.InitReportersAction;
+import jsystem.treeui.actionItems.NewScenarioAction;
+import jsystem.treeui.actionItems.OpenReportsApplicationAction;
+import jsystem.treeui.actionItems.PauseAction;
+import jsystem.treeui.actionItems.PlayAction;
+import jsystem.treeui.actionItems.PublishXmlResultAction;
+import jsystem.treeui.actionItems.RefreshAction;
+import jsystem.treeui.actionItems.SaveFailedSequenceAction;
+import jsystem.treeui.actionItems.SaveScenarioAction;
+import jsystem.treeui.actionItems.StopAction;
+import jsystem.treeui.actionItems.SwitchProjectAction;
+import jsystem.treeui.actionItems.SystemObjectBrowserAction;
+import jsystem.treeui.actionItems.ViewLogAction;
+import jsystem.treeui.actionItems.ViewProcessedSutAction;
+import jsystem.treeui.actionItems.ViewTestCodeAction;
 import jsystem.treeui.client.JSystemAgentClientsPool;
 import jsystem.treeui.client.RunnerEngineManager;
 import jsystem.treeui.error.ErrorPanel;
 import jsystem.treeui.fixtureui.FixturePanel;
 import jsystem.treeui.fixtureui.FixtureView;
 import jsystem.treeui.images.ImageCenter;
+import jsystem.treeui.interfaces.JSystemTab;
 import jsystem.treeui.reporter.ReportersPanel;
 import jsystem.treeui.suteditor.planner.SutTreeDialog;
 import jsystem.treeui.suteditor.planner.SystemObjectBrowserUtils;
@@ -33,24 +100,13 @@ import jsystem.treeui.teststable.TestsTableController;
 import jsystem.treeui.tree.TestTreePanel;
 import jsystem.treeui.tree.TestsTreeController;
 import jsystem.treeui.tree.TestsTreeListener;
-import jsystem.utils.*;
-import org.w3c.dom.Document;
+import jsystem.utils.FileUtils;
+import jsystem.utils.StringUtils;
+import jsystem.utils.SwingUtils;
+import jsystem.utils.UploadRunner;
+import jsystem.utils.XmlUtils;
 
-import javax.swing.*;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.plaf.ColorUIResource;
-import javax.swing.plaf.basic.BasicComboBoxRenderer;
-import java.awt.*;
-import java.awt.event.*;
-import java.io.File;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-import java.util.StringTokenizer;
-import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.w3c.dom.Document;
 
 /**
  * 
@@ -107,7 +163,7 @@ public class TestTreeView extends JFrame implements ActionListener, TestsTreeLis
 	ProgressController progressController;
 
 	private JCheckBox repeatCheckBox;
-	
+
 	private JCheckBox debugCheckBox;
 
 	private JCheckBox freezeCheckBox;
@@ -199,8 +255,9 @@ public class TestTreeView extends JFrame implements ActionListener, TestsTreeLis
 		fixture = fixtureView.initPanel();
 		tabbes.addTab(JsystemMapping.getInstance().getFixtureTAB(), fixture);
 
-		// Generic tabs - dynamic class loading of the chosen tabs in JSystem properties Generic_tabs 
-		// Uses the init & getTabName functions 
+		// Generic tabs - dynamic class loading of the chosen tabs in JSystem
+		// properties Generic_tabs
+		// Uses the init & getTabName functions
 		String extraTabs = JSystemProperties.getInstance().getPreference(FrameworkOptions.GENERIC_TABS);
 		if (extraTabs != null) {
 			StringTokenizer st = new StringTokenizer(extraTabs, ";");
@@ -208,28 +265,17 @@ public class TestTreeView extends JFrame implements ActionListener, TestsTreeLis
 				String className = st.nextToken();
 				try {
 					Class<?> tabClass = LoadersManager.getInstance().getLoader().loadClass(className);
-					//Get the constructor
+					// Get the constructor
 					Constructor<?>[] constractors = tabClass.getConstructors();
-					Object instance = constractors[0].newInstance(new Object[] {});
-
-                    //Set the "TestsTableController" object on the new tab
-                    Method setTestsTableController = tabClass.getMethod("setTestsTableController",
-                            new Class[]{TestsTableController.class});
-                    setTestsTableController.invoke(instance, new Object[]{tableController});
-
-                    //Get the new tab name
-                    Method tabName = tabClass.getMethod("getTabName");
-                    String name = (String) tabName.invoke(instance, new Object[] {});
-
-                    //Call the tab "init" method for getting the JPanel Component
-					Method init = tabClass.getMethod("init");
-					tabbes.addTab(name, (Component)init.invoke(instance, new Object[] {}));
+					JSystemTab tabInstance = (JSystemTab) constractors[0].newInstance(new Object[] {});
+					tabInstance.setTestsTableController(tableController);
+					tabbes.addTab(tabInstance.getTabName(), tabInstance.init());
 				} catch (Exception e) {
 					log.log(Level.WARNING, "fail to load tab: " + className, e);
 				}
-			}	
+			}
 		}
-		
+
 		tabbes.addChangeListener(testInformation);
 		JPanel jp = new JPanel();
 		jp.setLayout(new BorderLayout());
@@ -333,20 +379,19 @@ public class TestTreeView extends JFrame implements ActionListener, TestsTreeLis
 
 		// add the stop button
 		runToolBar.add(StopAction.getInstance());
-//		runToolBar.add(ToggleDebugOptionAction.getInstance());
-		
+		// runToolBar.add(ToggleDebugOptionAction.getInstance());
+
 		debugCheckBox = new JCheckBox("Debug", false);
 		debugCheckBox.setToolTipText("Debug Mode");
 		debugCheckBox.setOpaque(false);
 
 		runToolBar.add(debugCheckBox);
-   		String vmParams = JSystemProperties.getInstance().getPreference(FrameworkOptions.TEST_VM_PARMS);
-        if(null!= vmParams && vmParams.length()>3){
-        	debugCheckBox.setSelected(true);
-        }
+		String vmParams = JSystemProperties.getInstance().getPreference(FrameworkOptions.TEST_VM_PARMS);
+		if (null != vmParams && vmParams.length() > 3) {
+			debugCheckBox.setSelected(true);
+		}
 
 		debugCheckBox.addActionListener(this);
-		
 
 		toolBar.add(SaveFailedSequenceAction.getInstance());
 		toolBar.add(RefreshAction.getInstance());
@@ -517,17 +562,16 @@ public class TestTreeView extends JFrame implements ActionListener, TestsTreeLis
 		} else if (e.getSource().equals(repeatCheckBox)) {
 			repeateScenario();
 		} else if (e.getSource().equals(debugCheckBox)) {
-			if(debugCheckBox.isSelected()){
+			if (debugCheckBox.isSelected()) {
 				String debug = "-classic -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=${8787},server=y,suspend=y";
-				
-		   		String vmParams = JSystemProperties.getInstance().getPreference(FrameworkOptions.TEST_VM_PARMS);
-		        if(vmParams==null || vmParams.length()<3){
-		        	vmParams = new String(debug);
-		        }
-				
-		        JSystemProperties.getInstance().setPreference(FrameworkOptions.TEST_VM_PARMS, debug);
-			}
-			else{
+
+				String vmParams = JSystemProperties.getInstance().getPreference(FrameworkOptions.TEST_VM_PARMS);
+				if (vmParams == null || vmParams.length() < 3) {
+					vmParams = new String(debug);
+				}
+
+				JSystemProperties.getInstance().setPreference(FrameworkOptions.TEST_VM_PARMS, debug);
+			} else {
 				JSystemProperties.getInstance().setPreference(FrameworkOptions.TEST_VM_PARMS, "");
 			}
 		} else if (e.getSource().equals(sutPlanner)) {
@@ -624,18 +668,17 @@ public class TestTreeView extends JFrame implements ActionListener, TestsTreeLis
 		Object selectedItem = sutCombo.getSelectedItem();
 		if (selectedItem != null) {
 			String selectedItemString = sutCombo.getSelectedItem().toString();
-			if(0!=selectedItemString.length())
-			tooltip = selectedItemString;
-		}else{
+			if (0 != selectedItemString.length())
+				tooltip = selectedItemString;
+		} else {
 			String sutName = JSystemProperties.getInstance().getPreference(FrameworkOptions.USED_SUT_FILE);
-			if(sutName == null){
-				
+			if (sutName == null) {
+
 			}
 			tooltip = sutName;
 		}
 		sutCombo.setToolTipText(tooltip);
-		
-		
+
 	}
 
 	public boolean validateUrl(String url) {
@@ -678,7 +721,8 @@ public class TestTreeView extends JFrame implements ActionListener, TestsTreeLis
 	}
 
 	private void changeSut(String sutName) {
-		// TODO: Added by Itai. I need it for the source control plug-in but I am
+		// TODO: Added by Itai. I need it for the source control plug-in but I
+		// am
 		// not sure it will not cause side effects.
 		ListenerstManager.getInstance().sutChanged(sutName);
 		try {
@@ -805,7 +849,7 @@ public class TestTreeView extends JFrame implements ActionListener, TestsTreeLis
 
 	private void configureSutStatus(boolean enable) {
 		sutCombo.setEnabled(enable);
-		if (null != sutPlanner){
+		if (null != sutPlanner) {
 			sutPlanner.setEnabled(enable);
 		}
 	}
@@ -987,8 +1031,8 @@ public class TestTreeView extends JFrame implements ActionListener, TestsTreeLis
 		return menuBuilder;
 	}
 
-//	public PublisherTreePanel getPublishPanel() {
-//		return publishPanel;
-//	}
+	// public PublisherTreePanel getPublishPanel() {
+	// return publishPanel;
+	// }
 
 }
