@@ -1,5 +1,7 @@
 package jsystem.treeui.interfaces;
 
+import jsystem.treeui.teststable.TestsTableController;
+
 import javax.swing.JPanel;
 
 /**
@@ -22,5 +24,10 @@ public interface JSystemTab {
 	 * @return the tab title
 	 */
 	public String getTabName();
-	
+
+    /**
+     * Set the TestsTableController from TestTreeView
+     */
+    public void setTestsTableController(TestsTableController testsTableController);
+
 }
