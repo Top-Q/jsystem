@@ -29,6 +29,7 @@ public class TestsExamples extends SystemTestCase4 {
 	private Account account;
 	private Account[] accountArr;
 	private HarryPotterBook book = HarryPotterBook.Chamber_of_Secrets;
+	private String[] books;
 	// Parameters in sections. See the @ParameterProperties of each of the
 	// parameters setters
 	private int intInSection9;
@@ -86,7 +87,7 @@ public class TestsExamples extends SystemTestCase4 {
 	 */
 	@Test
 	@TestProperties(name = "Test with file '${file}' string '${str}' integer ${i} date ${date}", paramsInclude = {
-			"file", "str", "i", "date", "strArr", "book", "intInSection9", "strInSection9", "fileInSection9" })
+			"file", "str", "i", "date", "strArr", "book", "intInSection9", "strInSection9", "fileInSection9","books" })
 	public void testWithParameters() {
 		report.report("File: " + file.getAbsolutePath());
 		report.report("Date: " + date.toString());
@@ -293,6 +294,26 @@ public class TestsExamples extends SystemTestCase4 {
 	@ParameterProperties(section = "Section9")
 	public void setFileInSection9(File fileInSection9) {
 		this.fileInSection9 = fileInSection9;
+	}
+
+	/**
+	 * @see getBooksOptions
+	 * @return
+	 */
+	public String[] getBooks() {
+		return books;
+	}
+
+	@ParameterProperties(description = "Multiple selection example")
+	public void setBooks(String[] books) {
+		this.books = books;
+	}
+
+	public String[] getBooksOptions() {
+		return new String[] { HarryPotterBook.Chamber_of_Secrets.name(), HarryPotterBook.Deathly_Hallows.name(),
+				HarryPotterBook.Half_Blood_Prince.name(), HarryPotterBook.Goblet_of_Fire.name(),
+				HarryPotterBook.Order_of_the_Phoenix.name(), HarryPotterBook.Philosophers_Stone.name(),
+				HarryPotterBook.Prisoner_of_Azkaban.name() };
 	}
 
 }
