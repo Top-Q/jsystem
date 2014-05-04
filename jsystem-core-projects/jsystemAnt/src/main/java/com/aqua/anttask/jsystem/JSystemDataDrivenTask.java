@@ -68,7 +68,7 @@ public class JSystemDataDrivenTask extends ForTask {
 			log.log(Level.WARNING, "Failed to collect data due to " + e.getMessage());
 			return;
 		}
-		if (data == null || data.size() <= 1) {
+		if (data == null || data.size() == 0) {
 			log.log(Level.INFO, "Invalid data");
 			return;
 		}
