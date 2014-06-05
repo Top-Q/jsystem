@@ -3,16 +3,9 @@
  */
 package jsystem.treeui.actionItems;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-
-import javax.swing.Action;
-import javax.swing.KeyStroke;
-
 import jsystem.framework.FrameworkOptions;
-import jsystem.framework.JSystemProperties;
 import jsystem.framework.GeneralEnums.RunMode;
+import jsystem.framework.JSystemProperties;
 import jsystem.framework.report.ListenerstManager;
 import jsystem.framework.scenario.DistributedExecutionHelper;
 import jsystem.framework.scenario.Scenario;
@@ -32,6 +25,11 @@ import jsystem.treeui.images.ImageCenter;
 import jsystem.treeui.publisher.PublisherTreePanel;
 import jsystem.utils.ProgressNotifier;
 import jsystem.utils.StringUtils;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 public class PlayAction extends IgnisAction {
 
@@ -57,7 +55,11 @@ public class PlayAction extends IgnisAction {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		boolean wasDirty = ScenariosManager.isDirty();
+        //Fire property change event with the name of the Action class
+        //In order to get this event you need to register to PropertyChangeListener.
+        firePropertyChange(action.getClass().getSimpleName(),null,null);
+
+        boolean wasDirty = ScenariosManager.isDirty();
 		try {
 			SaveScenarioAction.getInstance().saveCurrentScenarioWithConfirmation();
 		} catch (Exception e1) {
