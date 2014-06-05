@@ -3,23 +3,9 @@
  */
 package jsystem.treeui.actionItems;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.io.File;
-import java.util.logging.Logger;
-
-import javax.swing.Action;
-import javax.swing.JOptionPane;
-import javax.swing.KeyStroke;
-import javax.swing.SwingWorker;
-
 import jsystem.framework.FrameworkOptions;
 import jsystem.framework.report.ListenerstManager;
-import jsystem.framework.scenario.Parameter;
-import jsystem.framework.scenario.Scenario;
-import jsystem.framework.scenario.ScenarioChangeType;
-import jsystem.framework.scenario.ScenarioListener;
-import jsystem.framework.scenario.ScenariosManager;
+import jsystem.framework.scenario.*;
 import jsystem.guiMapping.JsystemMapping;
 import jsystem.runner.ErrorLevel;
 import jsystem.treeui.WaitDialog;
@@ -27,6 +13,12 @@ import jsystem.treeui.dialog.DialogWithCheckBox;
 import jsystem.treeui.error.ErrorPanel;
 import jsystem.treeui.images.ImageCenter;
 import jsystem.treeui.utilities.UnmodifiableFileHandler;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.io.File;
+import java.util.logging.Logger;
 
 public class SaveScenarioAction extends IgnisAction implements ScenarioListener {
 
@@ -75,7 +67,11 @@ public class SaveScenarioAction extends IgnisAction implements ScenarioListener 
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (!UnmodifiableFileHandler.getInstance().makeWritable(
+        //Fire property change event with the name of the Action class
+        //In order to get this event you need to register to PropertyChangeListener.
+        firePropertyChange(action.getClass().getSimpleName(),null,null);
+
+        if (!UnmodifiableFileHandler.getInstance().makeWritable(
 				ScenariosManager.getInstance().getCurrentScenario().getScenarioFiles())) {
 			// Failed to set file permissions to writable or user canceled
 			// operation.
