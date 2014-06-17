@@ -3,19 +3,15 @@
  */
 package jsystem.treeui.actionItems;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.Action;
-import javax.swing.JOptionPane;
-import javax.swing.KeyStroke;
-
-import org.jfree.util.Log;
-
 import jsystem.framework.scenario.ScenariosManager;
 import jsystem.guiMapping.JsystemMapping;
 import jsystem.treeui.TestRunner;
 import jsystem.treeui.images.ImageCenter;
+import org.jfree.util.Log;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
 public class NewScenarioAction extends IgnisAction {
 
@@ -42,6 +38,10 @@ public class NewScenarioAction extends IgnisAction {
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
+        //Fire property change event with the name of the Action class
+        //In order to get this event you need to register to PropertyChangeListener.
+        firePropertyChange(action.getClass().getSimpleName(),null,null);
+
 		int save_Ans = 0;
 		try {
 			save_Ans = SaveScenarioAction.getInstance().saveCurrentScenarioWithConfirmation();
