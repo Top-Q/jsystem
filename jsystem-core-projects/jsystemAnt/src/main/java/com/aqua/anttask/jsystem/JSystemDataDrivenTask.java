@@ -6,24 +6,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jsystem.utils.StringUtils;
-
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.MacroInstance;
 
-public class JSystemDataDrivenTask extends ForTask {
+public class JSystemDataDrivenTask extends PropertyReaderTask {
 
 	private static final String DELIMITER = ";";
 
 	static Logger log = Logger.getLogger(JSystemDataDrivenTask.class.getName());
-
-	String uuid;
-	String scenarioString;
 
 	private String file;
 
@@ -33,24 +27,13 @@ public class JSystemDataDrivenTask extends ForTask {
 
 	private int itrerationNum = 0;
 
-	public void setParentName(String name) {
-		if (name.startsWith(".")) {
-			name = name.substring(1);
-		}
-		scenarioString = name;
-	}
-
 	public void execute() throws BuildException {
 
-		if (!JSystemAntUtil.doesContainerHaveEnabledTests(uuid)) {
+		if (!JSystemAntUtil.doesContainerHaveEnabledTests(getUuid())) {
 			return;
 		}
 
-		Properties properties = JSystemAntUtil.getPropertiesValue(scenarioString, uuid);
-		type = JSystemAntUtil.getParameterValue("Type", "", properties);
-		if (StringUtils.isEmpty(type)) {
-			type = "Csv";
-		}
+		type = getParameterFromProperties("Type", "Csv");
 		DataCollector collector = null;
 		if (type.equals("Excel")) {
 			collector = new ExcelDataCollector();
@@ -63,7 +46,7 @@ public class JSystemDataDrivenTask extends ForTask {
 			return;
 		}
 		try {
-			data = collector.collect(properties);
+			data = collector.collect();
 		} catch (DataCollectorException e) {
 			log.log(Level.WARNING, "Failed to collect data due to " + e.getMessage());
 			return;
@@ -126,17 +109,13 @@ public class JSystemDataDrivenTask extends ForTask {
 		this.type = type;
 	}
 
-	public void setFullUuid(String uuid) {
-		this.uuid = uuid;
-	}
-
 	class CsvDataCollector implements DataCollector {
 
 		private static final String SEPARATION_STRING = ",";
 
 		@Override
-		public List<Map<String, Object>> collect(Properties properties) throws DataCollectorException {
-			file = JSystemAntUtil.getParameterValue("File", "", properties);
+		public List<Map<String, Object>> collect() throws DataCollectorException {
+			file = getParameterFromProperties("File","");
 			final File csvFile = new File(file);
 			List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
 			Scanner lineScanner = null;
@@ -197,7 +176,7 @@ public class JSystemDataDrivenTask extends ForTask {
 	class ExcelDataCollector implements DataCollector {
 
 		@Override
-		public List<Map<String, Object>> collect(Properties properties) throws DataCollectorException {
+		public List<Map<String, Object>> collect() throws DataCollectorException {
 			throw new DataCollectorException("Excel collector is not yet implemented");
 		}
 
@@ -206,14 +185,14 @@ public class JSystemDataDrivenTask extends ForTask {
 	class DatabaseDataCollector implements DataCollector {
 
 		@Override
-		public List<Map<String, Object>> collect(Properties properties) throws DataCollectorException {
+		public List<Map<String, Object>> collect() throws DataCollectorException {
 			throw new DataCollectorException("Database collector is not yet implemented");
 		}
 
 	}
 
 	interface DataCollector {
-		List<Map<String, Object>> collect(Properties properties) throws DataCollectorException;
+		List<Map<String, Object>> collect() throws DataCollectorException;
 	}
 
 	class DataCollectorException extends Exception {

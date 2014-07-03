@@ -3,52 +3,29 @@
  */
 package com.aqua.anttask.jsystem;
 
-import java.util.Properties;
-
-import jsystem.utils.StringUtils;
-
 import org.apache.tools.ant.BuildException;
 
 /**
  * A wrapper for the Ant for to allow replacing of reference parameters
  * 
- * @author Nizan
- *
+ * @author Nizan Freedman and Itai Agmon
+ * 
  */
-public class JSystemForTask extends ForTask {
+public class JSystemForTask extends PropertyReaderTask {
 
-	String uuid;
-	String scenarioString;
+	private static final String DEFAULT_LIST_VALUE = "a;b;c;d";
+	private static final String DEFAULT_PARAM_VALUE = "myVar";
 
-	public void setFullUuid(String uuid){
-		this.uuid = uuid;
-	}
+	public void execute() throws BuildException {
 
-	public void setParentName(String name){
-		if (name.startsWith(".")){
-			name = name.substring(1);
-		}
-		scenarioString = name;
-	}
-
-	public void execute() throws BuildException{
-		
-		if (!JSystemAntUtil.doesContainerHaveEnabledTests(uuid)){
+		if (!JSystemAntUtil.doesContainerHaveEnabledTests(getUuid())) {
 			return;
 		}
-		
-		Properties p = JSystemAntUtil.getPropertiesValue(scenarioString, uuid);
-		
-		String list = JSystemAntUtil.getParameterValue("list", "", p);
-		if (!StringUtils.isEmpty(list)){
-			setList(list);
-		}
-		
-		String param = JSystemAntUtil.getParameterValue("loop value", "", p);
-		if (!StringUtils.isEmpty(param)){
-			setParam(param);
-		}
-		
+		setList(getParameterFromProperties("list", DEFAULT_LIST_VALUE));
+		setParam(getParameterFromProperties("loop value", DEFAULT_PARAM_VALUE));
 		super.execute();
 	}
+
+
+
 }
