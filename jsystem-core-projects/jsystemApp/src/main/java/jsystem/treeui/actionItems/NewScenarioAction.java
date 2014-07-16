@@ -38,10 +38,6 @@ public class NewScenarioAction extends IgnisAction {
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-        //Fire property change event with the name of the Action class
-        //In order to get this event you need to register to PropertyChangeListener.
-        firePropertyChange(action.getClass().getSimpleName(),null,null);
-
 		int save_Ans = 0;
 		try {
 			save_Ans = SaveScenarioAction.getInstance().saveCurrentScenarioWithConfirmation();
@@ -54,6 +50,7 @@ public class NewScenarioAction extends IgnisAction {
 				ScenariosManager.resetDirty();
 			}
 		}
+        firePropertyChange(action.getClass().getSimpleName(),null,null);
 	}
 
 }

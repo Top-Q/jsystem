@@ -3,14 +3,13 @@
  */
 package jsystem.treeui.actionItems;
 
-import java.awt.event.ActionEvent;
-
-import javax.swing.Action;
-
 import jsystem.framework.scenario.ScenariosManager;
 import jsystem.guiMapping.JsystemMapping;
 import jsystem.treeui.TestRunner;
 import jsystem.treeui.images.ImageCenter;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
 
 public class CopyScenarioAction extends IgnisAction {
 	
@@ -42,6 +41,7 @@ public class CopyScenarioAction extends IgnisAction {
 				ScenariosManager.resetDirty();
 			}
 		}
+        firePropertyChange(action.getClass().getSimpleName(),null,null);
 	}
 
 

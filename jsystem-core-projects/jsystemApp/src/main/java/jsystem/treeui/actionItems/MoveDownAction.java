@@ -3,14 +3,13 @@
  */
 package jsystem.treeui.actionItems;
 
-import java.awt.event.ActionEvent;
-
-import javax.swing.Action;
-
 import jsystem.guiMapping.JsystemMapping;
 import jsystem.treeui.TestRunner;
 import jsystem.treeui.images.ImageCenter;
 import jsystem.treeui.teststable.TestsTableController.ActionType;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
 
 public class MoveDownAction extends IgnisAction {
 
@@ -37,5 +36,6 @@ public class MoveDownAction extends IgnisAction {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		TestRunner.treeView.getTableController().handleUpDownAndDelete(ActionType.DOWN);
+        firePropertyChange(action.getClass().getSimpleName(),null,null);
 	}
 }
