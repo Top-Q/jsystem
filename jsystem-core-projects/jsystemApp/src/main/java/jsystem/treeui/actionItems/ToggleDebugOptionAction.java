@@ -74,7 +74,7 @@ public class ToggleDebugOptionAction extends IgnisAction {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-        JSystemProperties.getInstance().setPreference(FrameworkOptions.TEST_VM_PARMS, " ");
+        JSystemProperties.getInstance().removePreference(FrameworkOptions.TEST_VM_PARMS);
 		
 	}
 

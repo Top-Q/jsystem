@@ -572,7 +572,7 @@ public class TestTreeView extends JFrame implements ActionListener, TestsTreeLis
 
 				JSystemProperties.getInstance().setPreference(FrameworkOptions.TEST_VM_PARMS, debug);
 			} else {
-				JSystemProperties.getInstance().setPreference(FrameworkOptions.TEST_VM_PARMS, "");
+				JSystemProperties.getInstance().removePreference(FrameworkOptions.TEST_VM_PARMS);
 			}
 		} else if (e.getSource().equals(sutPlanner)) {
 			SutTreeDialog panel = new SutTreeDialog("SUT planner");
