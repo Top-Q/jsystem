@@ -9,6 +9,8 @@ import java.lang.reflect.Method;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+import jsystem.framework.FrameworkOptions;
+import jsystem.framework.JSystemProperties;
 import jsystem.utils.FileUtils;
 import jsystem.utils.StringUtils;
 import jsystem.utils.exec.Command;
@@ -23,14 +25,24 @@ public class BeanDefaultsExtractor {
 	private static Logger log = Logger.getLogger(BeanDefaultsExtractor.class.getName());
 	public static Properties getBeanDefaults(Class<?> c, String...properties) throws Exception{
 		String[] args = new String[properties.length + 1];
+		boolean debug = false;
+		String debugString = "-classic -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=${8787},server=y,suspend=y";
+		String vmParams = JSystemProperties.getInstance().getPreference(FrameworkOptions.TEST_VM_PARMS);
+		if (null != vmParams) {
+			debug = true;
+			JSystemProperties.getInstance().removePreference(FrameworkOptions.TEST_VM_PARMS);
+		}
 		System.arraycopy(properties, 0, args, 1, properties.length);
 		args[0] = c.getName();
 		Command command = JavaExecute.javaExecute(BeanDefaultsExtractor.class, new Properties(), args);
 		int returnCode = command.getProcess().waitFor();
+		if(debug)
+			JSystemProperties.getInstance().setPreference(FrameworkOptions.TEST_VM_PARMS, debugString);
 		if(returnCode != 0){
 			log.warning("Fail to process " + c.getName());
 			throw new Exception(command.getStd().toString());
 		}
+		
 		Properties prop = new Properties();
 		prop.load(new StringReader(command.getStdout().toString()));
 		return prop;
