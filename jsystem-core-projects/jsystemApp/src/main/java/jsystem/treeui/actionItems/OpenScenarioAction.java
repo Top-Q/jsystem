@@ -3,19 +3,15 @@
  */
 package jsystem.treeui.actionItems;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.Action;
-import javax.swing.JOptionPane;
-import javax.swing.KeyStroke;
-
 import jsystem.framework.scenario.ScenariosManager;
 import jsystem.guiMapping.JsystemMapping;
 import jsystem.treeui.TestRunner;
 import jsystem.treeui.images.ImageCenter;
-
 import org.jfree.util.Log;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
 public class OpenScenarioAction extends IgnisAction {
 	
@@ -54,6 +50,7 @@ public class OpenScenarioAction extends IgnisAction {
 				ScenariosManager.resetDirty();
 			}
 		}
+        firePropertyChange(action.getClass().getSimpleName(),null,null);
 	}
 
 }

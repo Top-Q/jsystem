@@ -3,16 +3,15 @@
  */
 package jsystem.treeui.actionItems;
 
-import java.awt.event.ActionEvent;
-import java.util.logging.Level;
-
-import javax.swing.Action;
-
 import jsystem.guiMapping.JsystemMapping;
 import jsystem.treeui.TestRunner;
 import jsystem.treeui.WaitDialog;
 import jsystem.treeui.images.ImageCenter;
 import jsystem.treeui.teststable.TestsTableController.ActionType;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.util.logging.Level;
 
 public class RemoveItemAction extends IgnisAction {
 	
@@ -52,6 +51,7 @@ public class RemoveItemAction extends IgnisAction {
 				}
 			}
 		}).start();
+        firePropertyChange(action.getClass().getSimpleName(),null,null);
 	}
 
 }

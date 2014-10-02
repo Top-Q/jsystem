@@ -3,15 +3,13 @@
  */
 package jsystem.treeui.actionItems;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.Action;
-import javax.swing.KeyStroke;
-
 import jsystem.guiMapping.JsystemMapping;
 import jsystem.treeui.TestRunner;
 import jsystem.treeui.images.ImageCenter;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
 public class CopyAction extends IgnisAction {
 
@@ -38,9 +36,10 @@ public class CopyAction extends IgnisAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		TestRunner.treeView.getTableController().saveClipboardTests();
+        TestRunner.treeView.getTableController().saveClipboardTests();
 //		PasteAction.getInstance().setEnabled(true);
 //		PasteAfterAction.getInstance().setEnabled(true);
+        firePropertyChange(action.getClass().getSimpleName(),null,null);
 	}
 
 }
