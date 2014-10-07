@@ -24,7 +24,7 @@ import junit.framework.Test;
  * @author arseniy
  */
 
-public class LevelHtmlTestReporter extends HtmlTestReporter {
+public class LevelHtmlTestReporter extends HtmlTestReporter implements ExtendLevelTestReporter {
  
 	private HtmlTestList	mainParent;
 	/**
@@ -71,26 +71,18 @@ public class LevelHtmlTestReporter extends HtmlTestReporter {
 			}
 		}
 	}
-	/**
-	 * Start new level
-	 * 
-	 * @param levelName
-	 * @param place
-	 *            -by the "EnumReportLevel" Enum
-	 * @throws IOException
+	/* (non-Javadoc)
+	 * @see jsystem.extensions.report.html.LevelHtmlReporter#startLevel(java.lang.String, jsystem.framework.report.Reporter.EnumReportLevel)
 	 */
+	@Override
 	public void startLevel(String level, EnumReportLevel place) throws IOException {
 		startLevel(level, place.value());
 	}
 
-	/**
-	 * Start new level
-	 * 
-	 * @param levelName
-	 * @param place
-	 *            -may be Reporter.MainFrame or Reporter.CurrentPlace
-	 * @throws IOException
+	/* (non-Javadoc)
+	 * @see jsystem.extensions.report.html.LevelHtmlReporter#startLevel(java.lang.String, int)
 	 */
+	@Override
 	public void startLevel(String levelName, int place) throws IOException {
 		if(reportWithoutLevel==true || levelDataStack == null){
 			place=Reporter.MainFrame;
@@ -142,11 +134,10 @@ public class LevelHtmlTestReporter extends HtmlTestReporter {
 		htl.setParent(tmp);
 	
 	}
-	/**
-	 * stop current level .Insert from
-	 * the stack previous level and 
-	 * previous level file name 
+	/* (non-Javadoc)
+	 * @see jsystem.extensions.report.html.LevelHtmlReporter#stopLevel()
 	 */
+	@Override
 	public void stopLevel() {
 		if (levelDataStack == null){
 			return;
@@ -162,20 +153,20 @@ public class LevelHtmlTestReporter extends HtmlTestReporter {
 		writer.lastTestReportList.resetCurrentLevelLinkStatus();
 	}
 
-	/**
-	 * if we inside level -go out to the main frame
+	/* (non-Javadoc)
+	 * @see jsystem.extensions.report.html.LevelHtmlReporter#closeAllLevels()
 	 */
+	@Override
 	public void closeAllLevels() {
 		while (levelDataStack != null && !levelDataStack.isEmpty()) {
 			stopLevel();
 		}
 	}
 	
-	/**
-	 * close all level until given level name, if exists. if not found closes all<br>
-	 * @param levelName	the level to stop closing on
-	 * @param includeLevel True will also close these level, False will leave it the current level
+	/* (non-Javadoc)
+	 * @see jsystem.extensions.report.html.LevelHtmlReporter#closeLevelsUpTo(java.lang.String, boolean)
 	 */
+	@Override
 	public void closeLevelsUpTo(String levelName, boolean includeLevel){
 		if (levelDataStack == null || levelDataStack.empty()){
 			switchToMainFrame();

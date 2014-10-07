@@ -47,7 +47,10 @@
 		<dependency>
 			<groupId>com.thoughtworks.qdox</groupId>
 			<artifactId>qdox</artifactId>
-
+		</dependency>
+		<dependency>
+			<groupId>il.co.topq.difido</groupId>
+			<artifactId>difido-reports-common</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.jsystemtest</groupId>
@@ -74,25 +77,11 @@
 	</dependencies>
 	<build>
 		<plugins>
-			<!--plugin>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<version>1.7</version>
-				<executions>
-					<execution>
-						<phase>install</phase>
-						<configuration>
-							<target>
-								<copy
-									file="${project.build.directory}/${project.artifactId}-${project.version}.jar"
-									todir="${basedir}/${runner.home}/lib" />
-							</target>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin-->
+			<!--plugin> <artifactId>maven-antrun-plugin</artifactId> <version>1.7</version> 
+				<executions> <execution> <phase>install</phase> <configuration> <target> 
+				<copy file="${project.build.directory}/${project.artifactId}-${project.version}.jar" 
+				todir="${basedir}/${runner.home}/lib" /> </target> </configuration> <goals> 
+				<goal>run</goal> </goals> </execution> </executions> </plugin -->
 		</plugins>
 	</build>
 </project>

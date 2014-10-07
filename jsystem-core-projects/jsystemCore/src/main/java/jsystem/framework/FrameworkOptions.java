@@ -219,6 +219,15 @@ public enum FrameworkOptions {
 			true, 
 			new String[] { "jsystem.framework.report.TestReporter" }),
 	
+	REPORTER_DELETE_CURRENT(
+			"reporter.delete.current", 
+			"Delete current report when init the reports", 
+			DataType.BOOLEAN, 
+			"",
+			true 
+			),
+		
+	
 	/**
 	 * Set the scenario editor
 	 */

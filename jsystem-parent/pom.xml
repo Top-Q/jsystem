@@ -1,14 +1,29 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
 	<groupId>org.jsystemtest</groupId>
 	<artifactId>jsystem-parent</artifactId>
 	<version>6.1.01-SNAPSHOT</version>
 	<packaging>pom</packaging>
-
 	<name>jsystem-parent</name>
-	<url>http://maven.apache.org</url>
+	<organization>
+		<name>Top-Q</name>
+	</organization>
+	<url>http://www.jsystem.org</url>
+	<developers>
+		<developer>
+			<name>Itai Agmon</name>
+			<email>itai.agmon@top-q.co.il</email>
+		</developer>
+	</developers>
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+			<comments>A business-friendly OSS license</comments>
+		</license>
+	</licenses>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -175,7 +190,11 @@
 				<artifactId>commons-compress</artifactId>
 				<version>1.4</version>
 			</dependency>
-
+			<dependency>
+				<groupId>il.co.topq.difido</groupId>
+				<artifactId>difido-reports-common</artifactId>
+				<version>0.5-SNAPSHOT</version>
+			</dependency>
 		</dependencies>
 
 
@@ -240,9 +259,6 @@
 			<url>${topq.repository.rootUrl}/content/groups/public</url>
 		</pluginRepository>
 	</pluginRepositories>
-	<organization>
-		<name>Top-Q</name>
-	</organization>
 	<profiles>
 		<profile>
 			<id>dist</id>

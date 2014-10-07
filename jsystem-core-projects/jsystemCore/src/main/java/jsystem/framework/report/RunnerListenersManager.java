@@ -24,6 +24,7 @@ import java.util.logging.Logger;
 import jsystem.extensions.report.html.CssUtils.CssType;
 import jsystem.extensions.report.html.HtmlCodeWriter;
 import jsystem.extensions.report.html.HtmlTestReporter;
+import jsystem.extensions.report.html.ExtendLevelTestReporter;
 import jsystem.extensions.report.html.LevelHtmlTestReporter;
 import jsystem.extensions.report.html.RepeatTestIndex;
 import jsystem.extensions.report.junit.JUnitReporter;
@@ -1301,12 +1302,12 @@ public class RunnerListenersManager extends DefaultReporterImpl implements JSyst
 		if (inScenarioAsTest && place == Reporter.MainFrame) {
 			for (int i = 0; i < listeners.size(); i++) {
 				Object currentObject = listeners.get(i);
-				if (currentObject instanceof LevelHtmlTestReporter) {
+				if (currentObject instanceof ExtendLevelTestReporter) {
 					try {
 						if(inLoop==0){
-							((LevelHtmlTestReporter) currentObject).closeLevelsUpTo(lastTestLevelName, false);
+							((ExtendLevelTestReporter) currentObject).closeLevelsUpTo(lastTestLevelName, false);
 						}
-						((LevelHtmlTestReporter) currentObject).startLevel(level, Reporter.CurrentPlace);
+						((ExtendLevelTestReporter) currentObject).startLevel(level, Reporter.CurrentPlace);
 					} catch (Throwable ex) {
 						log.log(Level.SEVERE, "Fail to report", ex);
 					}
@@ -1315,9 +1316,9 @@ public class RunnerListenersManager extends DefaultReporterImpl implements JSyst
 		} else {
 			for (int i = 0; i < listeners.size(); i++) {
 				Object currentObject = listeners.get(i);
-				if (currentObject instanceof LevelHtmlTestReporter) {
+				if (currentObject instanceof ExtendLevelTestReporter) {
 					try {
-						((LevelHtmlTestReporter) currentObject).startLevel(level, place);
+						((ExtendLevelTestReporter) currentObject).startLevel(level, place);
 					} catch (Throwable ex) {
 						log.log(Level.SEVERE, "Fail to report", ex);
 					}
@@ -1344,9 +1345,9 @@ public class RunnerListenersManager extends DefaultReporterImpl implements JSyst
 		}
 		for (int index = 0; index < listeners.size(); index++) {
 			Object currentObject = listeners.get(index);
-			if (currentObject instanceof LevelHtmlTestReporter) {
+			if (currentObject instanceof ExtendLevelTestReporter) {
 				try {
-					((LevelHtmlTestReporter) currentObject).stopLevel();
+					((ExtendLevelTestReporter) currentObject).stopLevel();
 				} catch (Throwable ex) {
 					log.log(Level.SEVERE, "Fail to report", ex);
 				}
@@ -1743,7 +1744,7 @@ public class RunnerListenersManager extends DefaultReporterImpl implements JSyst
 				Object currentObject = listeners.get(i);
 				if (currentObject instanceof LevelHtmlTestReporter) {
 					try {
-						((LevelHtmlTestReporter) currentObject).startLevel("Loop Number: " + count + ", " + loop.getLoopParamName() +"="+ loop.getLoopValue(count), Reporter.CurrentPlace);
+						((ExtendLevelTestReporter) currentObject).startLevel("Loop Number: " + count + ", " + loop.getLoopParamName() +"="+ loop.getLoopValue(count), Reporter.CurrentPlace);
 					} catch (Throwable ex) {
 						log.log(Level.SEVERE, "Fail to report", ex);
 					}
@@ -1772,7 +1773,7 @@ public class RunnerListenersManager extends DefaultReporterImpl implements JSyst
 				Object currentObject = listeners.get(i);
 				if (currentObject instanceof LevelHtmlTestReporter) {
 					try {
-						((LevelHtmlTestReporter) currentObject).stopLevel();
+						((ExtendLevelTestReporter) currentObject).stopLevel();
 					} catch (Throwable ex) {
 						log.log(Level.SEVERE, "Fail to report", ex);
 					}
@@ -1797,12 +1798,12 @@ public class RunnerListenersManager extends DefaultReporterImpl implements JSyst
 	public void closeAllLevels() throws IOException {
 		for (int i = 0; i < listeners.size(); i++) {
 			Object currentObject = listeners.get(i);
-			if (currentObject instanceof LevelHtmlTestReporter) {
+			if (currentObject instanceof ExtendLevelTestReporter) {
 				try {
 					if (lastTestLevelName == null && inLoop==0) {
-						((LevelHtmlTestReporter) currentObject).closeAllLevels();
+						((ExtendLevelTestReporter) currentObject).closeAllLevels();
 					} else if(inLoop==0){
-						((LevelHtmlTestReporter) currentObject).closeLevelsUpTo(lastTestLevelName, false);
+						((ExtendLevelTestReporter) currentObject).closeLevelsUpTo(lastTestLevelName, false);
 					}
 				} catch (Throwable ex) {
 					log.log(Level.SEVERE, "Fail to close all levels", ex);

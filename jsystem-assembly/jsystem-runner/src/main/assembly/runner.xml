@@ -37,9 +37,9 @@
 				<include>*:jsystem-services-tests:*:sources:*</include>
 			</includes>
 			<unpackOptions>
-			    <includes>
-			        <include>**/*.java</include>
-			    </includes>
+				<includes>
+					<include>**/*.java</include>
+				</includes>
 			</unpackOptions>
 		</dependencySet>
 		<dependencySet>
@@ -49,10 +49,10 @@
 				<include>*:jsystem-services-tests:*:sources:*</include>
 			</includes>
 			<unpackOptions>
-			    <includes>
-			        <include>**/*.xml</include>
-			        <include>**/*.properties</include>
-			    </includes>
+				<includes>
+					<include>**/*.xml</include>
+					<include>**/*.properties</include>
+				</includes>
 			</unpackOptions>
 		</dependencySet>
 		<dependencySet>
@@ -123,6 +123,10 @@
 				<include>*:commons-modeler:*</include>
 				<include>*:filters:*</include>
 				<include>*:xz:*</include>
+				<include>*:jackson-databind:*</include>
+				<include>*:jackson-annotations:*</include>
+				<include>*:jackson-core:*</include>
+				<include>*:difido-reports-common:*</include>
 			</includes>
 		</dependencySet>
 		<dependencySet>
@@ -133,9 +137,9 @@
 				<include>org.jsystemtest.systemobjects:*:jar</include>
 			</includes>
 			<excludes>
-			    <exclude>*:jsystem-services-so:*</exclude>
-			    <exclude>*:jsystem-services-tests:*</exclude>
-			    <exclude>*:jsystem-runner:*</exclude>
+				<exclude>*:jsystem-services-so:*</exclude>
+				<exclude>*:jsystem-services-tests:*</exclude>
+				<exclude>*:jsystem-runner:*</exclude>
 			</excludes>
 		</dependencySet>
 	</dependencySets>
@@ -148,9 +152,9 @@
 			<outputDirectory></outputDirectory>
 			<directory>src/main/etc</directory>
 			<excludes>
-			    <exclude>run</exclude>
-			    <exclude>runBase</exclude>
-			    <exclude>runAgent</exclude>
+				<exclude>run</exclude>
+				<exclude>runBase</exclude>
+				<exclude>runAgent</exclude>
 			</excludes>
 		</fileSet>
 		<fileSet>
@@ -158,12 +162,12 @@
 			<directory>src/main/etc</directory>
 			<fileMode>775</fileMode>
 			<includes>
-			    <include>run</include>
-			    <include>runBase</include>
-			    <include>runAgent</include>
+				<include>run</include>
+				<include>runBase</include>
+				<include>runAgent</include>
 			</includes>
 		</fileSet>
-		
+
 	</fileSets>
 
 </assembly>
