@@ -199,7 +199,14 @@ public enum GUIFrameworkOptions {
 			"Select one or more options from the list \n"
 	),
 	
+	REPORTER_DELETE_CURRENT(
+			FrameworkOptions.REPORTER_DELETE_CURRENT, 
+			true,
+			Group.REPORTER,
+			"If in each time the reports are initialized all the current reports are being deleted."
+	),
 
+	
 	/**
 	 * XML editor
 	 */
