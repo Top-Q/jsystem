@@ -49,7 +49,7 @@ import junit.framework.Test;
 public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, ExtendTestListener {
 
 	private static final Logger log = Logger.getLogger(AbstractHtmlReporter.class.getName());
-	
+
 	private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm:ss:");
 
 	private static final SimpleDateFormat TIME_AND_DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd 'at' HH:mm:ss");
@@ -350,7 +350,7 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 		writeExecution(execution);
 		writeTestDetails(testDetails);
 	}
-	
+
 	protected void updateTestDirectory() {
 		final String folder = "tests" + File.separator + "test_" + getCurrentTest().getUid();
 		try {
@@ -496,6 +496,8 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 	public void setDeleteCurrent(boolean deleteCurrent) {
 		this.deleteCurrent = deleteCurrent;
 	}
+
+	
 
 	/**
 	 * Since JSystem creates a few annoying elements that are messed with HTML

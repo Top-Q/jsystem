@@ -52,16 +52,16 @@ public class HtmlReporter extends AbstractHtmlReporter {
 	public void init() {
 		isZipLogDisable = ("true".equals(JSystemProperties.getInstance().getPreference(
 				FrameworkOptions.HTML_ZIP_DISABLE)));
+		setDeleteCurrent(!"false".equals(JSystemProperties.getInstance().getPreference(
+				FrameworkOptions.REPORTER_DELETE_CURRENT)));
+		updateLogDir();
 		try {
-			init(!isZipLogDisable,
-					!"false".equals(JSystemProperties.getInstance().getPreference(
-							FrameworkOptions.REPORTER_DELETE_CURRENT)));
+			initReporter(!isZipLogDisable);
 		} catch (Exception e) {
 			log.log(Level.SEVERE, "Fail to init HtmlTestReporter", e);
 		}
 
 	}
-
 
 	protected void updateLogDir() {
 		reportDir = JSystemProperties.getInstance().getPreference(FrameworkOptions.LOG_FOLDER);
@@ -82,9 +82,8 @@ public class HtmlReporter extends AbstractHtmlReporter {
 	 *            if True will delete current logs
 	 * @throws Exception
 	 */
-	public void init(boolean zipFirst, boolean deleteCurrent) throws Exception {
+	public void initReporter(boolean zipFirst) throws Exception {
 		super.initModel();
-		updateLogDir();
 		setLogDirectory(new File(reportDir));
 		if (!getLogDirectory().exists()) {
 			getLogDirectory().mkdirs();
@@ -103,14 +102,16 @@ public class HtmlReporter extends AbstractHtmlReporter {
 			logOld.mkdirs();
 		}
 		//
-		ZipDeleteLogDirectory dl = new ZipDeleteLogDirectory(logCurrent, logOld, deleteCurrent, zipFirst);
+		ZipDeleteLogDirectory dl = new ZipDeleteLogDirectory(logCurrent, logOld, isDeleteCurrent(), zipFirst);
 		dl.start();
 		try {
 			dl.join();
 		} catch (InterruptedException e) {
 			return;
 		}
-		PersistenceUtils.copyResources(new File(reportDir, "current"));
+		if (isDeleteCurrent()){
+			PersistenceUtils.copyResources(new File(reportDir, "current"));
+		}
 
 	}
 
