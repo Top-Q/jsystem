@@ -109,10 +109,16 @@ public class HtmlReporter extends AbstractHtmlReporter {
 		} catch (InterruptedException e) {
 			return;
 		}
-		if (isDeleteCurrent()){
-			PersistenceUtils.copyResources(new File(reportDir, "current"));
+		final File currentLogFolder = new File(reportDir, "current");
+		if (isDeleteCurrent()) {
+			PersistenceUtils.copyResources(currentLogFolder);
+		} else {
+			final File testDetailsHtmlFile = new File(currentLogFolder, PersistenceUtils.TEST_DETAILS_HTML_FILE);
+			final File indexFile = new File(currentLogFolder, "index.html");
+			if (!testDetailsHtmlFile.exists() && !indexFile.exists()) {
+				PersistenceUtils.copyResources(currentLogFolder);
+			}
 		}
-
 	}
 
 	@Override
