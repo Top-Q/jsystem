@@ -351,15 +351,12 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 		writeTestDetails(testDetails);
 	}
 
-	protected void updateTestDirectory() {
-		final String folder = "tests" + File.separator + "test_" + getCurrentTest().getUid();
-		try {
-			jsystem.utils.FileUtils.addPropertyToFile(CommonResources.TEST_INNER_TEMP_FILENAME,
-					CommonResources.TEST_DIR_KEY, folder);
-		} catch (Exception e) {
-			log.log(Level.WARNING, "Failed updating tmp properties", e);
-		}
-	}
+	/**
+	 * This method will be called at the beginning of each test. If the reporter
+	 * is using the file system, it is responsible for updating the current test
+	 * folder in the '.testdir.tmp' file. See the HtmlReporter implementation for example.
+	 */
+	protected abstract void updateTestDirectory();
 
 	private int getAndUpdateTestHistory(final Object bb) {
 		if (testCounter == null) {
@@ -496,8 +493,6 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 	public void setDeleteCurrent(boolean deleteCurrent) {
 		this.deleteCurrent = deleteCurrent;
 	}
-
-	
 
 	/**
 	 * Since JSystem creates a few annoying elements that are messed with HTML

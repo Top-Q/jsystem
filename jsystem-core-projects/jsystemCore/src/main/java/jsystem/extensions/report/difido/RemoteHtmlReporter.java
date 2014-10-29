@@ -28,10 +28,10 @@ public class RemoteHtmlReporter extends AbstractHtmlReporter {
 
 	private int numOfFailures;
 
-	public RemoteHtmlReporter(){
+	public RemoteHtmlReporter() {
 		super();
 	}
-	
+
 	@Override
 	public void initReporterManager() throws IOException {
 	}
@@ -123,6 +123,12 @@ public class RemoteHtmlReporter extends AbstractHtmlReporter {
 			}
 		}
 
+	}
+
+	@Override
+	protected void updateTestDirectory() {
+		// Since we are not using the file system, there is no point in setting
+		// the current test folder
 	}
 
 }

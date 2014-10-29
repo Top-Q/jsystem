@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 
 import jsystem.framework.FrameworkOptions;
 import jsystem.framework.JSystemProperties;
+import jsystem.framework.common.CommonResources;
 import jsystem.framework.report.ListenerstManager;
 import jsystem.framework.report.Summary;
 import jsystem.framework.scenario.ScenariosManager;
@@ -70,6 +71,18 @@ public class HtmlReporter extends AbstractHtmlReporter {
 			JSystemProperties.getInstance().setPreference(FrameworkOptions.LOG_FOLDER, reportDir);
 		}
 	}
+	
+	@Override
+	protected void updateTestDirectory() {
+		final String folder = "tests" + File.separator + "test_" + getCurrentTest().getUid();
+		try {
+			jsystem.utils.FileUtils.addPropertyToFile(CommonResources.TEST_INNER_TEMP_FILENAME,
+					CommonResources.TEST_DIR_KEY, folder);
+		} catch (Exception e) {
+			log.log(Level.WARNING, "Failed updating tmp properties", e);
+		}
+	}
+
 
 	/**
 	 * init current logs
