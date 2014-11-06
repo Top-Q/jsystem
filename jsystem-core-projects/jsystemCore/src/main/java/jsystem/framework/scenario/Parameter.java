@@ -139,10 +139,11 @@ public class Parameter {
 		if (value == null) {
 			return null;
 		}
-
-		if (ParametersManager.isReferenceValue(value)) {
+		//Added as fix for issue #214
+		if (paramClass != null && !paramClass.isArray() && ParametersManager.isReferenceValue(value)) {
 			return value;
 		}
+
 		if (getProvider() != null) {
 			if (value instanceof String) {
 				try {
@@ -182,7 +183,8 @@ public class Parameter {
 				return;
 			}
 		} else {
-			//Comparing parameter from type user defined is a little bit more complicated.
+			// Comparing parameter from type user defined is a little bit more
+			// complicated.
 			if (isUserDefinedEquals(inValue)) {
 				return;
 			}
@@ -234,7 +236,7 @@ public class Parameter {
 	/**
 	 * Normalize the parameter we want to set
 	 * 
-	 * @param inValue 
+	 * @param inValue
 	 * @return normalize object.
 	 */
 	private Object normalizeInValue(final Object inValue) {
