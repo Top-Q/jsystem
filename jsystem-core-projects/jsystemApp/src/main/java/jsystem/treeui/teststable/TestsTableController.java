@@ -176,6 +176,10 @@ public class TestsTableController extends Observable implements TestStatusListen
 	ScenarioModel model;
 
 	JPanel pane;
+	
+	JScrollPane scroll;
+	
+	int scrollBarValue;
 
 	JToolBar toolBar;
 
@@ -735,7 +739,7 @@ public class TestsTableController extends Observable implements TestStatusListen
 
 		pane = new JPanel(new BorderLayout());
 
-		JScrollPane scroll = SwingUtils.getJScrollPaneWithWaterMark(
+		scroll = SwingUtils.getJScrollPaneWithWaterMark(
 				ImageCenter.getInstance().getAwtImage(ImageCenter.ICON_SCENARIO_TREE_BG), tree);
 
 		pane.add(scroll, BorderLayout.CENTER);
@@ -1112,6 +1116,20 @@ public class TestsTableController extends Observable implements TestStatusListen
 	private int[] saveSelection() {
 		lastPaths = tree.getSelectionModel().getSelectionRows();
 		return lastPaths;
+	}
+	
+	/**
+	 * restore last scroll bar position
+	 */
+	private void restoreScrollBarPosition() {
+		scroll.getVerticalScrollBar().setValue(scrollBarValue);
+	}
+	
+	/**
+	 * save current scroll bar position
+	 */
+	private void saveScrollBarPosition() {
+		scrollBarValue = scroll.getVerticalScrollBar().getValue();
 	}
 
 	/**
@@ -3323,6 +3341,7 @@ public class TestsTableController extends Observable implements TestStatusListen
 		model.reload();
 		restoreExpandedState();
 		restoreSelections(paths);
+		restoreScrollBarPosition();
 		pane.repaint();
 		checkPlayActionMode();
 	}
@@ -3550,6 +3569,7 @@ public class TestsTableController extends Observable implements TestStatusListen
 		}
 
 		saveSelection();
+		saveScrollBarPosition();
 		lastClickedPath = clickedPath;
 	}
 
