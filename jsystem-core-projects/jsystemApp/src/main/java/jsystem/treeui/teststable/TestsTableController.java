@@ -32,6 +32,7 @@ import java.util.Enumeration;
 import java.util.EventListener;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Observable;
 import java.util.Properties;
 import java.util.TreeMap;
@@ -152,7 +153,6 @@ import jsystem.treeui.actionItems.ViewTestCodeAction;
 import jsystem.treeui.dialog.DialogWithCheckBox;
 import jsystem.treeui.error.ErrorPanel;
 import jsystem.treeui.images.ImageCenter;
-import jsystem.treeui.publisher.RunInfoFrameListener;
 import jsystem.treeui.tree.TestsTreeController;
 import jsystem.treeui.tree.undo.UndoManager;
 import jsystem.treeui.utilities.UnmodifiableFileHandler;
@@ -295,7 +295,7 @@ public class TestsTableController extends Observable implements TestStatusListen
 	private TreeMap<Integer, JTest> testByRow;
 	private int[] paths = null;
 	private JTest[] selectedTests;
-	private HashMap<Integer, JTest> clipboardTests;
+	private LinkedHashMap<Integer, JTest> clipboardTests;
 
 	/**
 	 * The method copies the container selected rows in the Scenario editor,
@@ -315,7 +315,7 @@ public class TestsTableController extends Observable implements TestStatusListen
 													// supposed to get here
 													// since the copy and cut
 													// are disabled
-			clipboardTests = new HashMap<Integer, JTest>();
+			clipboardTests = new LinkedHashMap<Integer, JTest>();
 
 			// collect all selected tests by user selection order.
 			TreePath[] pathsTests = tree.getSelectionModel().getSelectionPaths();
@@ -431,7 +431,7 @@ public class TestsTableController extends Observable implements TestStatusListen
 	 *            (in the container) or after the paste location
 	 * @return
 	 */
-	public boolean addClipboardTests(HashMap<Integer, JTest> tests, boolean after) {
+	public boolean addClipboardTests(LinkedHashMap<Integer, JTest> tests, boolean after) {
 		TestsContainer container = getContainer();
 		Scenario rootScenario = ScenariosManager.getInstance().getCurrentScenario();
 		JTestContainer destJTestContainer = container.getContainerRoot();
