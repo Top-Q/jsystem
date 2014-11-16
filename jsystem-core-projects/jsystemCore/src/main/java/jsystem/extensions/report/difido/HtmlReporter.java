@@ -123,13 +123,17 @@ public class HtmlReporter extends AbstractHtmlReporter {
 			return;
 		}
 		final File currentLogFolder = new File(reportDir, "current");
+		final File templateFolder = new File(reportDir,"template");
+		if (!templateFolder.exists() || !(new File(templateFolder,"index.html").exists())){
+			PersistenceUtils.copyResources(templateFolder);
+		}
 		if (isDeleteCurrent()) {
-			PersistenceUtils.copyResources(currentLogFolder);
+			FileUtils.copyDirectory(templateFolder, currentLogFolder);
 		} else {
 			final File testDetailsHtmlFile = new File(currentLogFolder, PersistenceUtils.TEST_DETAILS_HTML_FILE);
 			final File indexFile = new File(currentLogFolder, "index.html");
 			if (!testDetailsHtmlFile.exists() && !indexFile.exists()) {
-				PersistenceUtils.copyResources(currentLogFolder);
+				FileUtils.copyDirectory(templateFolder, currentLogFolder);
 			}
 		}
 	}
