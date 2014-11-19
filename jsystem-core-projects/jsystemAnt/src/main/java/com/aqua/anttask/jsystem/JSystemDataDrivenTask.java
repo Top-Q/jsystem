@@ -23,6 +23,8 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 
 	private String type;
 
+	private String param;
+
 	private List<Map<String, Object>> data;
 
 	private int itrerationNum = 0;
@@ -115,7 +117,7 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 
 		@Override
 		public List<Map<String, Object>> collect() throws DataCollectorException {
-			file = getParameterFromProperties("File","");
+			file = getParameterFromProperties("File", "");
 			final File csvFile = new File(file);
 			List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
 			Scanner lineScanner = null;
@@ -186,9 +188,16 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 
 		@Override
 		public List<Map<String, Object>> collect() throws DataCollectorException {
-			throw new DataCollectorException("Database collector is not yet implemented");
+			param = getParameterFromProperties("Parameters", "");
+			String[] iterations = param.split(",");
+			List<Map<String, Object>> response = new ArrayList<Map<String, Object>>();
+			for (String iteration : iterations) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("index", iteration);
+				response.add(map);
+			}
+			return response;
 		}
-
 	}
 
 	interface DataCollector {
