@@ -22,6 +22,11 @@
 			<groupId>org.apache.ant</groupId>
 			<artifactId>ant-nodeps</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.31</version>
+		</dependency>
 	</dependencies>
 
 </project>

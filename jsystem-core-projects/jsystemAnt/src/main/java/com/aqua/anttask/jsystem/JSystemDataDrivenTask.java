@@ -1,11 +1,23 @@
 package com.aqua.anttask.jsystem;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -70,7 +82,7 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 
 		// Actually, we not using this parameter, but we need in order for the
 		// for task to work.
-		setParam(paramName);
+		setParam(paramName.replaceAll("_", ""));
 		// And, we are also not really using the list values, only pass it to
 		// the for task in order to create the number of iterations required.
 		setList(sb.toString().replaceFirst(DELIMITER, ""));
@@ -188,34 +200,231 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 
 		@Override
 		public List<Map<String, Object>> collect() throws DataCollectorException {
+			List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
+			final String tablePrefix;
+			final String inputKey;
+			final String outputKey;
+			final String[] rowsToExecute;
+
+			file = getParameterFromProperties("File", "");
 			param = getParameterFromProperties("Parameters", "");
-			String[] iterations = param.split(",");
-			List<Map<String, Object>> response = new ArrayList<Map<String, Object>>();
-			for (String iteration : iterations) {
-				Map<String, Object> map = new HashMap<String, Object>();
-				map.put("index", iteration);
-				response.add(map);
+			String[] dataDrivenParameters = param.split(";");
+			// The parameter convention is as such: <table prefix>;<input
+			// key>;<output key>;<rows to execute>
+			// when the first two are must and the rest are optional. If user
+			// doesn't want to give output key, but
+			// does want to include rows to execute, he should type: <table
+			// prefix>;<input key>;;<rows to execute>
+			if (dataDrivenParameters == null || (dataDrivenParameters.length < 2 || dataDrivenParameters.length > 4)) {
+				throw new DataCollectorException("Wrong number of parameters.");
+			} else {
+				tablePrefix = fetchTablePrefix(dataDrivenParameters);
+				inputKey = fetchInputKey(dataDrivenParameters);
+				outputKey = fetchOutputKey(dataDrivenParameters);
+				rowsToExecute = fetchRowsToExecute(dataDrivenParameters);
+				TableDataExtractor tableDataExtractor;
+				// if we do not provide properties file, the TableDataExtractor
+				// class will use a default database.properties file
+				// otherwise it will use the file we provided
+				if (file == null || file.isEmpty()) {
+					tableDataExtractor = new TableDataExtractor(tablePrefix);
+				} else {
+					tableDataExtractor = new TableDataExtractor(tablePrefix, file);
+				}
+				try {
+					data = tableDataExtractor.extractData(inputKey);
+				} catch (Exception e) {
+					throw new DataCollectorException("Failed extracting data from the database: " + e.getMessage());
+				}
+				try {
+					data = cleanUnusedRows(data, rowsToExecute);
+				} catch (Exception e) {
+					throw new DataCollectorException("Failed removing unwanted rows: " + e.getMessage());
+				}
 			}
-			return response;
+			return data;
+		}
+
+		/**
+		 * Method assumes rowsToUse contain either integer numbers in string
+		 * representation or range separated by "-" character. Also assumes
+		 * there are no repetitive values, like 1-8,5,...(notice 1-8 already
+		 * includes 5, thus 5 will be counted twice)
+		 * 
+		 * @param rows
+		 *            - the original list of rows fetched previously from the
+		 *            database
+		 * @param rowsToUse
+		 *            - Strings which represent the relevant rows. See above
+		 *            description.
+		 * @return new List of rows which contains only the rows presented in
+		 *         rowsToUse. Or the original rows list if rowsToUse is null or
+		 *         empty.
+		 * @throws Exception
+		 */
+		private List<Map<String, Object>> cleanUnusedRows(List<Map<String, Object>> rows, String[] rowsToUse)
+				throws Exception {
+			if (rowsToUse == null || rowsToUse.length == 0) {
+				return rows;
+			}
+			List<Map<String, Object>> relevantRows = new ArrayList<Map<String, Object>>();
+			for (String rowToAdd : rowsToUse) {
+				if (rowToAdd.trim().contains("-")) {
+					int min = Integer.valueOf(rowToAdd.substring(0, rowToAdd.indexOf("-") - 1).trim());
+					int max = Integer.valueOf(rowToAdd.substring(rowToAdd.lastIndexOf("-") + 1).trim());
+					for (int i = min - 1; i < max; i++) {
+						if (i >= 0 && i < rows.size()) {
+							relevantRows.add(rows.get(i));
+						}
+					}
+				} else {
+					int row = Integer.valueOf(rowToAdd) - 1;
+					if (row >= 0 && row < rows.size()) {
+						relevantRows.add(rows.get(row));
+					}
+				}
+			}
+
+			return relevantRows;
+		}
+
+		private String fetchTablePrefix(final String[] dataDrivenParameters) {
+			if (dataDrivenParameters.length > 0) {
+				return dataDrivenParameters[0].trim();
+			}
+			return null;
+		}
+
+		private String fetchInputKey(final String[] dataDrivenParameters) {
+			if (dataDrivenParameters.length > 1) {
+				return dataDrivenParameters[1].trim();
+			}
+			return null;
+		}
+
+		private String fetchOutputKey(final String[] dataDrivenParameters) {
+			// if user did not provide output key we use date+time instead
+			if (dataDrivenParameters.length < 3 || dataDrivenParameters[2].trim().isEmpty()) {
+				DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+				Date date = new Date();
+				return dateFormat.format(date);
+			} else {
+				return dataDrivenParameters[2].trim();
+			}
+		}
+
+		// the convention is the rows separated by ","
+		private String[] fetchRowsToExecute(final String[] dataDrivenParameters) {
+			if (dataDrivenParameters.length > 3) {
+				return dataDrivenParameters[3].split(",");
+			}
+			return null;
 		}
 	}
 
-	interface DataCollector {
-		List<Map<String, Object>> collect() throws DataCollectorException;
+	class TableDataExtractor {
+
+		public TableDataExtractor(final String tableName) {
+			this.TABLE_NAME = tableName;
+			this.DB_PROPERTIES_FILE = "C:/TEMP/database.properties";// sets the
+																	// default
+																	// database
+																	// properties
+																	// filepath
+		}
+
+		public TableDataExtractor(final String tableName, final String propertiesFile) {
+			this.TABLE_NAME = tableName;
+			this.DB_PROPERTIES_FILE = propertiesFile;
+		}
+
+		private final String TABLE_NAME;
+		private final String DB_PROPERTIES_FILE;
+
+		private Connection getConnection() throws Exception {
+			Properties props = new Properties();
+			FileInputStream fis = null;
+			Connection con = null;
+			try {
+				fis = new FileInputStream(DB_PROPERTIES_FILE);
+				props.load(fis);
+				Class.forName(props.getProperty("DB_DRIVER_CLASS"));
+				con = DriverManager.getConnection(props.getProperty("DB_URL"), props.getProperty("DB_USERNAME"),
+						props.getProperty("DB_PASSWORD"));
+			} catch (IOException | ClassNotFoundException | SQLException e) {
+				throw new Exception("Cannot connect to the database.");
+			}
+			return con;
+		}
+
+		public List<Map<String, Object>> extractData(final String inputKey) throws Exception {
+			final String QUERY = "SELECT * FROM " + TABLE_NAME + "_input WHERE jira_key = ?";
+			List<Map<String, Object>> extractedData = new ArrayList<Map<String, Object>>();
+			PreparedStatement preparedStatement = null;
+			Connection dbConnection = null;
+			try {
+				dbConnection = getConnection();
+				preparedStatement = dbConnection.prepareStatement(QUERY);
+				preparedStatement.setString(1, inputKey);
+
+				ResultSet resultSet = preparedStatement.executeQuery();
+				ResultSetMetaData metaData = resultSet.getMetaData();
+				List<String> titles = new ArrayList<String>();
+				int count = metaData.getColumnCount();
+				// get the column titles of the table
+				for (int i = 1; i <= count; i++) {
+					titles.add(metaData.getColumnName(i));
+				}
+
+				while (resultSet.next()) {
+					Map<String, Object> dataRow = new HashMap<String, Object>();
+					// map title to value for current row
+					for (String title : titles) {
+						Object data = resultSet.getObject(title);
+						dataRow.put(title, data);
+					}
+					// add map to list and proceed to next row if exists
+					extractedData.add(dataRow);
+				}
+
+			} catch (SQLException e) {
+				throw new Exception(e.getMessage());
+			} finally {
+				if (preparedStatement != null) {
+					try {
+						preparedStatement.close();
+					} catch (SQLException e) {
+						throw new Exception(e.getMessage());
+					}
+				}
+
+				if (dbConnection != null) {
+					try {
+						dbConnection.close();
+					} catch (SQLException e) {
+						throw new Exception(e.getMessage());
+					}
+				}
+			}
+			return extractedData;
+		}
+	}
+}
+
+interface DataCollector {
+	List<Map<String, Object>> collect() throws DataCollectorException;
+}
+
+class DataCollectorException extends Exception {
+
+	private static final long serialVersionUID = 1L;
+
+	public DataCollectorException(String message) {
+		super(message);
 	}
 
-	class DataCollectorException extends Exception {
-
-		private static final long serialVersionUID = 1L;
-
-		public DataCollectorException(String message) {
-			super(message);
-		}
-
-		public DataCollectorException(String message, Throwable t) {
-			super(message, t);
-		}
-
+	public DataCollectorException(String message, Throwable t) {
+		super(message, t);
 	}
 
 }
