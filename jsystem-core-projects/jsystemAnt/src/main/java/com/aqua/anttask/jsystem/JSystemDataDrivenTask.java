@@ -10,10 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -208,7 +205,8 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 			file = getParameterFromProperties("File", "");
 			param = getParameterFromProperties("Parameters", "");
 			String[] dataDrivenParameters = param.split(";");
-			// The parameter convention is as such: <table prefix>;<input key>;<rows to execute>
+			// The parameter convention is as such: <table prefix>;<input
+			// key>;<rows to execute>
 			// when the first two are must and the rest are optional.
 			if (dataDrivenParameters == null || (dataDrivenParameters.length < 2 || dataDrivenParameters.length > 4)) {
 				throw new DataCollectorException("Wrong number of parameters.");
@@ -217,7 +215,8 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 				inputKey = fetchInputKey(dataDrivenParameters);
 				rowsToExecute = fetchRowsToExecute(dataDrivenParameters);
 				TableDataExtractor tableDataExtractor;
-				// if we do not provide database properties file, the TableDataExtractor
+				// if we do not provide database properties file, the
+				// TableDataExtractor
 				// class will use a default database.properties file
 				// otherwise it will use the file we provided
 				if (file == null || file.isEmpty()) {
@@ -227,14 +226,11 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 				}
 				try {
 					data = tableDataExtractor.extractData(inputKey);
-				} catch (Exception e) {
-					throw new DataCollectorException("Failed extracting data from the database: " + e.getMessage());
+				} catch (SQLDataExtractException e) {
+					throw new DataCollectorException("Failed extracting data from the database. " + e.getMessage());
 				}
-				try {
-					data = cleanUnusedRows(data, rowsToExecute);
-				} catch (Exception e) {
-					throw new DataCollectorException("Failed removing unwanted rows: " + e.getMessage());
-				}
+				
+				data = cleanUnusedRows(data, rowsToExecute);			
 			}
 			return data;
 		}
@@ -254,10 +250,8 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 		 * @return new List of rows which contains only the rows presented in
 		 *         rowsToUse. Or the original rows list if rowsToUse is null or
 		 *         empty.
-		 * @throws Exception
 		 */
-		private List<Map<String, Object>> cleanUnusedRows(List<Map<String, Object>> rows, String[] rowsToUse)
-				throws Exception {
+		private List<Map<String, Object>> cleanUnusedRows(List<Map<String, Object>> rows, String[] rowsToUse) {
 			if (rowsToUse == null || rowsToUse.length == 0) {
 				return rows;
 			}
@@ -313,7 +307,8 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 																	// default
 																	// database
 																	// properties
-																	// filepath here
+																	// filepath
+																	// here
 		}
 
 		public TableDataExtractor(final String tableName, final String propertiesFile) {
@@ -324,23 +319,19 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 		private final String TABLE_NAME;
 		private final String DB_PROPERTIES_FILE;
 
-		private Connection getConnection() throws Exception {
+		private Connection getConnection() throws IOException, ClassNotFoundException, SQLException {
 			Properties props = new Properties();
 			FileInputStream fis = null;
 			Connection con = null;
-			try {
-				fis = new FileInputStream(DB_PROPERTIES_FILE);
-				props.load(fis);
-				Class.forName(props.getProperty("DB_DRIVER_CLASS"));
-				con = DriverManager.getConnection(props.getProperty("DB_URL"), props.getProperty("DB_USERNAME"),
-						props.getProperty("DB_PASSWORD"));
-			} catch (IOException | ClassNotFoundException | SQLException e) {
-				throw new Exception("Cannot connect to the database.");
-			}
+			fis = new FileInputStream(DB_PROPERTIES_FILE);
+			props.load(fis);
+			Class.forName(props.getProperty("DB_DRIVER_CLASS"));
+			con = DriverManager.getConnection(props.getProperty("DB_URL"), props.getProperty("DB_USERNAME"),
+					props.getProperty("DB_PASSWORD"));
 			return con;
 		}
 
-		public List<Map<String, Object>> extractData(final String inputKey) throws Exception {
+		public List<Map<String, Object>> extractData(final String inputKey) throws SQLDataExtractException {
 			final String QUERY = "SELECT * FROM " + TABLE_NAME + "_input WHERE jira_key = ?";
 			List<Map<String, Object>> extractedData = new ArrayList<Map<String, Object>>();
 			PreparedStatement preparedStatement = null;
@@ -369,23 +360,25 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 					// add map to list and proceed to next row if exists
 					extractedData.add(dataRow);
 				}
-
+			} catch (IOException e) {
+				throw new SQLDataExtractException("Error loading properties file. " + e.getMessage());
+			} catch (ClassNotFoundException e) {
+				throw new SQLDataExtractException("Driver class not found. " + e.getMessage());
 			} catch (SQLException e) {
-				throw new Exception(e.getMessage());
+				throw new SQLDataExtractException("SQL Error: " + e.getMessage());
 			} finally {
 				if (preparedStatement != null) {
 					try {
 						preparedStatement.close();
 					} catch (SQLException e) {
-						throw new Exception(e.getMessage());
+						throw new SQLDataExtractException("Error closing sql statement. " + e.getMessage());
 					}
 				}
-
 				if (dbConnection != null) {
 					try {
 						dbConnection.close();
 					} catch (SQLException e) {
-						throw new Exception(e.getMessage());
+						throw new SQLDataExtractException("Error closing database connection. " + e.getMessage());
 					}
 				}
 			}
@@ -409,5 +402,18 @@ class DataCollectorException extends Exception {
 	public DataCollectorException(String message, Throwable t) {
 		super(message, t);
 	}
+}
+	
+	class SQLDataExtractException extends Exception {
+		
+		private static final long serialVersionUID = 1L;
+
+		public SQLDataExtractException(String message) {
+			super(message);
+		}
+
+		public SQLDataExtractException(String message, Throwable t) {
+			super(message, t);
+		}
 
 }
