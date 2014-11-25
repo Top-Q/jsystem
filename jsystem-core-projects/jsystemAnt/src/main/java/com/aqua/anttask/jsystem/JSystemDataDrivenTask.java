@@ -270,7 +270,7 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 			List<Map<String, Object>> relevantRows = new ArrayList<Map<String, Object>>();
 			for (String rowToAdd : rowsToUse) {
 				if (rowToAdd.trim().contains("-")) {
-					int min = Integer.valueOf(rowToAdd.substring(0, rowToAdd.indexOf("-") - 1).trim());
+					int min = Integer.valueOf(rowToAdd.substring(0, rowToAdd.indexOf("-")).trim());
 					int max = Integer.valueOf(rowToAdd.substring(rowToAdd.lastIndexOf("-") + 1).trim());
 					for (int i = min - 1; i < max; i++) {
 						if (i >= 0 && i < rows.size()) {
