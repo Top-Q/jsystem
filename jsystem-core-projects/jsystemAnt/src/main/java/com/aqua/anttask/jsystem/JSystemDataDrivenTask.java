@@ -203,27 +203,21 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 			List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
 			final String tablePrefix;
 			final String inputKey;
-			final String outputKey;
 			final String[] rowsToExecute;
 
 			file = getParameterFromProperties("File", "");
 			param = getParameterFromProperties("Parameters", "");
 			String[] dataDrivenParameters = param.split(";");
-			// The parameter convention is as such: <table prefix>;<input
-			// key>;<output key>;<rows to execute>
-			// when the first two are must and the rest are optional. If user
-			// doesn't want to give output key, but
-			// does want to include rows to execute, he should type: <table
-			// prefix>;<input key>;;<rows to execute>
+			// The parameter convention is as such: <table prefix>;<input key>;<rows to execute>
+			// when the first two are must and the rest are optional.
 			if (dataDrivenParameters == null || (dataDrivenParameters.length < 2 || dataDrivenParameters.length > 4)) {
 				throw new DataCollectorException("Wrong number of parameters.");
 			} else {
 				tablePrefix = fetchTablePrefix(dataDrivenParameters);
 				inputKey = fetchInputKey(dataDrivenParameters);
-				outputKey = fetchOutputKey(dataDrivenParameters);
 				rowsToExecute = fetchRowsToExecute(dataDrivenParameters);
 				TableDataExtractor tableDataExtractor;
-				// if we do not provide properties file, the TableDataExtractor
+				// if we do not provide database properties file, the TableDataExtractor
 				// class will use a default database.properties file
 				// otherwise it will use the file we provided
 				if (file == null || file.isEmpty()) {
@@ -302,21 +296,10 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 			return null;
 		}
 
-		private String fetchOutputKey(final String[] dataDrivenParameters) {
-			// if user did not provide output key we use date+time instead
-			if (dataDrivenParameters.length < 3 || dataDrivenParameters[2].trim().isEmpty()) {
-				DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-				Date date = new Date();
-				return dateFormat.format(date);
-			} else {
-				return dataDrivenParameters[2].trim();
-			}
-		}
-
 		// the convention is the rows separated by ","
 		private String[] fetchRowsToExecute(final String[] dataDrivenParameters) {
-			if (dataDrivenParameters.length > 3) {
-				return dataDrivenParameters[3].split(",");
+			if (dataDrivenParameters.length > 2) {
+				return dataDrivenParameters[2].split(",");
 			}
 			return null;
 		}
@@ -326,11 +309,11 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 
 		public TableDataExtractor(final String tableName) {
 			this.TABLE_NAME = tableName;
-			this.DB_PROPERTIES_FILE = "C:/TEMP/database.properties";// sets the
+			this.DB_PROPERTIES_FILE = "C:/TEMP/database.properties";// set the
 																	// default
 																	// database
 																	// properties
-																	// filepath
+																	// filepath here
 		}
 
 		public TableDataExtractor(final String tableName, final String propertiesFile) {
