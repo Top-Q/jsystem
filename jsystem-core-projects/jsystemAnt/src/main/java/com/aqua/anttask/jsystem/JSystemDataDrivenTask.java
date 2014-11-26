@@ -192,6 +192,7 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 		}
 
 	}
+	
 
 	class DatabaseDataCollector implements DataCollector {
 
@@ -200,24 +201,23 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 			List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
 			final String tablePrefix;
 			final String inputKey;
-			final String[] rowsToExecute;
+			final String[] idsToRun;
 
 			file = getParameterFromProperties("File", "");
 			param = getParameterFromProperties("Parameters", "");
-			String[] dataDrivenParameters = param.split(";");
-			// The parameter convention is as such: <table prefix>;<input
-			// key>;<rows to execute>
-			// when the first two are must and the rest are optional.
-			if (dataDrivenParameters == null || (dataDrivenParameters.length < 2 || dataDrivenParameters.length > 4)) {
+			String[] dataDrivenParameters = param.split(DELIMITER);
+			// The parameter convention is as such: 
+			//<table prefix>;<jira input key>;<ids to execute>
+			// when the first two are must and the ids are optional.
+			if (dataDrivenParameters == null || (dataDrivenParameters.length < 2 || dataDrivenParameters.length > 3)) {
 				throw new DataCollectorException("Wrong number of parameters.");
 			} else {
 				tablePrefix = fetchTablePrefix(dataDrivenParameters);
 				inputKey = fetchInputKey(dataDrivenParameters);
-				rowsToExecute = fetchRowsToExecute(dataDrivenParameters);
+				idsToRun = fetchIdsToExecute(dataDrivenParameters);
 				TableDataExtractor tableDataExtractor;
 				// if we do not provide database properties file, the
-				// TableDataExtractor
-				// class will use a default database.properties file
+				// TableDataExtractor class will use a default database.properties file
 				// otherwise it will use the file we provided
 				if (file == null || file.isEmpty()) {
 					tableDataExtractor = new TableDataExtractor(tablePrefix);
@@ -225,55 +225,12 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 					tableDataExtractor = new TableDataExtractor(tablePrefix, file);
 				}
 				try {
-					data = tableDataExtractor.extractData(inputKey);
+					data = tableDataExtractor.extractData(inputKey, idsToRun);
 				} catch (SQLDataExtractException e) {
 					throw new DataCollectorException("Failed extracting data from the database. " + e.getMessage());
 				}
-				
-				data = cleanUnusedRows(data, rowsToExecute);			
 			}
 			return data;
-		}
-
-		/**
-		 * Method assumes rowsToUse contain either integer numbers in string
-		 * representation or range separated by "-" character. Also assumes
-		 * there are no repetitive values, like 1-8,5,...(notice 1-8 already
-		 * includes 5, thus 5 will be counted twice)
-		 * 
-		 * @param rows
-		 *            - the original list of rows fetched previously from the
-		 *            database
-		 * @param rowsToUse
-		 *            - Strings which represent the relevant rows. See above
-		 *            description.
-		 * @return new List of rows which contains only the rows presented in
-		 *         rowsToUse. Or the original rows list if rowsToUse is null or
-		 *         empty.
-		 */
-		private List<Map<String, Object>> cleanUnusedRows(List<Map<String, Object>> rows, String[] rowsToUse) {
-			if (rowsToUse == null || rowsToUse.length == 0) {
-				return rows;
-			}
-			List<Map<String, Object>> relevantRows = new ArrayList<Map<String, Object>>();
-			for (String rowToAdd : rowsToUse) {
-				if (rowToAdd.trim().contains("-")) {
-					int min = Integer.valueOf(rowToAdd.substring(0, rowToAdd.indexOf("-")).trim());
-					int max = Integer.valueOf(rowToAdd.substring(rowToAdd.lastIndexOf("-") + 1).trim());
-					for (int i = min - 1; i < max; i++) {
-						if (i >= 0 && i < rows.size()) {
-							relevantRows.add(rows.get(i));
-						}
-					}
-				} else {
-					int row = Integer.valueOf(rowToAdd) - 1;
-					if (row >= 0 && row < rows.size()) {
-						relevantRows.add(rows.get(row));
-					}
-				}
-			}
-
-			return relevantRows;
 		}
 
 		private String fetchTablePrefix(final String[] dataDrivenParameters) {
@@ -290,27 +247,32 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 			return null;
 		}
 
-		// the convention is the rows separated by ","
-		private String[] fetchRowsToExecute(final String[] dataDrivenParameters) {
+		// the convention is the ids and ids range are separated by ","
+		private String[] fetchIdsToExecute(final String[] dataDrivenParameters) {
 			if (dataDrivenParameters.length > 2) {
 				return dataDrivenParameters[2].split(",");
 			}
 			return null;
 		}
 	}
-
+	
+	/**
+	 * The following class assumes properties file appears in a default location
+	 * or is provided as a parameter in the constructor. The file includes the following
+	 * properties: DB_DRIVER_CLASS, DB_URL, DB_USERNAME, DB_PASSWORD
+	 */
 	class TableDataExtractor {
 
 		public TableDataExtractor(final String tableName) {
 			this.TABLE_NAME = tableName;
-			this.DB_PROPERTIES_FILE = "C:/TEMP/database.properties";// set the
+			this.DB_PROPERTIES_FILE = "database.properties";// set the
 																	// default
 																	// database
 																	// properties
 																	// filepath
 																	// here
 		}
-
+		
 		public TableDataExtractor(final String tableName, final String propertiesFile) {
 			this.TABLE_NAME = tableName;
 			this.DB_PROPERTIES_FILE = propertiesFile;
@@ -318,7 +280,7 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 
 		private final String TABLE_NAME;
 		private final String DB_PROPERTIES_FILE;
-
+		
 		private Connection getConnection() throws IOException, ClassNotFoundException, SQLException {
 			Properties props = new Properties();
 			FileInputStream fis = null;
@@ -330,9 +292,19 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 					props.getProperty("DB_PASSWORD"));
 			return con;
 		}
-
-		public List<Map<String, Object>> extractData(final String inputKey) throws SQLDataExtractException {
-			final String QUERY = "SELECT * FROM " + TABLE_NAME + "_input WHERE jira_key = ?";
+		
+		/**
+		 * Method prepares a query to execute according to given parameters
+		 * connects to the database with the data given in properties file
+		 * and extracts relevant information
+		 * @param inputKey - jira input key
+		 * @param IdsToExecute - which rows asssociated to the jira key to execute
+		 * @return List of maps between column title and value for each row of the result set
+		 * @throws SQLDataExtractException
+		 */
+		public List<Map<String, Object>> extractData(final String inputKey, final String[] IdsToExecute)
+				throws SQLDataExtractException {
+			final String QUERY = getQuery(IdsToExecute);
 			List<Map<String, Object>> extractedData = new ArrayList<Map<String, Object>>();
 			PreparedStatement preparedStatement = null;
 			Connection dbConnection = null;
@@ -384,6 +356,35 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 			}
 			return extractedData;
 		}
+		
+		/**
+		 * Method assumes ids contain either integer numbers in string
+		 * representation or range separated by "-" character. 
+		 * @param ids - Strings which represent the ids to execute. See above
+		 *            description.
+		 * @return query to execute
+		 */
+		private String getQuery(String[] ids) {
+			StringBuilder query = new StringBuilder("SELECT * FROM " + TABLE_NAME + "_input WHERE jira_key = ?");
+			if (ids != null && ids.length > 0) {
+				query.append(" AND id IN (");
+				for (String id : ids) {
+					if (id.trim().contains("-")) {
+						int min = Integer.valueOf(id.substring(0, id.indexOf("-")).trim());
+						int max = Integer.valueOf(id.substring(id.lastIndexOf("-") + 1).trim());
+						for (int i = min; i <= max; i++) {
+							query.append(String.valueOf(i));
+							query.append(",");
+						}
+					} else {
+						query.append(id.trim());
+						query.append(",");
+					}
+				}
+				query.replace(query.lastIndexOf(","), query.lastIndexOf(",") + 1, ")" );
+			}
+			return query.toString();
+		}
 	}
 }
 
@@ -403,17 +404,17 @@ class DataCollectorException extends Exception {
 		super(message, t);
 	}
 }
-	
-	class SQLDataExtractException extends Exception {
-		
-		private static final long serialVersionUID = 1L;
 
-		public SQLDataExtractException(String message) {
-			super(message);
-		}
+class SQLDataExtractException extends Exception {
 
-		public SQLDataExtractException(String message, Throwable t) {
-			super(message, t);
-		}
+	private static final long serialVersionUID = 1L;
+
+	public SQLDataExtractException(String message) {
+		super(message);
+	}
+
+	public SQLDataExtractException(String message, Throwable t) {
+		super(message, t);
+	}
 
 }
