@@ -3,7 +3,6 @@
  */
 package jsystem.treeui.properties;
 
-import jsystem.framework.DataType;
 import jsystem.framework.FrameworkOptions;
 
 /**
@@ -815,6 +814,14 @@ public enum GUIFrameworkOptions {
 			"Select one or more options from the list \n"
 	),
 	
+	DATA_DRIVEN_COLLECTOR(
+			FrameworkOptions.DATA_DRIVEN_COLLECTOR,
+			true,
+			Group.BETA_FEATURES,
+			"Here you can provide a class the implements the DataCollector interface \n "+
+			"The data collector class will be used to collect the data for the data driven building block"
+			
+			),
 	
 	
 	/**

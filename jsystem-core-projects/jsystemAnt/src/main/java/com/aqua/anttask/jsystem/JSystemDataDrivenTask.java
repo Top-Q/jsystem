@@ -1,17 +1,21 @@
 package com.aqua.anttask.jsystem;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import jsystem.framework.FrameworkOptions;
+import jsystem.framework.JSystemProperties;
+import jsystem.runner.loader.LoadersManager;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.MacroInstance;
+
+import com.aqua.anttask.jsystem.datadriven.CsvDataCollector;
+import com.aqua.anttask.jsystem.datadriven.DataCollector;
+import com.aqua.anttask.jsystem.datadriven.DataCollectorException;
 
 public class JSystemDataDrivenTask extends PropertyReaderTask {
 
@@ -22,6 +26,8 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 	private String file;
 
 	private String type;
+
+	private String param;
 
 	private List<Map<String, Object>> data;
 
@@ -35,18 +41,12 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 
 		type = getParameterFromProperties("Type", "Csv");
 		DataCollector collector = null;
-		if (type.equals("Excel")) {
-			collector = new ExcelDataCollector();
-		} else if (type.equals("Csv")) {
-			collector = new CsvDataCollector();
-		} else if (type.equals("Database")) {
-			collector = new DatabaseDataCollector();
-		} else {
-			log.log(Level.WARNING, "Unknown data driven type");
-			return;
-		}
+
+		collector = createCollectorInstance();
 		try {
-			data = collector.collect();
+			file = getParameterFromProperties("File", "");
+			param = getParameterFromProperties("Parameter", "");
+			data = collector.collect(new File(file), param);
 		} catch (DataCollectorException e) {
 			log.log(Level.WARNING, "Failed to collect data due to " + e.getMessage());
 			return;
@@ -59,6 +59,27 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 		super.execute();
 	}
 
+	private DataCollector createCollectorInstance() {
+		String dataCollectorName = JSystemProperties.getInstance()
+				.getPreferenceOrDefault(FrameworkOptions.DATA_DRIVEN_COLLECTOR);
+		DataCollector collector = null;
+		try {
+			Class<?> dataCollectorClass = LoadersManager.getInstance().getLoader().loadClass(dataCollectorName);
+			if (dataCollectorClass != null) {
+				Object instance = dataCollectorClass.newInstance();
+				if (instance instanceof DataCollector) {
+					log.log(Level.INFO, "Reports publisher : " + dataCollectorName + " Was loaded.");
+					collector = (DataCollector) instance;
+				}
+			}
+		} catch (Exception e) {
+			log.log(Level.WARNING, "Fail to init collector : " + dataCollectorName, e);
+			collector = new CsvDataCollector();
+		}
+
+		return collector;
+	}
+
 	private void convertDataToLoop() {
 		final String paramName = data.get(0).keySet().toArray(new String[] {})[0];
 		StringBuilder sb = new StringBuilder();
@@ -68,7 +89,7 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 
 		// Actually, we not using this parameter, but we need in order for the
 		// for task to work.
-		setParam(paramName);
+		setParam("unusedparam");
 		// And, we are also not really using the list values, only pass it to
 		// the for task in order to create the number of iterations required.
 		setList(sb.toString().replaceFirst(DELIMITER, ""));
@@ -107,106 +128,6 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 
 	public void setType(String type) {
 		this.type = type;
-	}
-
-	class CsvDataCollector implements DataCollector {
-
-		private static final String SEPARATION_STRING = ",";
-
-		@Override
-		public List<Map<String, Object>> collect() throws DataCollectorException {
-			file = getParameterFromProperties("File","");
-			final File csvFile = new File(file);
-			List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
-			Scanner lineScanner = null;
-			try {
-				lineScanner = new Scanner(csvFile);
-				List<String> titles = null;
-				while (lineScanner.hasNextLine()) {
-					List<String> cells = new ArrayList<String>();
-					Scanner cellScanner = null;
-					try {
-						cellScanner = new Scanner(lineScanner.nextLine());
-						cellScanner.useDelimiter(SEPARATION_STRING);
-						while (cellScanner.hasNext()) {
-							cells.add(cellScanner.next());
-						}
-
-					} finally {
-						if (cellScanner != null) {
-							cellScanner.close();
-						}
-					}
-					if (cells.size() == 0) {
-						// Seems to be an empty line. Let's continue to the next
-						// line
-						continue;
-					}
-					if (null == titles) {
-						// This is the first line of the CSV, so it is the
-						// titles
-						titles = new ArrayList<String>();
-						titles.addAll(cells);
-						continue;
-					}
-					Map<String, Object> dataRow = new HashMap<String, Object>();
-					if (cells.size() != titles.size()) {
-						log.warning("Titles number is " + titles.size()
-								+ " while the cells number in one of the rows is " + cells.size());
-					}
-					// We would iterate over the smaller list size to avoid out
-					// of bounds
-					for (int i = 0; i < (titles.size() <= cells.size() ? titles.size() : cells.size()); i++) {
-						dataRow.put(titles.get(i), cells.get(i));
-					}
-					data.add(dataRow);
-				}
-			} catch (FileNotFoundException e) {
-				throw new DataCollectorException("Csv file " + file + " is not exist", e);
-			} finally {
-				if (lineScanner != null) {
-					lineScanner.close();
-				}
-			}
-			return data;
-		}
-
-	}
-
-	class ExcelDataCollector implements DataCollector {
-
-		@Override
-		public List<Map<String, Object>> collect() throws DataCollectorException {
-			throw new DataCollectorException("Excel collector is not yet implemented");
-		}
-
-	}
-
-	class DatabaseDataCollector implements DataCollector {
-
-		@Override
-		public List<Map<String, Object>> collect() throws DataCollectorException {
-			throw new DataCollectorException("Database collector is not yet implemented");
-		}
-
-	}
-
-	interface DataCollector {
-		List<Map<String, Object>> collect() throws DataCollectorException;
-	}
-
-	class DataCollectorException extends Exception {
-
-		private static final long serialVersionUID = 1L;
-
-		public DataCollectorException(String message) {
-			super(message);
-		}
-
-		public DataCollectorException(String message, Throwable t) {
-			super(message, t);
-		}
-
 	}
 
 }

@@ -1013,6 +1013,15 @@ public enum FrameworkOptions {
 			true,
 			new String[] {"jsystem.treeui.interfaces.JSystemTab"}),
 			
+	DATA_DRIVEN_COLLECTOR(
+			"data.driven.collector",
+			"Data driven collector",
+			DataType.SEARCH_AND_LIST,
+			"",
+			true,
+			new String[] {"com.aqua.anttask.jsystem.datadriven.DataCollector"}
+		),
+			
 	/**
 	 * Publisher class to user for publishing reports
 	 */
