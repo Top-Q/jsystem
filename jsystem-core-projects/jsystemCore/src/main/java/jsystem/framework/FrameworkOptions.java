@@ -1018,7 +1018,7 @@ public enum FrameworkOptions {
 			"Data driven collector",
 			DataType.SEARCH_AND_LIST,
 			"",
-			true,
+			false,
 			new String[] {"com.aqua.anttask.jsystem.datadriven.DataCollector"}
 		),
 			

@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 
 import jsystem.framework.FrameworkOptions;
 import jsystem.framework.JSystemProperties;
-import jsystem.runner.loader.LoadersManager;
+import jsystem.utils.beans.BeanUtils;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.MacroInstance;
@@ -39,10 +39,14 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 			return;
 		}
 
-		type = getParameterFromProperties("Type", "Csv");
-		DataCollector collector = null;
-
-		collector = createCollectorInstance();
+		final String collectorType = JSystemProperties.getInstance().getPreferenceOrDefault(
+				FrameworkOptions.DATA_DRIVEN_COLLECTOR);
+		DataCollector collector = BeanUtils.createInstanceFromClassName(collectorType, DataCollector.class);
+		if (null == collector) {
+			log.log(Level.WARNING, "Fail to init collector : " + collectorType);
+			collector = new CsvDataCollector();
+		}
+		type = collector.getName();
 		try {
 			file = getParameterFromProperties("File", "");
 			param = getParameterFromProperties("Parameter", "");
@@ -57,27 +61,6 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 		}
 		convertDataToLoop();
 		super.execute();
-	}
-
-	private DataCollector createCollectorInstance() {
-		String dataCollectorName = JSystemProperties.getInstance()
-				.getPreferenceOrDefault(FrameworkOptions.DATA_DRIVEN_COLLECTOR);
-		DataCollector collector = null;
-		try {
-			Class<?> dataCollectorClass = LoadersManager.getInstance().getLoader().loadClass(dataCollectorName);
-			if (dataCollectorClass != null) {
-				Object instance = dataCollectorClass.newInstance();
-				if (instance instanceof DataCollector) {
-					log.log(Level.INFO, "Reports publisher : " + dataCollectorName + " Was loaded.");
-					collector = (DataCollector) instance;
-				}
-			}
-		} catch (Exception e) {
-			log.log(Level.WARNING, "Fail to init collector : " + dataCollectorName, e);
-			collector = new CsvDataCollector();
-		}
-
-		return collector;
 	}
 
 	private void convertDataToLoop() {

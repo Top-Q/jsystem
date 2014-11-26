@@ -105,7 +105,8 @@ public class BeanUtils {
 				if (types.length == 1) {
 					UseProvider useProvider = currentMethod.getAnnotation(UseProvider.class);
 					Class<?> paramClass = types[0];
-					if ((supportEnum && paramClass.isEnum()) || isClassOfTypes(paramClass, fieldsClass) || useProvider != null) {
+					if ((supportEnum && paramClass.isEnum()) || isClassOfTypes(paramClass, fieldsClass)
+							|| useProvider != null) {
 						Method getter = findGetMethod(methods, paramClass, fieldName);
 						if (checkForGet && getter == null) {
 							continue;
@@ -122,8 +123,8 @@ public class BeanUtils {
 						if (useProvider != null) {
 							try {
 								String[] args = useProvider.config();
-								ParameterProvider provider = (ParameterProvider) LoadersManager.getInstance().getLoader().
-										loadClass(useProvider.provider().getName()).newInstance();
+								ParameterProvider provider = (ParameterProvider) LoadersManager.getInstance()
+										.getLoader().loadClass(useProvider.provider().getName()).newInstance();
 								provider.setProviderConfig(args);
 								beanElement.setParameterProvider(provider);
 							} catch (Exception e) {
@@ -427,7 +428,7 @@ public class BeanUtils {
 		}
 		return value;
 	}
-	
+
 	public static Object getObjects(Class<?> clazz, String value) {
 		if (clazz.equals(String.class)) {
 			return value;
@@ -535,5 +536,34 @@ public class BeanUtils {
 		} else {
 			return LoadersManager.getInstance().getLoader().loadClass(type);
 		}
+	}
+
+	/**
+	 * Create instance from the specified class name and cast it to the
+	 * specified class type.
+	 * 
+	 * @param className
+	 * @param type
+	 * @return instance from the specified class or null if failed
+	 * @author Itai
+	 */
+	public static <T> T createInstanceFromClassName(final String className, final Class<T> type) {
+		Class<?> clazz = null;
+		try {
+			clazz = LoadersManager.getInstance().getLoader().loadClass(className);
+		} catch (ClassNotFoundException e) {
+			return null;
+		}
+		if (clazz == null) {
+			return null;
+		}
+		Object instance = null;
+		try {
+			instance = clazz.newInstance();
+		} catch (InstantiationException | IllegalAccessException e) {
+			return null;
+		}
+		return type.cast(instance);
+
 	}
 }
