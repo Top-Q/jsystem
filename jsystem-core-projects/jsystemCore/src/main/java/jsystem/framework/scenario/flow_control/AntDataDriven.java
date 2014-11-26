@@ -24,6 +24,8 @@ public class AntDataDriven extends AntFlowControl {
 	private Parameter dataSourceFile = new Parameter();
 
 	private Parameter dataSourceType = new Parameter();
+	
+	private Parameter dataSourceParam = new Parameter();
 
 	public static String XML_TAG = CommonResources.JSYSTEM_DATADRIVEN;
 	public static String XML_CONTAINER_TAG = "sequential";
@@ -47,12 +49,20 @@ public class AntDataDriven extends AntFlowControl {
 
 		dataSourceType.setType(Parameter.ParameterType.STRING);
 		dataSourceType.setAsOptions(true);
-		dataSourceType.setOptions(new Object[] { "Csv" });
+		dataSourceType.setOptions(new Object[] { "Csv", "Database" });
 		dataSourceType.setValue("Csv");
 		dataSourceType.setName("Type");
 		dataSourceType.setDescription("Data Source Type");
 		dataSourceType.setSection(getComment());
 		addParameter(dataSourceType);
+		
+		dataSourceParam.setType(Parameter.ParameterType.STRING);
+		dataSourceParam.setValue("");
+		dataSourceParam.setName("Parameters");
+		dataSourceParam.setDescription("Various data driven mechanism parameters");
+		dataSourceParam.setSection(getComment());
+		addParameter(dataSourceParam);
+		
 		setTestComment(defaultComment());
 
 	}
@@ -123,6 +133,8 @@ public class AntDataDriven extends AntFlowControl {
 				dataSourceType.getValue() == null ? null : dataSourceType.getValue().toString()));
 		setDataSourceFile(ScenarioHelpers.getParameterValueFromProperties(this, getFlowFullUUID(), "File",
 				dataSourceFile.getValue() == null ? null : dataSourceFile.getValue().toString()));
+		setDataSourceFile(ScenarioHelpers.getParameterValueFromProperties(this, getFlowFullUUID(), "Parameters",
+				dataSourceParam.getValue() == null ? null : dataSourceParam.getValue().toString()));
 		loadAndSetUserDocumentation();
 	}
 
@@ -153,5 +165,11 @@ public class AntDataDriven extends AntFlowControl {
 	public void setDataSourceType(String dataSourceType) {
 		this.dataSourceType.setValue(dataSourceType);
 	}
+
+	public void setDataSourceParam(String dataSourceParamValue) {
+		this.dataSourceParam.setValue(dataSourceParam);
+	}
+	
+	
 
 }
