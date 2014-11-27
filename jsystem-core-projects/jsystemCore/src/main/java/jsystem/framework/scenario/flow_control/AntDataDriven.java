@@ -51,6 +51,13 @@ public class AntDataDriven extends AntFlowControl {
 		dataSourceParam.setDescription("Various data driven parameters");
 		dataSourceParam.setSection(getComment());
 		addParameter(dataSourceParam);
+		
+		dataSourceParam.setType(Parameter.ParameterType.STRING);
+		dataSourceParam.setValue("");
+		dataSourceParam.setName("Rows");
+		dataSourceParam.setDescription("Rows to execute (separated by ','), including ranges, i.e 1-5");
+		dataSourceParam.setSection(getComment());
+		addParameter(dataSourceParam);
 
 		setTestComment(defaultComment());
 

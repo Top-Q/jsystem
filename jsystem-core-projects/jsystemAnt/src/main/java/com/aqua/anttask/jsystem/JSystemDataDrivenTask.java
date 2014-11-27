@@ -1,6 +1,7 @@
 package com.aqua.anttask.jsystem;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -28,6 +29,8 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 	private String type;
 
 	private String param;
+	
+	private String rows;
 
 	private List<Map<String, Object>> data;
 
@@ -50,7 +53,9 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 		try {
 			file = getParameterFromProperties("File", "");
 			param = getParameterFromProperties("Parameters", "");
+			rows = getParameterFromProperties("Rows", "");
 			data = collector.collect(new File(file), param);
+			data = cleanUnusedRows(data, rows.split(","));
 		} catch (DataCollectorException e) {
 			log.log(Level.WARNING, "Failed to collect data due to " + e.getMessage());
 			return;
@@ -61,6 +66,31 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 		}
 		convertDataToLoop();
 		super.execute();
+	}
+	
+	private List<Map<String, Object>> cleanUnusedRows(List<Map<String, Object>> rows, String[] rowsToUse) {
+		if (rowsToUse == null || rowsToUse.length == 0) {
+			return rows;
+		}
+		List<Map<String, Object>> relevantRows = new ArrayList<Map<String, Object>>();
+		for (String rowToAdd : rowsToUse) {
+			if (rowToAdd.trim().contains("-")) {
+				int min = Integer.valueOf(rowToAdd.substring(0, rowToAdd.indexOf("-")).trim());
+				int max = Integer.valueOf(rowToAdd.substring(rowToAdd.lastIndexOf("-") + 1).trim());
+				for (int i = min - 1; i < max; i++) {
+					if (i >= 0 && i < rows.size()) {
+						relevantRows.add(rows.get(i));
+					}
+				}
+			} else {
+				int row = Integer.valueOf(rowToAdd) - 1;
+				if (row >= 0 && row < rows.size()) {
+					relevantRows.add(rows.get(row));
+				}
+			}
+		}
+
+		return relevantRows;
 	}
 
 	private void convertDataToLoop() {
