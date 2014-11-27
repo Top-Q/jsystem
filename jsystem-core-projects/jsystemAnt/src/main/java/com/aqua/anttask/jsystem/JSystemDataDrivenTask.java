@@ -70,26 +70,35 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 		file = getParameterFromProperties("File", "");
 		param = getParameterFromProperties("Parameters", "");
 		lineIndexes = getParameterFromProperties("LineIndexes", "");
-		
 	}
 
+	/**
+	 * Change the data received from the collector to include only the lines
+	 * that are specified in the line indexes parameter
+	 */
 	private void filterData() {
 		if (null == lineIndexes || lineIndexes.isEmpty()) {
 			return;
 		}
-		final List<Integer> requiredNumbers = convertStringOfNumbersToList(lineIndexes);
+		final List<Integer> requiredNumbers = convertStringOfNumbersToList(lineIndexes.trim());
 		if (null == requiredNumbers || requiredNumbers.size() == 0) {
 			return;
 		}
-		List<Map<String, Object>> filteredData = new ArrayList<Map<String, Object>>();
+		final List<Map<String, Object>> filteredData = new ArrayList<Map<String, Object>>();
 
 		for (int lineNumber : requiredNumbers) {
+			// Notice that the line indexes are one-based
 			if (data.size() < lineNumber) {
 				continue;
 			}
-			filteredData.add(data.get(lineNumber));
+			filteredData.add(data.get(lineNumber - 1));
 		}
-		data = filteredData;
+		if (filteredData.size() > 0) {
+			// Only if there is something in the filtered data we will replace
+			// the data with the filtered one. We do this to avoid exception at
+			// run time when trying to iterate over empty list
+			data = filteredData;
+		}
 
 	}
 
@@ -115,11 +124,16 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 				if (numberStr.contains("-")) {
 					final String rangeNumbersStr[] = numberStr.split("-");
 					for (int i = Integer.parseInt(rangeNumbersStr[0]); i <= Integer.parseInt(rangeNumbersStr[1]); i++) {
-						result.add(i);
+						if (i > 0){
+							result.add(i);
+						}
 					}
 
 				} else {
-					result.add(Integer.parseInt(numberStr));
+					int tempInt = Integer.parseInt(numberStr);
+					if (tempInt > 0){
+						result.add(Integer.parseInt(numberStr));
+					}
 				}
 
 			} catch (NumberFormatException e) {

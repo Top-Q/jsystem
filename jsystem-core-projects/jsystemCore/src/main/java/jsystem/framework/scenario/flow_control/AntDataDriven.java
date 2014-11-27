@@ -57,7 +57,7 @@ public class AntDataDriven extends AntFlowControl {
 		dataSourceLineIndexes.setValue("");
 		dataSourceLineIndexes.setName("LineIndexes");
 		dataSourceLineIndexes
-				.setDescription("Zero based, comma separated indexes list of required lines. Use '-' for ranges");
+				.setDescription("One-based, comma separated list of the required line indexes. You can use '-' for ranges");
 		dataSourceLineIndexes.setSection(getComment());
 		addParameter(dataSourceLineIndexes);
 
@@ -131,8 +131,9 @@ public class AntDataDriven extends AntFlowControl {
 				dataSourceFile.getValue() == null ? null : dataSourceFile.getValue().toString()));
 		setDataSourceParam(ScenarioHelpers.getParameterValueFromProperties(this, getFlowFullUUID(), "Parameters",
 				dataSourceParam.getValue() == null ? null : dataSourceParam.getValue().toString()));
-		setDataSourceLineIndexes(ScenarioHelpers.getParameterValueFromProperties(this, getFlowFullUUID(), "LineIndexes",
-				dataSourceLineIndexes.getValue() == null ? null : dataSourceLineIndexes.getValue().toString()));
+		setDataSourceLineIndexes(ScenarioHelpers.getParameterValueFromProperties(this, getFlowFullUUID(),
+				"LineIndexes", dataSourceLineIndexes.getValue() == null ? null : dataSourceLineIndexes.getValue()
+						.toString()));
 		loadAndSetUserDocumentation();
 	}
 
