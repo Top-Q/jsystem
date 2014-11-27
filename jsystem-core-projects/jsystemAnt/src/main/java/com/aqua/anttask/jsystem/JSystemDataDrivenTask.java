@@ -49,7 +49,7 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 		type = collector.getName();
 		try {
 			file = getParameterFromProperties("File", "");
-			param = getParameterFromProperties("Parameter", "");
+			param = getParameterFromProperties("Parameters", "");
 			data = collector.collect(new File(file), param);
 		} catch (DataCollectorException e) {
 			log.log(Level.WARNING, "Failed to collect data due to " + e.getMessage());
