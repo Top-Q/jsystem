@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,7 +19,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.MacroInstance;
 
 import com.aqua.anttask.jsystem.datadriven.CsvDataCollector;
-import com.aqua.anttask.jsystem.datadriven.DataCollector;
+import com.aqua.anttask.jsystem.datadriven.DataProvider;
 import com.aqua.anttask.jsystem.datadriven.DataCollectorException;
 
 public class JSystemDataDrivenTask extends PropertyReaderTask {
@@ -33,6 +34,12 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 
 	private String lineIndexes;
 
+	private boolean shuffle;
+
+	private long shuffleSeed;
+
+	private boolean reverseOrder;
+
 	private List<Map<String, Object>> data;
 
 	private int iterationNum = 0;
@@ -44,8 +51,8 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 		}
 
 		final String collectorType = JSystemProperties.getInstance().getPreferenceOrDefault(
-				FrameworkOptions.DATA_DRIVEN_COLLECTOR);
-		DataCollector collector = BeanUtils.createInstanceFromClassName(collectorType, DataCollector.class);
+				FrameworkOptions.DATA_DRIVEN_DATA_PROVIDER);
+		DataProvider collector = BeanUtils.createInstanceFromClassName(collectorType, DataProvider.class);
 		if (null == collector) {
 			log.log(Level.WARNING, "Fail to init collector : " + collectorType);
 			collector = new CsvDataCollector();
@@ -63,13 +70,30 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 		}
 		filterData();
 		convertDataToLoop();
+		if (shuffle) {
+			shuffleData();
+		}
+		if (reverseOrder) {
+			Collections.reverse(data);
+		}
 		super.execute();
+	}
+
+	private void shuffleData() {
+		if (shuffleSeed <= 0) {
+			Collections.shuffle(data);
+		} else {
+			Collections.shuffle(data, new Random(shuffleSeed));
+		}
 	}
 
 	private void loadParameters() {
 		file = getParameterFromProperties("File", "");
-		param = getParameterFromProperties("Parameters", "");
+		param = getParameterFromProperties("Parameter", "");
 		lineIndexes = getParameterFromProperties("LineIndexes", "");
+		shuffle = Boolean.valueOf(getParameterFromProperties("Shuffle", "false"));
+		shuffleSeed = Long.parseLong(getParameterFromProperties("ShuffleSeed", "0"));
+		reverseOrder = Boolean.parseBoolean(getParameterFromProperties("ReverseOrder", "false"));
 	}
 
 	/**
@@ -124,14 +148,14 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 				if (numberStr.contains("-")) {
 					final String rangeNumbersStr[] = numberStr.split("-");
 					for (int i = Integer.parseInt(rangeNumbersStr[0]); i <= Integer.parseInt(rangeNumbersStr[1]); i++) {
-						if (i > 0){
+						if (i > 0) {
 							result.add(i);
 						}
 					}
 
 				} else {
 					int tempInt = Integer.parseInt(numberStr);
-					if (tempInt > 0){
+					if (tempInt > 0) {
 						result.add(Integer.parseInt(numberStr));
 					}
 				}

@@ -9,6 +9,7 @@ import jsystem.framework.common.CommonResources;
 import jsystem.framework.scenario.JTest;
 import jsystem.framework.scenario.JTestContainer;
 import jsystem.framework.scenario.Parameter;
+import jsystem.framework.scenario.Parameter.ParameterType;
 import jsystem.framework.scenario.RunnerTest;
 import jsystem.framework.scenario.ScenarioHelpers;
 import jsystem.utils.XmlUtils;
@@ -26,6 +27,12 @@ public class AntDataDriven extends AntFlowControl {
 	private Parameter dataSourceParam = new Parameter();
 
 	private Parameter dataSourceLineIndexes = new Parameter();
+
+	private Parameter dataSourceShuffle = new Parameter();
+
+	private Parameter dataSourceShuffleSeed = new Parameter();
+
+	private Parameter dataSourceReverseOrder = new Parameter();
 
 	public static String XML_TAG = CommonResources.JSYSTEM_DATADRIVEN;
 	public static String XML_CONTAINER_TAG = "sequential";
@@ -48,8 +55,8 @@ public class AntDataDriven extends AntFlowControl {
 
 		dataSourceParam.setType(Parameter.ParameterType.STRING);
 		dataSourceParam.setValue("");
-		dataSourceParam.setName("Parameters");
-		dataSourceParam.setDescription("Various data driven parameters");
+		dataSourceParam.setName("Parameter");
+		dataSourceParam.setDescription("Open data provider parameter");
 		dataSourceParam.setSection(getComment());
 		addParameter(dataSourceParam);
 
@@ -60,6 +67,27 @@ public class AntDataDriven extends AntFlowControl {
 				.setDescription("One-based, comma separated list of the required line indexes. You can use '-' for ranges");
 		dataSourceLineIndexes.setSection(getComment());
 		addParameter(dataSourceLineIndexes);
+
+		dataSourceShuffle.setType(ParameterType.BOOLEAN);
+		dataSourceShuffle.setValue(false);
+		dataSourceShuffle.setName("Shuffle");
+		dataSourceShuffle.setDescription("Data will be provided in pseudorandom order using the specified seed");
+		dataSourceShuffle.setSection(getComment());
+		addParameter(dataSourceShuffle);
+
+		dataSourceShuffleSeed.setType(ParameterType.LONG);
+		dataSourceShuffleSeed.setValue(0);
+		dataSourceShuffleSeed.setName("ShuffleSeed");
+		dataSourceShuffleSeed.setDescription("Random seed. Use '0' for default");
+		dataSourceShuffleSeed.setSection(getComment());
+		addParameter(dataSourceShuffleSeed);
+
+		dataSourceReverseOrder.setType(ParameterType.BOOLEAN);
+		dataSourceReverseOrder.setValue(false);
+		dataSourceReverseOrder.setName("ReverseOrder");
+		dataSourceReverseOrder.setDescription("Data will be providerd in reverse order");
+		dataSourceReverseOrder.setSection(getComment());
+		addParameter(dataSourceReverseOrder);
 
 		setTestComment(defaultComment());
 
@@ -129,11 +157,25 @@ public class AntDataDriven extends AntFlowControl {
 	protected void loadParameters() {
 		setDataSourceFile(ScenarioHelpers.getParameterValueFromProperties(this, getFlowFullUUID(), "File",
 				dataSourceFile.getValue() == null ? null : dataSourceFile.getValue().toString()));
+
 		setDataSourceParam(ScenarioHelpers.getParameterValueFromProperties(this, getFlowFullUUID(), "Parameters",
 				dataSourceParam.getValue() == null ? null : dataSourceParam.getValue().toString()));
+
 		setDataSourceLineIndexes(ScenarioHelpers.getParameterValueFromProperties(this, getFlowFullUUID(),
 				"LineIndexes", dataSourceLineIndexes.getValue() == null ? null : dataSourceLineIndexes.getValue()
 						.toString()));
+
+		setDataSourceShuffle(Boolean.valueOf(ScenarioHelpers.getParameterValueFromProperties(this, getFlowFullUUID(),
+				"Shuffle", dataSourceShuffle.getValue() == null ? null : dataSourceShuffle.getValue().toString())));
+
+		setDataSourceShuffleSeed(Integer.valueOf(ScenarioHelpers.getParameterValueFromProperties(this,
+				getFlowFullUUID(), "ShuffleSeed", dataSourceShuffleSeed.getValue() == null ? null
+						: dataSourceShuffleSeed.getValue().toString())));
+
+		setDataSourceReverseOrder(Boolean.valueOf(ScenarioHelpers.getParameterValueFromProperties(this,
+				getFlowFullUUID(), "ReverseOrder", dataSourceReverseOrder.getValue() == null ? null
+						: dataSourceReverseOrder.getValue().toString())));
+
 		loadAndSetUserDocumentation();
 	}
 
@@ -167,6 +209,18 @@ public class AntDataDriven extends AntFlowControl {
 
 	public void setDataSourceLineIndexes(String dataSourceLineIndexesValue) {
 		this.dataSourceLineIndexes.setValue(dataSourceLineIndexesValue);
+	}
+
+	public void setDataSourceShuffle(boolean dataSourceShuffleValue) {
+		this.dataSourceShuffle.setValue(dataSourceShuffleValue);
+	}
+
+	public void setDataSourceShuffleSeed(long dataSourceShuffleSeedValue) {
+		this.dataSourceShuffleSeed.setValue(dataSourceShuffleSeedValue);
+	}
+
+	public void setDataSourceReverseOrder(boolean dataSourceReverseOrderValue) {
+		this.dataSourceReverseOrder.setValue(dataSourceReverseOrderValue);
 	}
 
 }

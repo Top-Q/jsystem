@@ -814,13 +814,17 @@ public enum GUIFrameworkOptions {
 			"Select one or more options from the list \n"
 	),
 	
-	DATA_DRIVEN_COLLECTOR(
-			FrameworkOptions.DATA_DRIVEN_COLLECTOR,
+	DATA_DRIVEN_DATA_PROVIDER(
+			FrameworkOptions.DATA_DRIVEN_DATA_PROVIDER,
 			true,
 			Group.BETA_FEATURES,
-			"Here you can provide a class the implements the DataCollector interface \n "+
-			"The data collector class will be used to collect the data for the data driven building block"
-			
+			"Allow users to implement different data providers for the data driven building block.\n"+ 
+			"For example, database data provider, Excel data provider, etc..\n" +
+			"To create a new data provider one need to create a new Maven project and add JSystemAnt project "+
+			" as a dependency \n" +
+			"After implementing the concrete data provider class, the jar of the project needs to be added to the lib folder of JSystem.\n"+
+			"If there are any additional dependencies that are needed they should be part of the jar or to be added to the JSystem thirdparty/commonLib folder\n"+ 
+			"After launching JSystem, the data provider should be selected in the property  data.driven.provider. \n"
 			),
 	
 	

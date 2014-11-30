@@ -1013,13 +1013,13 @@ public enum FrameworkOptions {
 			true,
 			new String[] {"jsystem.treeui.interfaces.JSystemTab"}),
 			
-	DATA_DRIVEN_COLLECTOR(
-			"data.driven.collector",
-			"Data driven collector",
+	DATA_DRIVEN_DATA_PROVIDER(
+			"data.driven.provider",
+			"Data driven data provider",
 			DataType.SEARCH_AND_LIST,
 			"",
 			false,
-			new String[] {"com.aqua.anttask.jsystem.datadriven.DataCollector"}
+			new String[] {"com.aqua.anttask.jsystem.datadriven.DataProvider"}
 		),
 			
 	/**

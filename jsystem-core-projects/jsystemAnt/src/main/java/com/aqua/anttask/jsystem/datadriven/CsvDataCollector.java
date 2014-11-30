@@ -10,7 +10,7 @@ import java.util.Scanner;
 import java.util.logging.Logger;
 
 
-public class CsvDataCollector implements DataCollector {
+public class CsvDataCollector implements DataProvider {
 
 	static Logger log = Logger.getLogger(CsvDataCollector.class.getName());
 	private static final String SEPARATION_STRING = ",";
