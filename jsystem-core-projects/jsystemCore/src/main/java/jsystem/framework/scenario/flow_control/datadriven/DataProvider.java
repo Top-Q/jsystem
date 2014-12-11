@@ -1,4 +1,4 @@
-package com.aqua.anttask.jsystem.datadriven;
+package jsystem.framework.scenario.flow_control.datadriven;
 
 import java.io.File;
 import java.util.List;
@@ -40,7 +40,7 @@ public interface DataProvider {
 	 * @throws DataCollectorException
 	 *             if fails to fetch the data
 	 */
-	List<Map<String, Object>> collect(File file, String param) throws DataCollectorException;
+	List<Map<String, Object>> provide(File file, String param) throws DataCollectorException;
 
 	/**
 	 * Used to specify the data provider name

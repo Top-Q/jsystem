@@ -13,14 +13,15 @@ import java.util.logging.Logger;
 
 import jsystem.framework.FrameworkOptions;
 import jsystem.framework.JSystemProperties;
+import jsystem.framework.scenario.ParametersManager;
+import jsystem.framework.scenario.Parameter.ParameterType;
+import jsystem.framework.scenario.flow_control.datadriven.CsvDataCollector;
+import jsystem.framework.scenario.flow_control.datadriven.DataCollectorException;
+import jsystem.framework.scenario.flow_control.datadriven.DataProvider;
 import jsystem.utils.beans.BeanUtils;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.MacroInstance;
-
-import com.aqua.anttask.jsystem.datadriven.CsvDataCollector;
-import com.aqua.anttask.jsystem.datadriven.DataProvider;
-import com.aqua.anttask.jsystem.datadriven.DataCollectorException;
 
 public class JSystemDataDrivenTask extends PropertyReaderTask {
 
@@ -50,16 +51,16 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 			return;
 		}
 
+		loadParameters();
 		final String collectorType = JSystemProperties.getInstance().getPreferenceOrDefault(
 				FrameworkOptions.DATA_DRIVEN_DATA_PROVIDER);
-		DataProvider collector = BeanUtils.createInstanceFromClassName(collectorType, DataProvider.class);
-		if (null == collector) {
+		DataProvider provider = BeanUtils.createInstanceFromClassName(collectorType, DataProvider.class);
+		if (null == provider) {
 			log.log(Level.WARNING, "Fail to init collector : " + collectorType);
-			collector = new CsvDataCollector();
+			provider = new CsvDataCollector();
 		}
-		loadParameters();
 		try {
-			data = collector.collect(new File(file), param);
+			data = provider.provide(new File(file), param);
 		} catch (DataCollectorException e) {
 			log.log(Level.WARNING, "Failed to collect data due to " + e.getMessage());
 			return;
@@ -90,6 +91,11 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 	private void loadParameters() {
 		file = getParameterFromProperties("File", "");
 		param = getParameterFromProperties("Parameter", "");
+		try {
+			param = ParametersManager.replaceAllReferenceValues(param, ParameterType.STRING);
+		} catch (Exception e) {
+			log.log(Level.SEVERE, "Error trying to replace reference parameters for input: " + param, e);
+		}
 		lineIndexes = getParameterFromProperties("LineIndexes", "");
 		shuffle = Boolean.valueOf(getParameterFromProperties("Shuffle", "false"));
 		shuffleSeed = Long.parseLong(getParameterFromProperties("ShuffleSeed", "0"));

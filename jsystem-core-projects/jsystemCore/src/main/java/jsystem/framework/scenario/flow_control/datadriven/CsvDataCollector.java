@@ -1,4 +1,4 @@
-package com.aqua.anttask.jsystem.datadriven;
+package jsystem.framework.scenario.flow_control.datadriven;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
+import jsystem.utils.StringUtils;
+
 
 public class CsvDataCollector implements DataProvider {
 
@@ -16,7 +18,7 @@ public class CsvDataCollector implements DataProvider {
 	private static final String SEPARATION_STRING = ",";
 	
 	@Override
-	public List<Map<String, Object>> collect(File file, String param) throws DataCollectorException {
+	public List<Map<String, Object>> provide(File file, String param) throws DataCollectorException {
 		List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
 		Scanner lineScanner = null;
 		try {
@@ -29,7 +31,11 @@ public class CsvDataCollector implements DataProvider {
 					cellScanner = new Scanner(lineScanner.nextLine());
 					cellScanner.useDelimiter(SEPARATION_STRING);
 					while (cellScanner.hasNext()) {
-						cells.add(cellScanner.next());
+						String cellValue = cellScanner.next();
+						if (StringUtils.isEmpty(cellValue)) {
+							cellValue = " ";
+						}
+						cells.add(cellValue);
 					}
 
 				} finally {

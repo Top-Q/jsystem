@@ -1016,10 +1016,10 @@ public enum FrameworkOptions {
 	DATA_DRIVEN_DATA_PROVIDER(
 			"data.driven.provider",
 			"Data driven data provider",
-			DataType.SEARCH_AND_LIST,
+			DataType.SEARCH_AND_MULTY_SELECT_LIST,
 			"",
 			false,
-			new String[] {"com.aqua.anttask.jsystem.datadriven.DataProvider"}
+			new String[] {"jsystem.framework.scenario.flow_control.datadriven.DataProvider"}
 		),
 			
 	/**

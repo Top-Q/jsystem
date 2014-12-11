@@ -1,4 +1,4 @@
-package com.aqua.anttask.jsystem.datadriven;
+package jsystem.framework.scenario.flow_control.datadriven;
 
 public class DataCollectorException extends Exception {
 

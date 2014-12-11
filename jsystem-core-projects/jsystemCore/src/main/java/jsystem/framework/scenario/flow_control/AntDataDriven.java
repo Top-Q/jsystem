@@ -1,10 +1,11 @@
 package jsystem.framework.scenario.flow_control;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
 
+import jsystem.framework.FrameworkOptions;
+import jsystem.framework.JSystemProperties;
 import jsystem.framework.common.CommonResources;
 import jsystem.framework.scenario.JTest;
 import jsystem.framework.scenario.JTestContainer;
@@ -12,7 +13,15 @@ import jsystem.framework.scenario.Parameter;
 import jsystem.framework.scenario.Parameter.ParameterType;
 import jsystem.framework.scenario.RunnerTest;
 import jsystem.framework.scenario.ScenarioHelpers;
+import jsystem.framework.scenario.flow_control.datadriven.CsvDataCollector;
+import jsystem.framework.scenario.flow_control.datadriven.DataProvider;
 import jsystem.utils.XmlUtils;
+import jsystem.utils.beans.BeanUtils;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Presentation of the data driven action in the scenario
@@ -34,6 +43,8 @@ public class AntDataDriven extends AntFlowControl {
 
 	private Parameter dataSourceReverseOrder = new Parameter();
 
+	private Parameter dataSourceType = new Parameter();
+
 	public static String XML_TAG = CommonResources.JSYSTEM_DATADRIVEN;
 	public static String XML_CONTAINER_TAG = "sequential";
 
@@ -45,6 +56,28 @@ public class AntDataDriven extends AntFlowControl {
 
 	public AntDataDriven(JTestContainer parent, String id) {
 		super("DataDriven", parent, id);
+		dataSourceType.setType(ParameterType.STRING);
+		dataSourceType.setAsOptions(true);
+		
+		List<String> options = new ArrayList<>();
+		final String[] providersClassName = JSystemProperties.getInstance().getPreferenceOrDefault(FrameworkOptions.DATA_DRIVEN_DATA_PROVIDER).split(";");
+		for (int i = 0; i < providersClassName.length; i++) {
+			DataProvider provider = BeanUtils.createInstanceFromClassName(providersClassName[i], DataProvider.class);
+			if (null == provider) {
+				log.log(Level.WARNING, "Fail to init provider: " + providersClassName[i]);
+				provider = new CsvDataCollector();
+			}
+			String providerName = ((DataProvider) provider).getName();
+			options.add(providerName);
+		}
+		
+		dataSourceType.setOptions(options.toArray());
+		dataSourceType.setValue("");
+		dataSourceType.setName("Type");
+		dataSourceType.setDescription("Data Provider Type");
+		dataSourceType.setSection(getComment());
+		addParameter(dataSourceType);
+
 		dataSourceFile.setType(Parameter.ParameterType.FILE);
 		dataSourceFile.setValue("");
 		dataSourceFile.setName("File");
@@ -158,7 +191,7 @@ public class AntDataDriven extends AntFlowControl {
 		setDataSourceFile(ScenarioHelpers.getParameterValueFromProperties(this, getFlowFullUUID(), "File",
 				dataSourceFile.getValue() == null ? null : dataSourceFile.getValue().toString()));
 
-		setDataSourceParam(ScenarioHelpers.getParameterValueFromProperties(this, getFlowFullUUID(), "Parameters",
+		setDataSourceParam(ScenarioHelpers.getParameterValueFromProperties(this, getFlowFullUUID(), "Parameter",
 				dataSourceParam.getValue() == null ? null : dataSourceParam.getValue().toString()));
 
 		setDataSourceLineIndexes(ScenarioHelpers.getParameterValueFromProperties(this, getFlowFullUUID(),
@@ -175,6 +208,9 @@ public class AntDataDriven extends AntFlowControl {
 		setDataSourceReverseOrder(Boolean.valueOf(ScenarioHelpers.getParameterValueFromProperties(this,
 				getFlowFullUUID(), "ReverseOrder", dataSourceReverseOrder.getValue() == null ? null
 						: dataSourceReverseOrder.getValue().toString())));
+
+		setDataSourceType(ScenarioHelpers.getParameterValueFromProperties(this, getFlowFullUUID(), "Type",
+				dataSourceType.getValue() == null ? null : dataSourceType.getValue().toString()));
 
 		loadAndSetUserDocumentation();
 	}
@@ -221,6 +257,10 @@ public class AntDataDriven extends AntFlowControl {
 
 	public void setDataSourceReverseOrder(boolean dataSourceReverseOrderValue) {
 		this.dataSourceReverseOrder.setValue(dataSourceReverseOrderValue);
+	}
+
+	public void setDataSourceType(String dataSourceTypeValue) {
+		this.dataSourceType.setValue(dataSourceTypeValue);
 	}
 
 }
