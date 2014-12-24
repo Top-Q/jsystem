@@ -1,14 +1,24 @@
 package com.aqua.anttask.jsystem;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
+import java.util.Random;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import jsystem.framework.FrameworkOptions;
+import jsystem.framework.JSystemProperties;
+import jsystem.framework.scenario.ParametersManager;
+import jsystem.framework.scenario.Parameter.ParameterType;
+import jsystem.framework.scenario.flow_control.datadriven.CsvDataCollector;
+import jsystem.framework.scenario.flow_control.datadriven.DataCollectorException;
+import jsystem.framework.scenario.flow_control.datadriven.DataProvider;
+import jsystem.utils.beans.BeanUtils;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.MacroInstance;
@@ -21,11 +31,19 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 
 	private String file;
 
-	private String type;
+	private String param;
+
+	private String lineIndexes;
+
+	private boolean shuffle;
+
+	private long shuffleSeed;
+
+	private boolean reverseOrder;
 
 	private List<Map<String, Object>> data;
 
-	private int itrerationNum = 0;
+	private int iterationNum = 0;
 
 	public void execute() throws BuildException {
 
@@ -33,20 +51,16 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 			return;
 		}
 
-		type = getParameterFromProperties("Type", "Csv");
-		DataCollector collector = null;
-		if (type.equals("Excel")) {
-			collector = new ExcelDataCollector();
-		} else if (type.equals("Csv")) {
-			collector = new CsvDataCollector();
-		} else if (type.equals("Database")) {
-			collector = new DatabaseDataCollector();
-		} else {
-			log.log(Level.WARNING, "Unknown data driven type");
-			return;
+		loadParameters();
+		final String collectorType = JSystemProperties.getInstance().getPreferenceOrDefault(
+				FrameworkOptions.DATA_DRIVEN_DATA_PROVIDER);
+		DataProvider provider = BeanUtils.createInstanceFromClassName(collectorType, DataProvider.class);
+		if (null == provider) {
+			log.log(Level.WARNING, "Fail to init collector : " + collectorType);
+			provider = new CsvDataCollector();
 		}
 		try {
-			data = collector.collect();
+			data = provider.provide(new File(file), param);
 		} catch (DataCollectorException e) {
 			log.log(Level.WARNING, "Failed to collect data due to " + e.getMessage());
 			return;
@@ -55,8 +69,67 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 			log.log(Level.INFO, "Invalid data");
 			return;
 		}
+		filterData();
 		convertDataToLoop();
+		if (shuffle) {
+			shuffleData();
+		}
+		if (reverseOrder) {
+			Collections.reverse(data);
+		}
 		super.execute();
+	}
+
+	private void shuffleData() {
+		if (shuffleSeed <= 0) {
+			Collections.shuffle(data);
+		} else {
+			Collections.shuffle(data, new Random(shuffleSeed));
+		}
+	}
+
+	private void loadParameters() {
+		file = getParameterFromProperties("File", "");
+		param = getParameterFromProperties("Parameter", "");
+		try {
+			param = ParametersManager.replaceAllReferenceValues(param, ParameterType.STRING);
+		} catch (Exception e) {
+			log.log(Level.SEVERE, "Error trying to replace reference parameters for input: " + param, e);
+		}
+		lineIndexes = getParameterFromProperties("LineIndexes", "");
+		shuffle = Boolean.valueOf(getParameterFromProperties("Shuffle", "false"));
+		shuffleSeed = Long.parseLong(getParameterFromProperties("ShuffleSeed", "0"));
+		reverseOrder = Boolean.parseBoolean(getParameterFromProperties("ReverseOrder", "false"));
+	}
+
+	/**
+	 * Change the data received from the collector to include only the lines
+	 * that are specified in the line indexes parameter
+	 */
+	private void filterData() {
+		if (null == lineIndexes || lineIndexes.isEmpty()) {
+			return;
+		}
+		final List<Integer> requiredNumbers = convertStringOfNumbersToList(lineIndexes.trim());
+		if (null == requiredNumbers || requiredNumbers.size() == 0) {
+			return;
+		}
+		final List<Map<String, Object>> filteredData = new ArrayList<Map<String, Object>>();
+
+		for (int lineNumber : requiredNumbers) {
+			// Notice that the line indexes are one-based
+			if (data.size() < lineNumber) {
+				continue;
+			}
+			filteredData.add(data.get(lineNumber - 1));
+		}
+		if (filteredData.size() > 0) {
+			// Only if there is something in the filtered data we will replace
+			// the data with the filtered one. We do this to avoid exception at
+			// run time when trying to iterate over empty list
+			data = filteredData;
+		}
+
 	}
 
 	private void convertDataToLoop() {
@@ -66,12 +139,40 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 			sb.append(DELIMITER).append(dataRow.get(paramName));
 		}
 
-		// Actually, we not using this parameter, but we need in order for the
-		// for task to work.
-		setParam(paramName);
+		// Actually, we are not using this parameter, but we need it in order
+		// for the the task to work.
+		setParam("unusedparam");
 		// And, we are also not really using the list values, only pass it to
 		// the for task in order to create the number of iterations required.
 		setList(sb.toString().replaceFirst(DELIMITER, ""));
+	}
+
+	private static List<Integer> convertStringOfNumbersToList(final String numbers) {
+		final Set<Integer> result = new HashSet<Integer>();
+		for (String numberStr : numbers.split(",")) {
+			try {
+				if (numberStr.contains("-")) {
+					final String rangeNumbersStr[] = numberStr.split("-");
+					for (int i = Integer.parseInt(rangeNumbersStr[0]); i <= Integer.parseInt(rangeNumbersStr[1]); i++) {
+						if (i > 0) {
+							result.add(i);
+						}
+					}
+
+				} else {
+					int tempInt = Integer.parseInt(numberStr);
+					if (tempInt > 0) {
+						result.add(Integer.parseInt(numberStr));
+					}
+				}
+
+			} catch (NumberFormatException e) {
+				continue;
+			}
+		}
+		final List<Integer> sortedResult = new ArrayList<Integer>(result);
+		Collections.sort(sortedResult);
+		return sortedResult;
 	}
 
 	@Override
@@ -80,7 +181,7 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 		instance.setProject(getProject());
 		instance.setOwningTarget(getOwningTarget());
 		instance.setMacroDef(getMacroDef());
-		Map<String, Object> dataRow = data.get(itrerationNum++);
+		Map<String, Object> dataRow = data.get(iterationNum++);
 		for (String key : dataRow.keySet()) {
 			if (dataRow.get(key) == null) {
 				continue;
@@ -101,112 +202,12 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 		this.file = file;
 	}
 
-	public String getType() {
-		return type;
+	public String getLineIndexes() {
+		return lineIndexes;
 	}
 
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	class CsvDataCollector implements DataCollector {
-
-		private static final String SEPARATION_STRING = ",";
-
-		@Override
-		public List<Map<String, Object>> collect() throws DataCollectorException {
-			file = getParameterFromProperties("File","");
-			final File csvFile = new File(file);
-			List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
-			Scanner lineScanner = null;
-			try {
-				lineScanner = new Scanner(csvFile);
-				List<String> titles = null;
-				while (lineScanner.hasNextLine()) {
-					List<String> cells = new ArrayList<String>();
-					Scanner cellScanner = null;
-					try {
-						cellScanner = new Scanner(lineScanner.nextLine());
-						cellScanner.useDelimiter(SEPARATION_STRING);
-						while (cellScanner.hasNext()) {
-							cells.add(cellScanner.next());
-						}
-
-					} finally {
-						if (cellScanner != null) {
-							cellScanner.close();
-						}
-					}
-					if (cells.size() == 0) {
-						// Seems to be an empty line. Let's continue to the next
-						// line
-						continue;
-					}
-					if (null == titles) {
-						// This is the first line of the CSV, so it is the
-						// titles
-						titles = new ArrayList<String>();
-						titles.addAll(cells);
-						continue;
-					}
-					Map<String, Object> dataRow = new HashMap<String, Object>();
-					if (cells.size() != titles.size()) {
-						log.warning("Titles number is " + titles.size()
-								+ " while the cells number in one of the rows is " + cells.size());
-					}
-					// We would iterate over the smaller list size to avoid out
-					// of bounds
-					for (int i = 0; i < (titles.size() <= cells.size() ? titles.size() : cells.size()); i++) {
-						dataRow.put(titles.get(i), cells.get(i));
-					}
-					data.add(dataRow);
-				}
-			} catch (FileNotFoundException e) {
-				throw new DataCollectorException("Csv file " + file + " is not exist", e);
-			} finally {
-				if (lineScanner != null) {
-					lineScanner.close();
-				}
-			}
-			return data;
-		}
-
-	}
-
-	class ExcelDataCollector implements DataCollector {
-
-		@Override
-		public List<Map<String, Object>> collect() throws DataCollectorException {
-			throw new DataCollectorException("Excel collector is not yet implemented");
-		}
-
-	}
-
-	class DatabaseDataCollector implements DataCollector {
-
-		@Override
-		public List<Map<String, Object>> collect() throws DataCollectorException {
-			throw new DataCollectorException("Database collector is not yet implemented");
-		}
-
-	}
-
-	interface DataCollector {
-		List<Map<String, Object>> collect() throws DataCollectorException;
-	}
-
-	class DataCollectorException extends Exception {
-
-		private static final long serialVersionUID = 1L;
-
-		public DataCollectorException(String message) {
-			super(message);
-		}
-
-		public DataCollectorException(String message, Throwable t) {
-			super(message, t);
-		}
-
+	public void setLineIndexes(String lineIndexes) {
+		this.lineIndexes = lineIndexes;
 	}
 
 }

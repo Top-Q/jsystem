@@ -1,17 +1,27 @@
 package jsystem.framework.scenario.flow_control;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
 
+import jsystem.framework.FrameworkOptions;
+import jsystem.framework.JSystemProperties;
 import jsystem.framework.common.CommonResources;
 import jsystem.framework.scenario.JTest;
 import jsystem.framework.scenario.JTestContainer;
 import jsystem.framework.scenario.Parameter;
+import jsystem.framework.scenario.Parameter.ParameterType;
 import jsystem.framework.scenario.RunnerTest;
 import jsystem.framework.scenario.ScenarioHelpers;
+import jsystem.framework.scenario.flow_control.datadriven.CsvDataCollector;
+import jsystem.framework.scenario.flow_control.datadriven.DataProvider;
 import jsystem.utils.XmlUtils;
+import jsystem.utils.beans.BeanUtils;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Presentation of the data driven action in the scenario
@@ -22,6 +32,16 @@ import jsystem.utils.XmlUtils;
 public class AntDataDriven extends AntFlowControl {
 
 	private Parameter dataSourceFile = new Parameter();
+
+	private Parameter dataSourceParam = new Parameter();
+
+	private Parameter dataSourceLineIndexes = new Parameter();
+
+	private Parameter dataSourceShuffle = new Parameter();
+
+	private Parameter dataSourceShuffleSeed = new Parameter();
+
+	private Parameter dataSourceReverseOrder = new Parameter();
 
 	private Parameter dataSourceType = new Parameter();
 
@@ -36,23 +56,72 @@ public class AntDataDriven extends AntFlowControl {
 
 	public AntDataDriven(JTestContainer parent, String id) {
 		super("DataDriven", parent, id);
+		dataSourceType.setType(ParameterType.STRING);
+		dataSourceType.setAsOptions(true);
+		
+		List<String> options = new ArrayList<>();
+		final String[] providersClassName = JSystemProperties.getInstance().getPreferenceOrDefault(FrameworkOptions.DATA_DRIVEN_DATA_PROVIDER).split(";");
+		for (int i = 0; i < providersClassName.length; i++) {
+			DataProvider provider = BeanUtils.createInstanceFromClassName(providersClassName[i], DataProvider.class);
+			if (null == provider) {
+				log.log(Level.WARNING, "Fail to init provider: " + providersClassName[i]);
+				provider = new CsvDataCollector();
+			}
+			String providerName = ((DataProvider) provider).getName();
+			options.add(providerName);
+		}
+		
+		dataSourceType.setOptions(options.toArray());
+		dataSourceType.setValue("");
+		dataSourceType.setName("Type");
+		dataSourceType.setDescription("Data Provider Type");
+		dataSourceType.setSection(getComment());
+		addParameter(dataSourceType);
+
 		dataSourceFile.setType(Parameter.ParameterType.FILE);
 		dataSourceFile.setValue("");
 		dataSourceFile.setName("File");
 		dataSourceFile.setDescription("Data Source File");
 		// TODO: sync section with comment/name
 		dataSourceFile.setSection(getComment());
-
 		addParameter(dataSourceFile);
 
-		dataSourceType.setType(Parameter.ParameterType.STRING);
-		dataSourceType.setAsOptions(true);
-		dataSourceType.setOptions(new Object[] { "Csv" });
-		dataSourceType.setValue("Csv");
-		dataSourceType.setName("Type");
-		dataSourceType.setDescription("Data Source Type");
-		dataSourceType.setSection(getComment());
-		addParameter(dataSourceType);
+		dataSourceParam.setType(Parameter.ParameterType.STRING);
+		dataSourceParam.setValue("");
+		dataSourceParam.setName("Parameter");
+		dataSourceParam.setDescription("Open data provider parameter");
+		dataSourceParam.setSection(getComment());
+		addParameter(dataSourceParam);
+
+		dataSourceLineIndexes.setType(Parameter.ParameterType.STRING);
+		dataSourceLineIndexes.setValue("");
+		dataSourceLineIndexes.setName("LineIndexes");
+		dataSourceLineIndexes
+				.setDescription("One-based, comma separated list of the required line indexes. You can use '-' for ranges");
+		dataSourceLineIndexes.setSection(getComment());
+		addParameter(dataSourceLineIndexes);
+
+		dataSourceShuffle.setType(ParameterType.BOOLEAN);
+		dataSourceShuffle.setValue(false);
+		dataSourceShuffle.setName("Shuffle");
+		dataSourceShuffle.setDescription("Data will be provided in pseudorandom order using the specified seed");
+		dataSourceShuffle.setSection(getComment());
+		addParameter(dataSourceShuffle);
+
+		dataSourceShuffleSeed.setType(ParameterType.LONG);
+		dataSourceShuffleSeed.setValue(0);
+		dataSourceShuffleSeed.setName("ShuffleSeed");
+		dataSourceShuffleSeed.setDescription("Random seed. Use '0' for default");
+		dataSourceShuffleSeed.setSection(getComment());
+		addParameter(dataSourceShuffleSeed);
+
+		dataSourceReverseOrder.setType(ParameterType.BOOLEAN);
+		dataSourceReverseOrder.setValue(false);
+		dataSourceReverseOrder.setName("ReverseOrder");
+		dataSourceReverseOrder.setDescription("Data will be providerd in reverse order");
+		dataSourceReverseOrder.setSection(getComment());
+		addParameter(dataSourceReverseOrder);
+
 		setTestComment(defaultComment());
 
 	}
@@ -109,7 +178,7 @@ public class AntDataDriven extends AntFlowControl {
 
 	@Override
 	public String defaultComment() {
-		return "Data driven according to  \"" + dataSourceType.getValue() + "\"";
+		return "Data driven ";
 	}
 
 	@Override
@@ -119,10 +188,30 @@ public class AntDataDriven extends AntFlowControl {
 
 	@Override
 	protected void loadParameters() {
-		setDataSourceType(ScenarioHelpers.getParameterValueFromProperties(this, getFlowFullUUID(), "Type",
-				dataSourceType.getValue() == null ? null : dataSourceType.getValue().toString()));
 		setDataSourceFile(ScenarioHelpers.getParameterValueFromProperties(this, getFlowFullUUID(), "File",
 				dataSourceFile.getValue() == null ? null : dataSourceFile.getValue().toString()));
+
+		setDataSourceParam(ScenarioHelpers.getParameterValueFromProperties(this, getFlowFullUUID(), "Parameter",
+				dataSourceParam.getValue() == null ? null : dataSourceParam.getValue().toString()));
+
+		setDataSourceLineIndexes(ScenarioHelpers.getParameterValueFromProperties(this, getFlowFullUUID(),
+				"LineIndexes", dataSourceLineIndexes.getValue() == null ? null : dataSourceLineIndexes.getValue()
+						.toString()));
+
+		setDataSourceShuffle(Boolean.valueOf(ScenarioHelpers.getParameterValueFromProperties(this, getFlowFullUUID(),
+				"Shuffle", dataSourceShuffle.getValue() == null ? null : dataSourceShuffle.getValue().toString())));
+
+		setDataSourceShuffleSeed(Integer.valueOf(ScenarioHelpers.getParameterValueFromProperties(this,
+				getFlowFullUUID(), "ShuffleSeed", dataSourceShuffleSeed.getValue() == null ? null
+						: dataSourceShuffleSeed.getValue().toString())));
+
+		setDataSourceReverseOrder(Boolean.valueOf(ScenarioHelpers.getParameterValueFromProperties(this,
+				getFlowFullUUID(), "ReverseOrder", dataSourceReverseOrder.getValue() == null ? null
+						: dataSourceReverseOrder.getValue().toString())));
+
+		setDataSourceType(ScenarioHelpers.getParameterValueFromProperties(this, getFlowFullUUID(), "Type",
+				dataSourceType.getValue() == null ? null : dataSourceType.getValue().toString()));
+
 		loadAndSetUserDocumentation();
 	}
 
@@ -150,8 +239,28 @@ public class AntDataDriven extends AntFlowControl {
 		this.dataSourceFile.setValue(dataSourceFileValue);
 	}
 
-	public void setDataSourceType(String dataSourceType) {
-		this.dataSourceType.setValue(dataSourceType);
+	public void setDataSourceParam(String dataSourceParamValue) {
+		this.dataSourceParam.setValue(dataSourceParamValue);
+	}
+
+	public void setDataSourceLineIndexes(String dataSourceLineIndexesValue) {
+		this.dataSourceLineIndexes.setValue(dataSourceLineIndexesValue);
+	}
+
+	public void setDataSourceShuffle(boolean dataSourceShuffleValue) {
+		this.dataSourceShuffle.setValue(dataSourceShuffleValue);
+	}
+
+	public void setDataSourceShuffleSeed(long dataSourceShuffleSeedValue) {
+		this.dataSourceShuffleSeed.setValue(dataSourceShuffleSeedValue);
+	}
+
+	public void setDataSourceReverseOrder(boolean dataSourceReverseOrderValue) {
+		this.dataSourceReverseOrder.setValue(dataSourceReverseOrderValue);
+	}
+
+	public void setDataSourceType(String dataSourceTypeValue) {
+		this.dataSourceType.setValue(dataSourceTypeValue);
 	}
 
 }

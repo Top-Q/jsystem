@@ -26,9 +26,9 @@ import jsystem.framework.scenario.flow_control.AntIfElseIf;
 import jsystem.framework.scenario.flow_control.AntSwitch;
 import jsystem.framework.scenario.flow_control.AntSwitchCase;
 import jsystem.framework.scenario.flow_control.AntSwitchDefault;
+import jsystem.framework.scenario.flow_control.FlowControlHelpers;
 import jsystem.utils.IntegerWrapper;
 import jsystem.utils.StringUtils;
-import junit.framework.JSystemJUnit4ClassRunner;
 import junit.framework.NamedTest;
 import junit.framework.SystemTest;
 import junit.framework.Test;
@@ -794,7 +794,11 @@ public abstract class JTestContainer implements JTest {
 					uuid = t.getFullUUID();
 					testsHash.put(uuid, t);
 				}
-
+				List<AntFlowControl> allFlowControls = FlowControlHelpers.getAllFlowControls((JTestContainer) test);
+				for (AntFlowControl t : allFlowControls) {
+					uuid = t.getFlowFullUUID();
+					testsHash.put(uuid, t);
+				}				
 			} else if (test instanceof RunnerFixture) {
 				RunnerTest rt = (RunnerFixture) test;
 				testsHash.put(uuid, rt);

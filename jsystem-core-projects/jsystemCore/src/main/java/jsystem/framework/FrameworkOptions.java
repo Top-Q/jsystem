@@ -1013,6 +1013,15 @@ public enum FrameworkOptions {
 			true,
 			new String[] {"jsystem.treeui.interfaces.JSystemTab"}),
 			
+	DATA_DRIVEN_DATA_PROVIDER(
+			"data.driven.provider",
+			"Data driven data provider",
+			DataType.SEARCH_AND_MULTY_SELECT_LIST,
+			"",
+			false,
+			new String[] {"jsystem.framework.scenario.flow_control.datadriven.DataProvider"}
+		),
+			
 	/**
 	 * Publisher class to user for publishing reports
 	 */

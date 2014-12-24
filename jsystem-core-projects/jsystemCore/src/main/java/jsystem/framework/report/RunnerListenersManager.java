@@ -545,7 +545,7 @@ public class RunnerListenersManager extends DefaultReporterImpl implements JSyst
 		if (!(currentTest instanceof InternalTest) && !blockReporters && !inScenarioAsTest) {
 			addEndTestInfo();
 		}
-
+		
 		if (inScenarioAsTest) {
 			try {
 				stopLevel();
@@ -682,7 +682,7 @@ public class RunnerListenersManager extends DefaultReporterImpl implements JSyst
 			((SystemTest) test).clearDocumentation();
 			((SystemTest) test).clearFailCause();
 			((SystemTest) test).clearSteps();
-
+			((SystemTest) test).initFlags();
 		
 		}
 		

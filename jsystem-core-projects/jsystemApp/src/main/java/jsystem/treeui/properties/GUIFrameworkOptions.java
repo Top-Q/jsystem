@@ -3,7 +3,6 @@
  */
 package jsystem.treeui.properties;
 
-import jsystem.framework.DataType;
 import jsystem.framework.FrameworkOptions;
 
 /**
@@ -815,6 +814,18 @@ public enum GUIFrameworkOptions {
 			"Select one or more options from the list \n"
 	),
 	
+	DATA_DRIVEN_DATA_PROVIDER(
+			FrameworkOptions.DATA_DRIVEN_DATA_PROVIDER,
+			true,
+			Group.BETA_FEATURES,
+			"Allow users to implement different data providers for the data driven building block.\n"+ 
+			"For example, database data provider, Excel data provider, etc..\n" +
+			"To create a new data provider one need to create a new Maven project and add JSystemAnt project "+
+			" as a dependency \n" +
+			"After implementing the concrete data provider class, the jar of the project needs to be added to the lib folder of JSystem.\n"+
+			"If there are any additional dependencies that are needed they should be part of the jar or to be added to the JSystem thirdparty/commonLib folder\n"+ 
+			"After launching JSystem, the data provider should be selected in the property  data.driven.provider. \n"
+			),
 	
 	
 	/**
