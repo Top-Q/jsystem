@@ -60,7 +60,7 @@ public class AntDataDriven extends AntFlowControl {
 		dataSourceType.setAsOptions(true);
 		
 		List<String> options = new ArrayList<>();
-		final String[] providersClassName = JSystemProperties.getInstance().getPreferenceOrDefault(FrameworkOptions.DATA_DRIVEN_DATA_PROVIDER).split(";");
+		final String[] providersClassName = JSystemProperties.getInstance().getPreferenceOrDefault(FrameworkOptions.DATA_PROVIDER_CLASSES).split(";");
 		for (int i = 0; i < providersClassName.length; i++) {
 			DataProvider provider = BeanUtils.createInstanceFromClassName(providersClassName[i], DataProvider.class);
 			if (null == provider) {

@@ -814,8 +814,8 @@ public enum GUIFrameworkOptions {
 			"Select one or more options from the list \n"
 	),
 	
-	DATA_DRIVEN_DATA_PROVIDER(
-			FrameworkOptions.DATA_DRIVEN_DATA_PROVIDER,
+	DATA_PROVIDER_CLASSES(
+			FrameworkOptions.DATA_PROVIDER_CLASSES,
 			true,
 			Group.BETA_FEATURES,
 			"Allow users to implement different data providers for the data driven building block.\n"+ 

@@ -1013,9 +1013,9 @@ public enum FrameworkOptions {
 			true,
 			new String[] {"jsystem.treeui.interfaces.JSystemTab"}),
 			
-	DATA_DRIVEN_DATA_PROVIDER(
-			"data.driven.provider",
-			"Data driven data provider",
+	DATA_PROVIDER_CLASSES(
+			"data.provider.classes",
+			"Data driven data provider classes",
 			DataType.SEARCH_AND_MULTY_SELECT_LIST,
 			"",
 			false,

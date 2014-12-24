@@ -53,7 +53,7 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 
 		loadParameters();
 		final String collectorType = JSystemProperties.getInstance().getPreferenceOrDefault(
-				FrameworkOptions.DATA_DRIVEN_DATA_PROVIDER);
+				FrameworkOptions.DATA_PROVIDER_CLASSES);
 		DataProvider provider = BeanUtils.createInstanceFromClassName(collectorType, DataProvider.class);
 		if (null == provider) {
 			log.log(Level.WARNING, "Fail to init collector : " + collectorType);
