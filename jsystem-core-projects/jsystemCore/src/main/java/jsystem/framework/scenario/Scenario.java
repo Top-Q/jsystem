@@ -829,9 +829,8 @@ public class Scenario extends JTestContainer {
 		}
 		int index = PerformanceUtil.startMeasure();
 		update(true);
-		ScenarioHelpers.saveScenarioPropertiesToSrcAndClass(ScenarioHelpers.getScenarioProperties(getName()),
-				getName(), false);
-
+		Properties scenarioProperties = ScenarioHelpers.removeDeletedScenarioProperties(ScenarioHelpers.getScenarioProperties(getName()), getName());
+		ScenarioHelpers.saveScenarioPropertiesToSrcAndClass(scenarioProperties, getName(), false);
 		if (isRoot()) {
 			PerformanceUtil.endMeasure(index, "Saving scenario " + getName());
 		}
