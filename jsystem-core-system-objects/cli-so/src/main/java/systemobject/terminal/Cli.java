@@ -36,6 +36,11 @@ public class Cli {
 	 */
 	private int waitWithGraceCounter = 0;
 	
+	/**
+	 * Maximum time for retires of graceful operation
+	 */
+	private int maxGracefulRetries = 2;
+	
 	private boolean dontWaitForPrompts = false;
 
 	/**
@@ -368,7 +373,7 @@ public class Cli {
 			result.append(terminal.getResult());
 			return p;
 		} catch (Exception e) {
-			if ((!graceful) || (waitWithGraceCounter > 2)) {
+			if ((!graceful) || (waitWithGraceCounter > maxGracefulRetries)) {
 				throw e;
 			}
 
@@ -462,5 +467,20 @@ public class Cli {
 	public void setDontWaitForPrompts(boolean dontWaitForPrompts) {
 		this.dontWaitForPrompts = dontWaitForPrompts;
 	}
+	
+	public int getMaxGracefulRetries() {
+		return maxGracefulRetries;
+	}
+
+	/**
+	 * Set the maximum retries the cli connection will perform when working in
+	 * graceful mode.
+	 * 
+	 * @param maxGracefulRetries
+	 */
+	public void setMaxGracefulRetries(int maxGracefulRetries) {
+		this.maxGracefulRetries = maxGracefulRetries;
+	}
+
 
 }
