@@ -13,8 +13,9 @@ import jsystem.framework.scenario.Parameter;
 import jsystem.framework.scenario.Parameter.ParameterType;
 import jsystem.framework.scenario.RunnerTest;
 import jsystem.framework.scenario.ScenarioHelpers;
-import jsystem.framework.scenario.flow_control.datadriven.CsvDataCollector;
+import jsystem.framework.scenario.flow_control.datadriven.CsvDataProvider;
 import jsystem.framework.scenario.flow_control.datadriven.DataProvider;
+import jsystem.utils.StringUtils;
 import jsystem.utils.XmlUtils;
 import jsystem.utils.beans.BeanUtils;
 
@@ -58,21 +59,28 @@ public class AntDataDriven extends AntFlowControl {
 		super("DataDriven", parent, id);
 		dataSourceType.setType(ParameterType.STRING);
 		dataSourceType.setAsOptions(true);
-		
+
 		List<String> options = new ArrayList<>();
-		final String[] providersClassName = JSystemProperties.getInstance().getPreferenceOrDefault(FrameworkOptions.DATA_PROVIDER_CLASSES).split(";");
+		final String[] providersClassName = JSystemProperties.getInstance()
+				.getPreferenceOrDefault(FrameworkOptions.DATA_PROVIDER_CLASSES).split(";");
 		for (int i = 0; i < providersClassName.length; i++) {
 			DataProvider provider = BeanUtils.createInstanceFromClassName(providersClassName[i], DataProvider.class);
 			if (null == provider) {
 				log.log(Level.WARNING, "Fail to init provider: " + providersClassName[i]);
-				provider = new CsvDataCollector();
+				provider = new CsvDataProvider();
 			}
 			String providerName = ((DataProvider) provider).getName();
 			options.add(providerName);
 		}
-		
+
 		dataSourceType.setOptions(options.toArray());
-		dataSourceType.setValue("");
+		final String dataProviderClasses = JSystemProperties.getInstance().getPreferenceOrDefault(
+				FrameworkOptions.DATA_PROVIDER_CLASSES);
+		DataProvider provider = null;
+		if (!StringUtils.isEmpty(dataProviderClasses)) {
+			provider = BeanUtils.createInstanceFromClassName(dataProviderClasses.split(";")[0], DataProvider.class);
+		}
+		dataSourceType.setValue(provider != null ? provider.getName() : "");
 		dataSourceType.setName("Type");
 		dataSourceType.setDescription("Data Provider Type");
 		dataSourceType.setSection(getComment());

@@ -13,11 +13,12 @@ import java.util.logging.Logger;
 
 import jsystem.framework.FrameworkOptions;
 import jsystem.framework.JSystemProperties;
-import jsystem.framework.scenario.ParametersManager;
 import jsystem.framework.scenario.Parameter.ParameterType;
-import jsystem.framework.scenario.flow_control.datadriven.CsvDataCollector;
+import jsystem.framework.scenario.ParametersManager;
+import jsystem.framework.scenario.flow_control.datadriven.CsvDataProvider;
 import jsystem.framework.scenario.flow_control.datadriven.DataCollectorException;
 import jsystem.framework.scenario.flow_control.datadriven.DataProvider;
+import jsystem.utils.StringUtils;
 import jsystem.utils.beans.BeanUtils;
 
 import org.apache.tools.ant.BuildException;
@@ -28,6 +29,8 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 	private static final String DELIMITER = ";";
 
 	static Logger log = Logger.getLogger(JSystemDataDrivenTask.class.getName());
+
+	private String type;
 
 	private String file;
 
@@ -52,13 +55,7 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 		}
 
 		loadParameters();
-		final String collectorType = JSystemProperties.getInstance().getPreferenceOrDefault(
-				FrameworkOptions.DATA_PROVIDER_CLASSES);
-		DataProvider provider = BeanUtils.createInstanceFromClassName(collectorType, DataProvider.class);
-		if (null == provider) {
-			log.log(Level.WARNING, "Fail to init collector : " + collectorType);
-			provider = new CsvDataCollector();
-		}
+		final DataProvider provider = initProvider();
 		try {
 			data = provider.provide(new File(file), param);
 		} catch (DataCollectorException e) {
@@ -80,6 +77,33 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 		super.execute();
 	}
 
+	private DataProvider initProvider() {
+		if (StringUtils.isEmpty(type)) {
+			log.log(Level.WARNING, "No data provider type was specified. Rolling back to CSV provider");
+			return new CsvDataProvider();
+		}
+		final String allProviderTypes = JSystemProperties.getInstance().getPreferenceOrDefault(
+				FrameworkOptions.DATA_PROVIDER_CLASSES);
+		if (StringUtils.isEmpty(allProviderTypes)) {
+			log.log(Level.WARNING, "No providers were specified in the framework options. Rolling back to CSV provider");
+			return new CsvDataProvider();
+		}
+		List<DataProvider> dataProvidersList = new ArrayList<DataProvider>();
+		for (String providerType : allProviderTypes.split(DELIMITER)) {
+			final DataProvider provider = BeanUtils.createInstanceFromClassName(providerType, DataProvider.class);
+			if (provider != null) {
+				dataProvidersList.add(provider);
+			}
+		}
+		for (DataProvider provider : dataProvidersList) {
+			if (provider.getName() != null && provider.getName().trim().equals(type.trim())) {
+				return provider;
+			}
+		}
+		log.log(Level.WARNING, "No provider was found with name " + type + ". Rolling back to CSV provider");
+		return new CsvDataProvider();
+	}
+
 	private void shuffleData() {
 		if (shuffleSeed <= 0) {
 			Collections.shuffle(data);
@@ -89,6 +113,7 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 	}
 
 	private void loadParameters() {
+		type = getParameterFromProperties("Type", new CsvDataProvider().getName());
 		file = getParameterFromProperties("File", "");
 		param = getParameterFromProperties("Parameter", "");
 		try {

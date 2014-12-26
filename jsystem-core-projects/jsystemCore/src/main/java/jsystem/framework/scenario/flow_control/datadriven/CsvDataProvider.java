@@ -12,9 +12,9 @@ import java.util.logging.Logger;
 import jsystem.utils.StringUtils;
 
 
-public class CsvDataCollector implements DataProvider {
+public class CsvDataProvider implements DataProvider {
 
-	static Logger log = Logger.getLogger(CsvDataCollector.class.getName());
+	static Logger log = Logger.getLogger(CsvDataProvider.class.getName());
 	private static final String SEPARATION_STRING = ",";
 	
 	@Override
