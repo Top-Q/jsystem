@@ -14,7 +14,7 @@ import java.util.Map;
  * JSystem. If there are any additional dependencies that are needed they should
  * be part of the jar or to be added to the JSystem thirdparty/commonLib folder <br>
  * After launching JSystem, the data provider should be selected in the property
- * data.driven.provider. <br>
+ * data.provider.classes. <br>
  * 
  * @author Itai Agmon
  *
