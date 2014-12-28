@@ -32,6 +32,8 @@ import org.w3c.dom.NodeList;
  */
 public class AntDataDriven extends AntFlowControl {
 
+	private static final String OPTIONS_SECTION = "Options";
+
 	private Parameter dataSourceFile = new Parameter();
 
 	private Parameter dataSourceParam = new Parameter();
@@ -59,21 +61,7 @@ public class AntDataDriven extends AntFlowControl {
 		super("DataDriven", parent, id);
 		dataSourceType.setType(ParameterType.STRING);
 		dataSourceType.setAsOptions(true);
-
-		List<String> options = new ArrayList<>();
-		final String[] providersClassName = JSystemProperties.getInstance()
-				.getPreferenceOrDefault(FrameworkOptions.DATA_PROVIDER_CLASSES).split(";");
-		for (int i = 0; i < providersClassName.length; i++) {
-			DataProvider provider = BeanUtils.createInstanceFromClassName(providersClassName[i], DataProvider.class);
-			if (null == provider) {
-				log.log(Level.WARNING, "Fail to init provider: " + providersClassName[i]);
-				provider = new CsvDataProvider();
-			}
-			String providerName = ((DataProvider) provider).getName();
-			options.add(providerName);
-		}
-
-		dataSourceType.setOptions(options.toArray());
+		dataSourceType.setOptions(fetchProviderTypes().toArray());
 		final String dataProviderClasses = JSystemProperties.getInstance().getPreferenceOrDefault(
 				FrameworkOptions.DATA_PROVIDER_CLASSES);
 		DataProvider provider = null;
@@ -91,47 +79,65 @@ public class AntDataDriven extends AntFlowControl {
 		dataSourceFile.setName("File");
 		dataSourceFile.setDescription("Data Source File");
 		// TODO: sync section with comment/name
-		dataSourceFile.setSection(getComment());
 		addParameter(dataSourceFile);
 
 		dataSourceParam.setType(Parameter.ParameterType.STRING);
 		dataSourceParam.setValue("");
 		dataSourceParam.setName("Parameter");
-		dataSourceParam.setDescription("Open data provider parameter");
-		dataSourceParam.setSection(getComment());
+		dataSourceParam.setDescription("Free data provider parameter");
 		addParameter(dataSourceParam);
 
 		dataSourceLineIndexes.setType(Parameter.ParameterType.STRING);
 		dataSourceLineIndexes.setValue("");
+		dataSourceLineIndexes.setSection("Options");
 		dataSourceLineIndexes.setName("LineIndexes");
 		dataSourceLineIndexes
 				.setDescription("One-based, comma separated list of the required line indexes. You can use '-' for ranges");
-		dataSourceLineIndexes.setSection(getComment());
 		addParameter(dataSourceLineIndexes);
 
 		dataSourceShuffle.setType(ParameterType.BOOLEAN);
 		dataSourceShuffle.setValue(false);
 		dataSourceShuffle.setName("Shuffle");
+		dataSourceShuffle.setSection(OPTIONS_SECTION);
 		dataSourceShuffle.setDescription("Data will be provided in pseudorandom order using the specified seed");
-		dataSourceShuffle.setSection(getComment());
 		addParameter(dataSourceShuffle);
 
 		dataSourceShuffleSeed.setType(ParameterType.LONG);
 		dataSourceShuffleSeed.setValue(0);
 		dataSourceShuffleSeed.setName("ShuffleSeed");
+		dataSourceShuffleSeed.setSection(OPTIONS_SECTION);
 		dataSourceShuffleSeed.setDescription("Random seed. Use '0' for default");
-		dataSourceShuffleSeed.setSection(getComment());
 		addParameter(dataSourceShuffleSeed);
 
 		dataSourceReverseOrder.setType(ParameterType.BOOLEAN);
 		dataSourceReverseOrder.setValue(false);
+		dataSourceReverseOrder.setSection(OPTIONS_SECTION);
 		dataSourceReverseOrder.setName("ReverseOrder");
 		dataSourceReverseOrder.setDescription("Data will be providerd in reverse order");
-		dataSourceReverseOrder.setSection(getComment());
 		addParameter(dataSourceReverseOrder);
 
 		setTestComment(defaultComment());
 
+	}
+
+	private List<String> fetchProviderTypes() {
+		final List<String> options = new ArrayList<>();
+		final String[] providersClassName = JSystemProperties.getInstance()
+				.getPreferenceOrDefault(FrameworkOptions.DATA_PROVIDER_CLASSES).split(";");
+		for (int i = 0; i < providersClassName.length; i++) {
+			final DataProvider provider = BeanUtils.createInstanceFromClassName(providersClassName[i],
+					DataProvider.class);
+			if (null == provider) {
+				log.log(Level.WARNING, "Fail to init provider: " + providersClassName[i]);
+				continue;
+			}
+			options.add(((DataProvider) provider).getName());
+		}
+		if (options.size() == 0) {
+			log.log(Level.WARNING, "No data providers specified - Using only the default CSV provider");
+			options.add(new CsvDataProvider().getName());
+		}
+		return options;
 	}
 
 	public Element addExecutorXml(Element targetScenario, Document doc) {

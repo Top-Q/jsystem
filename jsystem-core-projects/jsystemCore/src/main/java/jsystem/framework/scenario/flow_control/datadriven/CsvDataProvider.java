@@ -78,7 +78,7 @@ public class CsvDataProvider implements DataProvider {
 	}
 	
 	public String getName(){
-		return "csv";
+		return "CSV";
 	}
 
 }
