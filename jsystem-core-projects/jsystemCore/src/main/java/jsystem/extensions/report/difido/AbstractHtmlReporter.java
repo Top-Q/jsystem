@@ -21,14 +21,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import jsystem.extensions.report.html.ExtendLevelTestReporter;
 import jsystem.framework.JSystemProperties;
-import jsystem.framework.common.CommonResources;
 import jsystem.framework.report.ExtendTestListener;
 import jsystem.framework.report.ListenerstManager;
 import jsystem.framework.report.Reporter.EnumReportLevel;
@@ -47,8 +44,6 @@ import junit.framework.Test;
  * 
  */
 public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, ExtendTestListener {
-
-	private static final Logger log = Logger.getLogger(AbstractHtmlReporter.class.getName());
 
 	private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm:ss:");
 

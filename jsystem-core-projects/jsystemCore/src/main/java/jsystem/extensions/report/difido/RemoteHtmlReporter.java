@@ -7,8 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-import jsystem.framework.FrameworkOptions;
-import jsystem.framework.JSystemProperties;
+import jsystem.extensions.report.difido.RemoteDifidoProperties.RemoteDifidoOptions;
 
 public class RemoteHtmlReporter extends AbstractHtmlReporter {
 
@@ -19,8 +18,6 @@ public class RemoteHtmlReporter extends AbstractHtmlReporter {
 	private boolean enabled;
 
 	private DifidoClient client;
-
-	private boolean appendToExistingExecution = true;
 
 	private int executionId;
 
@@ -45,19 +42,23 @@ public class RemoteHtmlReporter extends AbstractHtmlReporter {
 	public void init() {
 		super.initModel();
 		try {
-			final String host = JSystemProperties.getInstance().getPreferenceOrDefault(
-					FrameworkOptions.REPORTS_PUBLISHER_HOST);
-			final int port = Integer.parseInt(JSystemProperties.getInstance().getPreferenceOrDefault(
-					FrameworkOptions.REPORTS_PUBLISHER_PORT));
+			enabled = Boolean.parseBoolean(RemoteDifidoProperties.getInstance().getProperty(RemoteDifidoOptions.ENABLED));
+			if (!enabled) {
+				return;
+			}
+			final String host = RemoteDifidoProperties.getInstance().getProperty(RemoteDifidoOptions.HOST);
+			final int port = Integer.parseInt(RemoteDifidoProperties.getInstance().getProperty(RemoteDifidoOptions.PORT));
+			final boolean appendToExistingExecution = Boolean.parseBoolean(RemoteDifidoProperties.getInstance().getProperty(
+					RemoteDifidoOptions.APPEND_TO_EXISTING_EXECUTION));
 			client = new DifidoClient(host, port);
-			if (true) {
+			if (appendToExistingExecution) {
 				executionId = client.getLastExecutionId();
 			} else {
 				executionId = client.addExecution();
 			}
 			machineId = client.addMachine(executionId, getExecution().getLastMachine());
 			enabled = true;
-			log.fine(RemoteHtmlReporter.class.getName() + " was initilized successfully");
+			log.fine(RemoteHtmlReporter.class.getName() + " was initialized successfully");
 		} catch (Throwable t) {
 			enabled = false;
 			log.warning("Failed to init " + RemoteHtmlReporter.class.getName() + " due to " + t.getMessage());
