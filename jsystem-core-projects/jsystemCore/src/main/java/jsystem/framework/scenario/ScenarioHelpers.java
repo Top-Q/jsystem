@@ -7,7 +7,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -25,21 +24,20 @@ import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
 import jsystem.framework.FrameworkOptions;
 import jsystem.framework.JSystemProperties;
 import jsystem.framework.RunProperties;
 import jsystem.framework.common.CommonResources;
 import jsystem.framework.report.ListenerstManager;
 import jsystem.framework.scenario.flow_control.AntFlowControl;
-import jsystem.framework.scenario.flow_control.AntForLoop;
 import jsystem.utils.FileUtils;
 import jsystem.utils.SortedProperties;
 import jsystem.utils.StringUtils;
 import jsystem.utils.XmlUtils;
 import junit.framework.Test;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * Utility class for performing {@link Scenario} related manipulations and
@@ -657,7 +655,6 @@ public class ScenarioHelpers {
 	}
 
 	public static Properties removeDeletedScenarioProperties(Properties properties, String scenarioName) throws Exception {
-		long startTime = System.currentTimeMillis();
 		String lastTestFullUuid = "";
 		Properties sortedProperties = new SortedProperties();
 		sortedProperties.putAll(properties);
@@ -685,7 +682,7 @@ public class ScenarioHelpers {
 							continue;
 						}
 						String testParamName = key2.toString();
-						if (testParamName.startsWith("jsystem.")) {
+						if (testParamName.startsWith("jsystem.") || testParamName.equals("meaningfulName")) {
 							continue;
 						}
 						if (!testParamsNames.contains(testParamName)) {
@@ -695,9 +692,6 @@ public class ScenarioHelpers {
 				}
 			}
 		}
-		long endTime = System.currentTimeMillis();
-		double diff = endTime-startTime;
-		log.info("Removing deleted properties took " + (double)diff/1000 + " seconds.");
 		return sortedProperties;
 	}
 	
