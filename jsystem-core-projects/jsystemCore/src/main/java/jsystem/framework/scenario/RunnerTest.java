@@ -1441,11 +1441,14 @@ public class RunnerTest implements JTest, UIHandler {
 				properties.put(originalParameter.getName(), stringValue);
 			}
 		}
-		TestProperties tp = getTestProperties();
-		if (tp != null) {
-			meaningfulName = StringUtils.isEmpty(tp.name()) ? null : tp.name();
-			meaningfulName = processTestName(meaningfulName);
+		String originalName = meaningfulName;
+		if (originalName == null) {
+			TestProperties tp = getTestProperties();
+			if (tp != null) {
+				originalName = StringUtils.isEmpty(tp.name()) ? null : tp.name();
+			}
 		}
+		meaningfulName = processTestName(originalName);
 	}
 
 	private void updateTestInnerFlag(Parameter parameter, String parameterValue) {
