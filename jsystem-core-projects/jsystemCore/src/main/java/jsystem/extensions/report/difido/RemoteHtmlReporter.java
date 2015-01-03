@@ -41,15 +41,18 @@ public class RemoteHtmlReporter extends AbstractHtmlReporter {
 	@Override
 	public void init() {
 		super.initModel();
+		String host = null;
+		int port = 0;
 		try {
-			enabled = Boolean.parseBoolean(RemoteDifidoProperties.getInstance().getProperty(RemoteDifidoOptions.ENABLED));
+			enabled = Boolean.parseBoolean(RemoteDifidoProperties.getInstance()
+					.getProperty(RemoteDifidoOptions.ENABLED));
 			if (!enabled) {
 				return;
 			}
-			final String host = RemoteDifidoProperties.getInstance().getProperty(RemoteDifidoOptions.HOST);
-			final int port = Integer.parseInt(RemoteDifidoProperties.getInstance().getProperty(RemoteDifidoOptions.PORT));
-			final boolean appendToExistingExecution = Boolean.parseBoolean(RemoteDifidoProperties.getInstance().getProperty(
-					RemoteDifidoOptions.APPEND_TO_EXISTING_EXECUTION));
+			host = RemoteDifidoProperties.getInstance().getProperty(RemoteDifidoOptions.HOST);
+			port = Integer.parseInt(RemoteDifidoProperties.getInstance().getProperty(RemoteDifidoOptions.PORT));
+			final boolean appendToExistingExecution = Boolean.parseBoolean(RemoteDifidoProperties.getInstance()
+					.getProperty(RemoteDifidoOptions.APPEND_TO_EXISTING_EXECUTION));
 			client = new DifidoClient(host, port);
 			if (appendToExistingExecution) {
 				executionId = client.getLastExecutionId();
@@ -61,7 +64,8 @@ public class RemoteHtmlReporter extends AbstractHtmlReporter {
 			log.fine(RemoteHtmlReporter.class.getName() + " was initialized successfully");
 		} catch (Throwable t) {
 			enabled = false;
-			log.warning("Failed to init " + RemoteHtmlReporter.class.getName() + " due to " + t.getMessage());
+			log.warning("Failed to init " + RemoteHtmlReporter.class.getName() + "connection with host '" + host + ":"
+					+ port + "' due to " + t.getMessage());
 		}
 
 	}
