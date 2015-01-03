@@ -199,8 +199,9 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 			currentScenario = null;
 		}
 		currentTest = null;
-
-		writeExecution(execution);
+		// NOTE: DO NOT CALL TO writeExecution() AT THIS STAGE. Writing the
+		// execution here will cause the last execution to be deleted from the
+		// Difido server
 	}
 
 	protected void generateUid() {
@@ -349,7 +350,8 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 	/**
 	 * This method will be called at the beginning of each test. If the reporter
 	 * is using the file system, it is responsible for updating the current test
-	 * folder in the '.testdir.tmp' file. See the HtmlReporter implementation for example.
+	 * folder in the '.testdir.tmp' file. See the HtmlReporter implementation
+	 * for example.
 	 */
 	protected abstract void updateTestDirectory();
 
