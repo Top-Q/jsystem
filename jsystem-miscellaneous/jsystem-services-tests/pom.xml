@@ -60,7 +60,28 @@
 					</execution>
 				</executions>
 			</plugin>
-
+			<plugin>
+				<groupId>org.jsystemtest</groupId>
+				<artifactId>jsystem-maven-plugin</artifactId>
+				<version>${project.version}</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.jsystemtest</groupId>
+						<artifactId>jsystem-services-tests</artifactId>
+						<version>[0.0,]</version>
+						<scope>runtime</scope>
+					</dependency>
+				</dependencies>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.5.1</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 </project>
