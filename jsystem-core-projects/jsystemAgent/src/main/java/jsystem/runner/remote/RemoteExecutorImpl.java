@@ -11,6 +11,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -31,6 +32,7 @@ import jsystem.framework.scenario.RunningProperties;
 import jsystem.framework.scenario.ScenariosManager;
 import jsystem.runner.ErrorLevel;
 import jsystem.runner.WaitDialog;
+import jsystem.runner.WaitDialog.WaitDialogListner;
 import jsystem.runner.agent.publisher.Publisher;
 import jsystem.runner.agent.publisher.PublisherManager;
 import jsystem.runner.agent.tests.PublishTest;
@@ -149,20 +151,49 @@ public class RemoteExecutorImpl implements RemoteExecutor {
 		 * (test vm) manually with the information as execution parameters:
 		 * -port 1999 -host 127.0.0.1
 		 */
+		String vmParams = JSystemProperties.getInstance().getPreference(FrameworkOptions.TEST_VM_PARMS);
 		boolean testDebug = "true".equals(JSystemProperties.getInstance().getPreference(FrameworkOptions.TESTS_DEBUG));
 		String waitMessage;
 
-		if (testDebug) {
-			waitMessage = "Run Eclipse remote debugger and connect it to port 8787";
+		if (testDebug || (vmParams != null && vmParams.contains("-Xdebug"))) {
+			waitMessage = "Waiting for remote debugging connection";
 		} else {
 			waitMessage = "Wait for remote VM";
 		}
 
 		File antHome = CommonResources.getAntDirectory();
-		WaitDialog.launchWaitDialog(waitMessage);
+		WaitDialog.launchWaitDialog(waitMessage, new WaitDialogListner() {
 
+			@Override
+			public void cancel() {
+				interrupted = true;
+				if (ss != null) {
+					try {
+						// ITAI: This will cause the socket to throw exception
+						// and
+						// release the blocking state
+						ss.close();
+					} catch (IOException e) {
+						// Don't care
+					}
+				}
+				try {
+					// ITAI: Needs to give time for the ScenarioExecutor to get
+					// to the
+					// waitForRunEnd method.
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+				}
+
+				// ITAI: Telling everyone that the execution was ended.
+				runEndListener.endRun();
+				runEndListener.remoteExit();
+
+				// Let's close everything.
+				close();
+			}
+		});
 		File antLauncher = new File(antHome + File.separator + "lib", "ant-launcher.jar");
-		String vmParams = JSystemProperties.getInstance().getPreference(FrameworkOptions.TEST_VM_PARMS);
 		String[] vmParamsArr = new String[0];
 		if (vmParams != null) {
 			// replaces socket number templates with free socket numbers
@@ -228,15 +259,20 @@ public class RemoteExecutorImpl implements RemoteExecutor {
 
 		cmd.setDir(new File(System.getProperty("user.dir")));
 		Execute.execute(cmd, false, true, false);
+		try {
+			socket = ss.accept();
 
-		socket = ss.accept();
+		} catch (SocketException e) {
+			// ITAI: This will happen if the execution was cancelled by th user.
+			log.info("Execution was cancelled by the user ");
+			return;
+		}
 		in = new ObjectInputStream(socket.getInputStream());
 		out = new ObjectOutputStream(socket.getOutputStream());
 		running = true;
 		closed = false;
 		reader = new ReaderThread();
 		reader.start();
-
 	}
 
 	private class ReaderThread extends Thread {
@@ -485,7 +521,7 @@ public class RemoteExecutorImpl implements RemoteExecutor {
 						// SystemObjectCheckWindow.getInstance().setSysObjStatus(m.getField(0),
 						// SOCheckStatus.valueOf(m.getField(1)), m.getField(2));
 						break;
-			
+
 					default:
 						System.out.println("Unkown message type local: " + m.getType());
 					}

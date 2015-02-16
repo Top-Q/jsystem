@@ -34,10 +34,24 @@ public class WaitDialog extends JDialog {
 
 	private String title;
 
-	private JButton cancel = new JButton("Cancel");
-
+	private JButton cancelBtn = new JButton("Cancel");
+	
 	private static Object staticLock = new Object();
+	
+	private final WaitDialogListner listner;
 
+	public WaitDialog(Frame parent, String title, WaitDialogListner listener) {
+		super(parent, title);
+		this.parent = parent;
+		this.title = title;
+		this.listner =  listener;
+		/*
+		 * Set the dialog to be modal
+		 */
+		setModalityType(ModalityType.DOCUMENT_MODAL);
+		initComponents();
+	}
+	
 	/**
 	 * Default constructor
 	 * 
@@ -46,14 +60,7 @@ public class WaitDialog extends JDialog {
 	 * 
 	 */
 	public WaitDialog(Frame parent, String title) {
-		super(parent, title);
-		this.parent = parent;
-		this.title = title;
-		/*
-		 * Set the dialog to be modal
-		 */
-		setModalityType(ModalityType.DOCUMENT_MODAL);
-		initComponents();
+		this(parent,title,null);
 	}
 
 	public WaitDialog(Dialog parent, String title) {
@@ -65,6 +72,7 @@ public class WaitDialog extends JDialog {
 		 */
 		setModalityType(ModalityType.DOCUMENT_MODAL);
 		initComponents();
+		this.listner = null;
 	}
 
 	public WaitDialog(String title) {
@@ -75,6 +83,7 @@ public class WaitDialog extends JDialog {
 		 */
 		setModalityType(ModalityType.DOCUMENT_MODAL);
 		initComponents();
+		this.listner = null;
 	}
 	
 	public WaitDialog() {
@@ -83,6 +92,7 @@ public class WaitDialog extends JDialog {
 		 */
 		setModalityType(ModalityType.DOCUMENT_MODAL);
 		initComponents();
+		this.listner = null;
 	}
 
 	private void initComponents() {
@@ -91,7 +101,7 @@ public class WaitDialog extends JDialog {
 		panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
 		JProgressBar bar = new JProgressBar();
-		bar.setPreferredSize(new Dimension(200, 20));
+		bar.setPreferredSize(new Dimension(150 + (title != null ? title.length() : 0) * 4, 20));
 		bar.setIndeterminate(true);
 		bar.setStringPainted(true);
 		bar.setString(title);
@@ -102,9 +112,13 @@ public class WaitDialog extends JDialog {
 		buttons.setLayout(new BoxLayout(buttons, BoxLayout.X_AXIS));
 		buttons.add(Box.createHorizontalGlue());
 		buttons.add(Box.createHorizontalGlue());
+		buttons.add(cancelBtn);
 		panel.add(buttons, BorderLayout.SOUTH);
-		cancel.addActionListener(new ActionListener() {
+		cancelBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if (listner != null){
+					listner.cancel();
+				}
 				dispose();
 			}
 		});
@@ -117,14 +131,11 @@ public class WaitDialog extends JDialog {
 
 	private static WaitDialog dialog = null;
 
-	public synchronized static void launchWaitDialog(final String title) {
-		if (dialog != null) { // probebly sum kind of error
-			return;
-		}
+	public synchronized static void launchWaitDialog(final String title, WaitDialogListner listner) {
 		/*
 		 * Execute the open of the dialog in a thread as the dialog is modal
 		 */
-		dialog = new WaitDialog(TestRunnerFrame.guiMainFrame, title);
+		dialog = new WaitDialog(TestRunnerFrame.guiMainFrame, title, listner);
 		(new Thread() {
 			public void run() {
 				dialog.setVisible(true);
@@ -137,7 +148,7 @@ public class WaitDialog extends JDialog {
 			}
 		}
 	}
-
+	
 	public static void endWaitDialog() {
 		synchronized(staticLock){
 			if (dialog == null) {
@@ -149,7 +160,7 @@ public class WaitDialog extends JDialog {
 	}
 
 	public static void main(String[] args) {
-		launchWaitDialog("Just wait");
+		launchWaitDialog("Just wait",null);
 		try {
 			Thread.sleep(4000);
 		} catch (Exception e) {
@@ -158,5 +169,11 @@ public class WaitDialog extends JDialog {
 		}
 		endWaitDialog();
 	}
+
+	public interface WaitDialogListner {
+		void cancel();
+	}
+	
+	
 
 }
