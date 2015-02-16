@@ -21,7 +21,7 @@ public class TestVMParamsUtilTest extends SystemTestCase {
 	public void testRelpaceSocketNumberWithPort() throws Exception  {
 		TestVMParamsUtil util = new TestVMParamsUtil();
 		String result = 
-			util.relpaceSocketNumber("-Xms32M -Xmx256M -DentityExpansionLimit=1280000 -classic -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=${8787},server=y,suspend=y");
+			util.relpaceSocketNumber("-Xms32M -Xmx256M -DentityExpansionLimit=1280000 -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=${8787},server=y,suspend=y");
 		assertEquals("-Xms32M -Xmx256M -DentityExpansionLimit=1280000 -classic -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=y", result);
 	}
 
@@ -38,7 +38,7 @@ public class TestVMParamsUtilTest extends SystemTestCase {
 			ss	= new ServerSocket(8787);
 			TestVMParamsUtil util = new TestVMParamsUtil();
 			String result = 
-				util.relpaceSocketNumber("-Xms32M -Xmx256M -DentityExpansionLimit=1280000 -classic -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=${8787},server=y,suspend=y");
+				util.relpaceSocketNumber("-Xms32M -Xmx256M -DentityExpansionLimit=1280000 -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=${8787},server=y,suspend=y");
 			assertEquals("-Xms32M -Xmx256M -DentityExpansionLimit=1280000 -classic -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=8788,server=y,suspend=y", result);
 		}finally {
 			try {
