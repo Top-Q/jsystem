@@ -4,14 +4,14 @@
 	<parent>
 		<groupId>org.jsystemtest</groupId>
 		<artifactId>jsystem-parent</artifactId>
-		<version>6.1.01</version>		
+		<version>6.1.02-SNAPSHOT</version>		
 		<relativePath>../jsystem-parent</relativePath>
 	</parent>
 	<artifactId>jsystem-core-system-objects</artifactId>
 	<groupId>org.jsystemtest.systemobjects</groupId>
 	<packaging>pom</packaging>
 	<properties>
-		<jsystem.version>6.1.01</jsystem.version>
+		<jsystem.version>6.1.02-SNAPSHOT</jsystem.version>
 	</properties>
 	<modules>
 		<module>cli-so</module>
