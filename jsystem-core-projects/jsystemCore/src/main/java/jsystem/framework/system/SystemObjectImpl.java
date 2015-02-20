@@ -53,7 +53,7 @@ public abstract class SystemObjectImpl extends AnalyzerImpl implements SystemObj
 
 	protected boolean isClosed = false;
 
-	private int lifeTime = SystemObject.PERMANENT_LIFETIME;
+	protected int lifeTime = SystemObject.PERMANENT_LIFETIME;
 
 	protected SystemObjectManager system = SystemManagerImpl.getInstance();
 
