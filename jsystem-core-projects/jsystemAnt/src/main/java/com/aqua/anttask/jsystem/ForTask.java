@@ -312,6 +312,12 @@ public class ForTask extends Task {
 
 		// Take Care of the list attribute
 		if (list != null) {
+			//if loop list of values is a refrence - nir
+			try {
+				list = (String) ParametersManager.replaceReferenceWithValue(list, ParameterType.STRING);
+			} catch (Exception e) {
+				System.out.println("could not parse reference for loop values will try to run anyway");
+			}
 			StringTokenizer st = new StringTokenizer(list, delimiter);
 
 			while (st.hasMoreTokens()) {
