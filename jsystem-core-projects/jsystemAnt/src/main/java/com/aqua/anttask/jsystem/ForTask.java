@@ -312,23 +312,23 @@ public class ForTask extends Task {
 
 		// Take Care of the list attribute
 		if (list != null) {
-			//if loop list of values is a refrence - nir
+			//if list is a refrence
 			try {
-				list = (String) ParametersManager.replaceReferenceWithValue(list, ParameterType.STRING);
-			} catch (Exception e) {
-				System.out.println("could not parse reference for loop values will try to run anyway");
-			}
-			StringTokenizer st = new StringTokenizer(list, delimiter);
-
-			while (st.hasMoreTokens()) {
-				String tok = st.nextToken();
-				if (trim) {
-					tok = tok.trim();
+				list = (String) ParametersManager.replaceAllReferenceValues(list, ParameterType.STRING);
+				
+				StringTokenizer st = new StringTokenizer(list, delimiter);
+	
+				while (st.hasMoreTokens()) {
+					String tok = (String) ParametersManager.replaceReferenceWithValue(st.nextToken(), ParameterType.STRING);
+					if (trim) {
+						tok = tok.trim();
+					}
+					doToken(tok);
 				}
-				doToken(tok);
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
 			}
 		}
-
 		// Take care of the begin/end/step attributes
 		if (end != null) {
 			int iEnd = end.intValue();
