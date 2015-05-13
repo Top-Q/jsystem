@@ -35,6 +35,9 @@ import org.apache.tools.ant.types.DirSet;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
 
+import jsystem.framework.scenario.Parameter.ParameterType;
+import jsystem.framework.scenario.ParametersManager;
+
 /***
  * ITAI: We had to copy the class to our project in order to allow passing the 
  * FOR operation properties in the properties file instead of in the XML file. 
