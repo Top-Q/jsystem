@@ -25,7 +25,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import jsystem.extensions.report.html.ExtendLevelTestReporter;
+import jsystem.framework.FrameworkOptions;
 import jsystem.framework.JSystemProperties;
+import jsystem.framework.RunProperties;
 import jsystem.framework.report.ExtendTestListener;
 import jsystem.framework.report.ListenerstManager;
 import jsystem.framework.report.Reporter.EnumReportLevel;
@@ -396,6 +398,7 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 			if (numOfAppearances > 0) {
 				scenario.setName(scenario.getName() + " (" + ++numOfAppearances + ")");
 			}
+			addScenarioProperties(scenario);
 			execution.getLastMachine().addChild(scenario);
 		} else {
 			if (container instanceof AntForLoop) {
@@ -408,6 +411,40 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 		currentScenario = scenario;
 		writeExecution(execution);
 
+	}
+
+	private void addScenarioProperties(ScenarioNode scenario) {
+		// We will also add all the different execution properties as
+		// container properties
+		try {
+			final String version = RunProperties.getInstance().getRunProperty("summary.Version");
+			if (!StringUtils.isEmpty(version)) {
+				scenario.addScenarioProperty("version", version);
+			}
+			final String build = RunProperties.getInstance().getRunProperty("summary.Build");
+			if (!StringUtils.isEmpty(build)) {
+				scenario.addScenarioProperty("build", build);
+			}
+			final String station = RunProperties.getInstance().getRunProperty("summary.Station");
+			if (!StringUtils.isEmpty(station)) {
+				scenario.addScenarioProperty("station", station);
+			}
+			final String user = RunProperties.getInstance().getRunProperty("summary.User");
+			if (!StringUtils.isEmpty(user)) {
+				scenario.addScenarioProperty("user", user);
+			}
+			final String sutFile = JSystemProperties.getInstance().getPreference(FrameworkOptions.USED_SUT_FILE);
+			if (!StringUtils.isEmpty(sutFile)) {
+				scenario.addScenarioProperty("sutFile", sutFile);
+			}
+			final String testDir = JSystemProperties.getInstance().getPreference(FrameworkOptions.TESTS_CLASS_FOLDER);
+			if (!StringUtils.isEmpty(testDir)) {
+				scenario.addScenarioProperty("testDir", testDir);
+			}
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -442,7 +479,18 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 	}
 
 	@Override
-	public void setContainerProperties(int ancestorLevel, String key, String value) {
+	public void setContainerProperties(final int ancestorLevel, String key, String property) {
+		if (null == currentScenario) {
+			throw new IllegalStateException("Current scenario is null. Can't add container property");
+		}
+		ScenarioNode scenario = currentScenario;
+		int level = ancestorLevel;
+		if (ancestorLevel > 0) {
+			while (!(scenario.getParent() instanceof MachineNode) && (level-- > 0)) {
+				scenario = (ScenarioNode) scenario.getParent();
+			}
+		}
+		scenario.addScenarioProperty(key, property);
 	}
 
 	@Override
