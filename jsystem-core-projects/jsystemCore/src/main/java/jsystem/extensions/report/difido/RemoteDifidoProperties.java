@@ -4,8 +4,12 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
+
+import jsystem.utils.StringUtils;
 
 class RemoteDifidoProperties {
 
@@ -18,8 +22,17 @@ class RemoteDifidoProperties {
 	private Properties properties;
 
 	enum RemoteDifidoOptions {
-		HOST("host", "localhost"), PORT("port", "8080"), ENABLED("enabled", "true"), APPEND_TO_EXISTING_EXECUTION(
-				"append.to.existing.execution", "false");
+		//@formatter:off
+		HOST("host", "localhost"), 
+		PORT("port", "8080"), 
+		ENABLED("enabled", "true"), 
+		DESCRIPTION("execution.description",""),
+		EXECUTION_PROPETIES("execution.propeties",""),
+		USE_SHARED_EXECUTION("use.shared.execution","false"),
+		EXISTING_EXECUTION_ID("existing.execution.id","-1"),
+		FORCE_NEW_EXECUTION("force.new.execution","false"),
+		APPEND_TO_EXISTING_EXECUTION("append.to.existing.execution", "false");
+		//@formatter:on
 
 		private String property;
 
@@ -57,12 +70,44 @@ class RemoteDifidoProperties {
 	}
 
 	private void initDefaultProperties() {
-		properties.setProperty(RemoteDifidoOptions.HOST.getProperty(), RemoteDifidoOptions.HOST.getDefaultValue());
-		properties.setProperty(RemoteDifidoOptions.PORT.getProperty(), RemoteDifidoOptions.PORT.getDefaultValue());
-		properties
-				.setProperty(RemoteDifidoOptions.ENABLED.getProperty(), RemoteDifidoOptions.ENABLED.getDefaultValue());
-		properties.setProperty(RemoteDifidoOptions.APPEND_TO_EXISTING_EXECUTION.getProperty(),
+		//@formatter:off
+		properties.setProperty(
+				RemoteDifidoOptions.HOST.getProperty(), 
+				RemoteDifidoOptions.HOST.getDefaultValue());
+		
+		properties.setProperty(
+				RemoteDifidoOptions.PORT.getProperty(), 
+				RemoteDifidoOptions.PORT.getDefaultValue());
+		
+		properties.setProperty(
+				RemoteDifidoOptions.ENABLED.getProperty(), 
+				RemoteDifidoOptions.ENABLED.getDefaultValue());
+		
+		properties.setProperty(
+				RemoteDifidoOptions.APPEND_TO_EXISTING_EXECUTION.getProperty(),
 				RemoteDifidoOptions.APPEND_TO_EXISTING_EXECUTION.getDefaultValue());
+		
+		properties.setProperty(
+				RemoteDifidoOptions.DESCRIPTION.getProperty(),
+				RemoteDifidoOptions.DESCRIPTION.getDefaultValue());
+		
+		properties.setProperty(
+				RemoteDifidoOptions.USE_SHARED_EXECUTION.getProperty(),
+				RemoteDifidoOptions.USE_SHARED_EXECUTION.getDefaultValue());
+		
+		properties.setProperty(
+				RemoteDifidoOptions.EXISTING_EXECUTION_ID.getProperty(),
+				RemoteDifidoOptions.EXISTING_EXECUTION_ID.getDefaultValue());
+		
+		properties.setProperty(
+				RemoteDifidoOptions.FORCE_NEW_EXECUTION.getProperty(),
+				RemoteDifidoOptions.FORCE_NEW_EXECUTION.getDefaultValue());
+
+		properties.setProperty(
+				RemoteDifidoOptions.EXECUTION_PROPETIES.getProperty(),
+				RemoteDifidoOptions.EXECUTION_PROPETIES.getDefaultValue());
+		//@formatter:on
+
 		final File propertiesFile = new File(FILE_NAME);
 		if (propertiesFile.exists()) {
 			propertiesFile.delete();
@@ -74,8 +119,36 @@ class RemoteDifidoProperties {
 		}
 	}
 
-	public String getProperty(RemoteDifidoOptions option) {
+	public String getPropertyAsString(RemoteDifidoOptions option) {
 		return properties.getProperty(option.getProperty());
+	}
+
+	public boolean getPropertyAsBoolean(RemoteDifidoOptions option) {
+		final String value = getPropertyAsString(option);
+		return Boolean.parseBoolean(value);
+	}
+
+	public int getPropertyAsInt(RemoteDifidoOptions option) {
+		final String value = getPropertyAsString(option);
+		return Integer.parseInt(value);
+	}
+
+	public Map<String, String> getPropertyAsMap(RemoteDifidoOptions option) {
+		final String value = getPropertyAsString(option);
+		Map<String, String> valueMap = new HashMap<String, String>();
+		if (StringUtils.isEmpty(value)) {
+			return valueMap;
+		}
+		String[] keyValuePairArr = value.split(";");
+		for (String keyValuePair : keyValuePairArr) {
+			try {
+				valueMap.put(keyValuePair.split("=")[0], keyValuePair.split("=")[1]);
+			} catch (Exception e) {
+
+			}
+
+		}
+		return valueMap;
 	}
 
 	public static RemoteDifidoProperties getInstance() {

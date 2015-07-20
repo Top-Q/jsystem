@@ -1,6 +1,7 @@
 package jsystem.extensions.report.difido;
 
 import il.co.topq.difido.model.execution.MachineNode;
+import il.co.topq.difido.model.remote.ExecutionDetails;
 import il.co.topq.difido.model.test.TestDetails;
 
 import java.io.File;
@@ -8,7 +9,6 @@ import java.io.File;
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.PutMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
@@ -30,21 +30,23 @@ public class DifidoClient {
 		client = new HttpClient();
 	}
 
-	public int addExecution() throws Exception {
+	public int addExecution(ExecutionDetails details) throws Exception {
 		final PostMethod method = new PostMethod(baseUri + "executions/");
-		method.setRequestHeader(new Header("Content-Type", "text/plain"));
+		method.setRequestHeader(new Header("Content-Type", "application/json"));
+		if (details != null) {
+			final String descriptionJson = new ObjectMapper().writeValueAsString(details);
+			method.setRequestEntity(new StringRequestEntity(descriptionJson));
+		}
 		final int responseCode = client.executeMethod(method);
 		handleResponseCode(method, responseCode);
 		return Integer.parseInt(method.getResponseBodyAsString());
-
 	}
 
-	public int getLastExecutionId() throws Exception {
-		final GetMethod method = new GetMethod(baseUri + "executions/lastId");
+	public void endExecution(int executionId) throws Exception {
+		final PutMethod method = new PutMethod(baseUri + "executions/" + executionId + "?active=false");
 		method.setRequestHeader(new Header("Content-Type", "text/plain"));
 		final int responseCode = client.executeMethod(method);
 		handleResponseCode(method, responseCode);
-		return Integer.parseInt(method.getResponseBodyAsString());
 	}
 
 	public int addMachine(int executionId, MachineNode machine) throws Exception {
