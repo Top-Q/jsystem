@@ -27,7 +27,7 @@ class RemoteDifidoProperties {
 		PORT("port", "8080"), 
 		ENABLED("enabled", "true"), 
 		DESCRIPTION("execution.description",""),
-		EXECUTION_PROPETIES("execution.propeties",""),
+		EXECUTION_PROPETIES("execution.properties",""),
 		USE_SHARED_EXECUTION("use.shared.execution","false"),
 		EXISTING_EXECUTION_ID("existing.execution.id","-1"),
 		FORCE_NEW_EXECUTION("force.new.execution","false"),
