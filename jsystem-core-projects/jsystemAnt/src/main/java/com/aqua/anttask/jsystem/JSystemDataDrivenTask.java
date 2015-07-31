@@ -57,8 +57,10 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 		loadParameters();
 		final DataProvider provider = initProvider();
 		try {
+			// in case file is a reference, if not the file name will be as entered by the user - nir
+			String fileName = (String) ParametersManager.replaceReferenceWithValue(file, ParameterType.FILE);
 			data = provider.provide(new File(file), param);
-		} catch (DataCollectorException e) {
+		} catch (Exception e) {
 			log.log(Level.WARNING, "Failed to collect data due to " + e.getMessage());
 			return;
 		}

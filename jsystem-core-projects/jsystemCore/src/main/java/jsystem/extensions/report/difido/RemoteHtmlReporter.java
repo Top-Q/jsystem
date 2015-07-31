@@ -1,10 +1,12 @@
 package jsystem.extensions.report.difido;
 
 import il.co.topq.difido.model.execution.Execution;
+import il.co.topq.difido.model.remote.ExecutionDetails;
 import il.co.topq.difido.model.test.TestDetails;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import jsystem.extensions.report.difido.RemoteDifidoProperties.RemoteDifidoOptions;
@@ -44,21 +46,16 @@ public class RemoteHtmlReporter extends AbstractHtmlReporter {
 		String host = null;
 		int port = 0;
 		try {
-			enabled = Boolean.parseBoolean(RemoteDifidoProperties.getInstance()
-					.getProperty(RemoteDifidoOptions.ENABLED));
+			enabled = Boolean.parseBoolean(RemoteDifidoProperties.getInstance().getPropertyAsString(
+					RemoteDifidoOptions.ENABLED));
 			if (!enabled) {
 				return;
 			}
-			host = RemoteDifidoProperties.getInstance().getProperty(RemoteDifidoOptions.HOST);
-			port = Integer.parseInt(RemoteDifidoProperties.getInstance().getProperty(RemoteDifidoOptions.PORT));
-			final boolean appendToExistingExecution = Boolean.parseBoolean(RemoteDifidoProperties.getInstance()
-					.getProperty(RemoteDifidoOptions.APPEND_TO_EXISTING_EXECUTION));
+			host = RemoteDifidoProperties.getInstance().getPropertyAsString(RemoteDifidoOptions.HOST);
+			port = Integer.parseInt(RemoteDifidoProperties.getInstance().getPropertyAsString(RemoteDifidoOptions.PORT));
 			client = new DifidoClient(host, port);
-			if (appendToExistingExecution) {
-				executionId = client.getLastExecutionId();
-			} else {
-				executionId = client.addExecution();
-			}
+			closeOldExecutionIfNeeded();
+			executionId = prepareExecution();
 			machineId = client.addMachine(executionId, getExecution().getLastMachine());
 			enabled = true;
 			log.fine(RemoteHtmlReporter.class.getName() + " was initialized successfully");
@@ -68,6 +65,36 @@ public class RemoteHtmlReporter extends AbstractHtmlReporter {
 					+ port + "' due to " + t.getMessage());
 		}
 
+	}
+
+	private void closeOldExecutionIfNeeded() throws Exception {
+		// We are not using shared execution, that means that we are the only
+		// one that are using it and we just ended with it, so let's set it to
+		// not active
+		if (executionId > 0
+				&& !RemoteDifidoProperties.getInstance().getPropertyAsBoolean(RemoteDifidoOptions.USE_SHARED_EXECUTION)) {
+			client.endExecution(executionId);
+		}
+	}
+
+	private int prepareExecution() throws Exception {
+		// Fetching properties
+		final RemoteDifidoProperties props = RemoteDifidoProperties.getInstance();
+		final boolean appendToExistingExecution = props
+				.getPropertyAsBoolean(RemoteDifidoOptions.APPEND_TO_EXISTING_EXECUTION);
+		final boolean useSharedExecution = props.getPropertyAsBoolean(RemoteDifidoOptions.USE_SHARED_EXECUTION);
+		final String description = props.getPropertyAsString(RemoteDifidoOptions.DESCRIPTION);
+		final int id = props.getPropertyAsInt(RemoteDifidoOptions.EXISTING_EXECUTION_ID);
+		final boolean forceNewExecution = props.getPropertyAsBoolean(RemoteDifidoOptions.FORCE_NEW_EXECUTION);
+		final Map<String, String> properties = props.getPropertyAsMap(RemoteDifidoOptions.EXECUTION_PROPETIES);
+
+		if (appendToExistingExecution && id >= 0 && !forceNewExecution) {
+			return id;
+		}
+		ExecutionDetails details = new ExecutionDetails(description, useSharedExecution);
+		details.setForceNew(forceNewExecution);
+		details.setExecutionProperties(properties);
+		return client.addExecution(details);
 	}
 
 	@Override
