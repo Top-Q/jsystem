@@ -163,7 +163,7 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 		final String paramName = data.get(0).keySet().toArray(new String[] {})[0];
 		StringBuilder sb = new StringBuilder();
 		for (Map<String, Object> dataRow : data) {
-			sb.append(DELIMITER).append(dataRow.get(paramName));
+			sb.append(DELIMITER).append(!StringUtils.isEmpty(dataRow.get(paramName).toString())?dataRow.get(paramName):" ");
 		}
 
 		// Actually, we are not using this parameter, but we need it in order
