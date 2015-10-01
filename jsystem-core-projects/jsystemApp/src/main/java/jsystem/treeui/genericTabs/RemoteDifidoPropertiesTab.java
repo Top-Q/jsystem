@@ -17,9 +17,12 @@ import jsystem.treeui.teststable.TestsTableController;
 public class RemoteDifidoPropertiesTab implements JSystemTab {
 
 	private static Logger log = Logger.getLogger(RemoteDifidoPropertiesTab.class.getName());
-	
+
 	@Override
 	public JPanel init() {
+		// Making sure that the remote Difido properties file will be created
+		new RemoteDifidoProperties();
+
 		PropertiesGuiPanel panel = null;
 		try {
 			panel = new PropertiesGuiPanel(new File(RemoteDifidoProperties.FILE_NAME));
@@ -37,7 +40,7 @@ public class RemoteDifidoPropertiesTab implements JSystemTab {
 
 	@Override
 	public void setTestsTableController(TestsTableController testsTableController) {
-		//Not used
+		// Not used
 	}
 
 }
