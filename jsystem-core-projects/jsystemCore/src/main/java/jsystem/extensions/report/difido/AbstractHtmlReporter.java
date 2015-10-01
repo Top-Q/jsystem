@@ -71,12 +71,19 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 
 	private String executionUid;
 
+	private boolean firstTest = true;
+
 	protected abstract void writeTestDetails(TestDetails testDetails);
 
 	protected abstract void writeExecution(Execution execution);
 
 	protected abstract Execution readExecution();
 
+	@Override
+	public void init(){
+		firstTest = true;
+	}
+	
 	@Override
 	public boolean asUI() {
 		return true;
@@ -350,6 +357,13 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 	}
 
 	/**
+	 * This method is meant to be override. It is called at the start of the run
+	 */
+	public void startRun() {
+
+	}
+
+	/**
 	 * This method will be called at the beginning of each test. If the reporter
 	 * is using the file system, it is responsible for updating the current test
 	 * folder in the '.testdir.tmp' file. See the HtmlReporter implementation
@@ -372,6 +386,7 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 
 	@Override
 	public void endRun() {
+		firstTest = true;
 		writeExecution(execution);
 	}
 
@@ -391,6 +406,10 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 
 	@Override
 	public void startContainer(JTestContainer container) {
+		if (firstTest) {
+			firstTest = false;
+			startRun();
+		}
 		ScenarioNode scenario = new ScenarioNode(ScenarioHelpers.removeScenarioHeader(container.getName()));
 		if (container.isRoot()) {
 			// We keep scenario history only for the root scenario;
@@ -441,7 +460,7 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 			if (!StringUtils.isEmpty(testDir)) {
 				scenario.addScenarioProperty("testDir", testDir);
 			}
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

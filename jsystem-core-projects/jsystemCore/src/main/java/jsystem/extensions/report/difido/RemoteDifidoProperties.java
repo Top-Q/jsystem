@@ -17,8 +17,6 @@ class RemoteDifidoProperties {
 
 	private static final String FILE_NAME = "remoteDifido.properties";
 
-	private static RemoteDifidoProperties instance;
-
 	private Properties properties;
 
 	enum RemoteDifidoOptions {
@@ -53,7 +51,7 @@ class RemoteDifidoProperties {
 
 	}
 
-	private RemoteDifidoProperties() {
+	public RemoteDifidoProperties() {
 		properties = new Properties();
 		final File propertiesFile = new File(FILE_NAME);
 		if (!propertiesFile.exists()) {
@@ -151,10 +149,4 @@ class RemoteDifidoProperties {
 		return valueMap;
 	}
 
-	public static RemoteDifidoProperties getInstance() {
-		if (null == instance) {
-			instance = new RemoteDifidoProperties();
-		}
-		return instance;
-	}
 }
