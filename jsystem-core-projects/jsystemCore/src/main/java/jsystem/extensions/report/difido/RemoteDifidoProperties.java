@@ -11,11 +11,11 @@ import java.util.logging.Logger;
 
 import jsystem.utils.StringUtils;
 
-class RemoteDifidoProperties {
+public class RemoteDifidoProperties {
 
 	private static final Logger log = Logger.getLogger(RemoteDifidoProperties.class.getName());
 
-	private static final String FILE_NAME = "remoteDifido.properties";
+	public static final String FILE_NAME = "remoteDifido.properties";
 
 	private Properties properties;
 
