@@ -132,6 +132,17 @@ public class ForTask extends Task {
 	}
 
 	/**
+	 * ITAI. Was added since we need to get this value in order to check if it
+	 * was set by an old version of JSystem
+	 * 
+	 * @return list value
+	 * @author Itai 
+	 */
+	protected String getList() {
+		return this.list;
+	}
+
+	/**
 	 * Set the delimiter attribute.
 	 * 
 	 * @param delimiter
