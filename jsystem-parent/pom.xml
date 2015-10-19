@@ -205,7 +205,7 @@
 			<dependency>
 				<groupId>il.co.topq.difido</groupId>
 				<artifactId>difido-reports-common</artifactId>
-				<version>0.5-SNAPSHOT</version>
+				<version>0.5</version>
 			</dependency>
 			<dependency>
 				<groupId>xml-apis</groupId>
