@@ -85,7 +85,7 @@ public class DifidoClient {
 
 	public void addFile(final int executionId, final String uid, final File file) throws Exception {
 		PostMethod method = new PostMethod(baseUri + "executions/" + executionId + "/details/" + uid + "/file/");
-		Part[] parts = new Part[] { new FilePart(file.getName(), file) };
+		Part[] parts = new Part[] { new FilePart("file", file) };
 		method.setRequestEntity(new MultipartRequestEntity(parts, method.getParams()));
 		final int responseCode = client.executeMethod(method);
 		handleResponseCode(method, responseCode);
