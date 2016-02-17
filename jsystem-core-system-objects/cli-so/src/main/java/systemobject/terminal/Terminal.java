@@ -498,4 +498,8 @@ public abstract class Terminal {
 		return charSet;
 	}
 	
+	public InputStream getIn() {
+		return in;
+	}
+	
 }
