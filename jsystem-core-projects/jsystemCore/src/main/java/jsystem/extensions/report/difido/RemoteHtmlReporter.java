@@ -1,6 +1,7 @@
 package jsystem.extensions.report.difido;
 
 import il.co.topq.difido.model.execution.Execution;
+import il.co.topq.difido.model.execution.ScenarioNode;
 import il.co.topq.difido.model.remote.ExecutionDetails;
 import il.co.topq.difido.model.test.TestDetails;
 
@@ -30,6 +31,8 @@ public class RemoteHtmlReporter extends AbstractHtmlReporter {
 	private int numOfFailures;
 
 	private RemoteDifidoProperties difidoProps;
+
+	private ExecutionDetails details;
 
 	public RemoteHtmlReporter() {
 		super();
@@ -115,10 +118,23 @@ public class RemoteHtmlReporter extends AbstractHtmlReporter {
 			}
 
 		}
-		ExecutionDetails details = new ExecutionDetails(description, useSharedExecution);
+		details = new ExecutionDetails(description, useSharedExecution);
 		details.setForceNew(forceNewExecution);
 		details.setExecutionProperties(properties);
 		return client.addExecution(details);
+	}
+
+	/**
+	 * We want to add all the execution properties for each scenario. This will
+	 * eventually appear in the ElasticSearch
+	 * 
+	 * @param scenario
+	 */
+	protected void addScenarioProperties(ScenarioNode scenario) {
+		super.addScenarioProperties(scenario);
+		for (String key : details.getExecutionProperties().keySet()) {
+			scenario.addScenarioProperty(key, details.getExecutionProperties().get(key));
+		}
 	}
 
 	@Override

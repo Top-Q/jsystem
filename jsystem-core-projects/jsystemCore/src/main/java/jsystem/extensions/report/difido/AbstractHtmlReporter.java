@@ -80,10 +80,10 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 	protected abstract Execution readExecution();
 
 	@Override
-	public void init(){
+	public void init() {
 		firstTest = true;
 	}
-	
+
 	@Override
 	public boolean asUI() {
 		return true;
@@ -432,7 +432,15 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 
 	}
 
-	private void addScenarioProperties(ScenarioNode scenario) {
+	/**
+	 * Adding the scenario properties to the newly created scenario. <br>
+	 * Override this method if you would your reporter to add additional
+	 * properties to the scenario.
+	 * 
+	 * @param scenario
+	 *            Newly created scenario.
+	 */
+	protected void addScenarioProperties(ScenarioNode scenario) {
 		// We will also add all the different execution properties as
 		// container properties
 		try {
