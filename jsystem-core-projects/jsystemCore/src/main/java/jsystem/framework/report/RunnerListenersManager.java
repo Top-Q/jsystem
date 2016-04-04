@@ -756,9 +756,14 @@ public class RunnerListenersManager extends DefaultReporterImpl implements JSyst
 		}
 		if (inScenarioAsTest) {
 			try {
-				String name = tname.getClassName() + "-" + tname.getMethodName();
+				String name = null;
 				if (!StringUtils.isEmpty(ti.meaningfulName)) {
 					name = ti.meaningfulName;
+				}
+				if (null == name){
+					name = tname.getClassName() + "-" + tname.getMethodName();
+				} else {
+					name = name + " (" + tname.getMethodName() + ")";
 				}
 				startLevel(name, Reporter.MainFrame);
 				lastTestLevelName = name;
