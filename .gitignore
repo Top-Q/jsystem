@@ -36,3 +36,5 @@ runnerState.properties
 log
 myFile.txt
 *.xml.versionsBackup
+difido.properties
+remoteDifido.properties

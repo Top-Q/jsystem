@@ -24,6 +24,7 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import jsystem.extensions.report.difido.DifidoConfig.DifidoProperty;
 import jsystem.extensions.report.html.ExtendLevelTestReporter;
 import jsystem.framework.FrameworkOptions;
 import jsystem.framework.JSystemProperties;
@@ -279,7 +280,13 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 
 	@Override
 	public void addError(Test arg0, Throwable arg1) {
-		currentTest.setStatus(Status.error);
+		if (DifidoConfig.getInstance().getBoolean(DifidoProperty.errorsToFailures)) {
+			// We don't want errors in the report, so we will change each error
+			// to failure.
+			currentTest.setStatus(Status.failure);
+		} else {
+			currentTest.setStatus(Status.error);
+		}
 	}
 
 	@Override
