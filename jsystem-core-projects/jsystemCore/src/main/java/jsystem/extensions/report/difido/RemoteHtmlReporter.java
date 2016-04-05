@@ -132,8 +132,12 @@ public class RemoteHtmlReporter extends AbstractHtmlReporter {
 	 */
 	protected void addScenarioProperties(ScenarioNode scenario) {
 		super.addScenarioProperties(scenario);
-		for (String key : details.getExecutionProperties().keySet()) {
-			scenario.addScenarioProperty(key, details.getExecutionProperties().get(key));
+		// If the execution is shared, and we were not responsible for creating
+		// the execution, the execution details in this stage will be null.
+		if (details != null && details.getExecutionProperties() != null) {
+			for (String key : details.getExecutionProperties().keySet()) {
+				scenario.addScenarioProperty(key, details.getExecutionProperties().get(key));
+			}
 		}
 	}
 
