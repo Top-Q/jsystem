@@ -11,14 +11,14 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.springframework.util.ObjectUtils;
+
 import jsystem.extensions.report.html.HtmlCodeWriter;
 import jsystem.framework.FrameworkOptions;
 import jsystem.framework.JSystemProperties;
 import jsystem.framework.common.CommonResources;
 import jsystem.utils.StringUtils;
 import jsystem.utils.beans.BeanUtils;
-
-import org.springframework.util.ObjectUtils;
 
 /**
  * POJO which models a test/scenario parameter. Parameters are created by the
@@ -37,7 +37,8 @@ public class Parameter {
 	private static Logger log = Logger.getLogger(Parameter.class.getName());
 
 	public enum ParameterType {
-		STRING, INT, LONG, BOOLEAN, FLOAT, DOUBLE, SHORT, ENUM, FILE, DATE("Date/Time"), REFERENCE, STRING_ARRAY, USER_DEFINED, JSYSTEM_INTERNAL_FLAG;
+		STRING, INT, LONG, BOOLEAN, FLOAT, DOUBLE, SHORT, ENUM, FILE, DATE(
+				"Date/Time"), REFERENCE, STRING_ARRAY, USER_DEFINED, JSYSTEM_INTERNAL_FLAG;
 
 		private String description;
 
@@ -139,7 +140,11 @@ public class Parameter {
 		if (value == null) {
 			return null;
 		}
-		//Added as fix for issue #214
+		// The param class can be null in primitive parameters. Fixes issue #239
+		if (null == paramClass && ParametersManager.isReferenceValue(value)) {
+			return value;
+		}
+		// Added as fix for issue #214
 		if (paramClass != null && !paramClass.isArray() && ParametersManager.isReferenceValue(value)) {
 			return value;
 		}
@@ -163,9 +168,9 @@ public class Parameter {
 	 */
 	public void setValue(Object inValue) throws NumberFormatException {
 		if (isAsOptions()
-				&& "false".equals(JSystemProperties.getInstance().getPreference(
-						FrameworkOptions.ADD_DEFAULTS_CURRENT_TO_PARAM)) && !isValueInOptions(inValue)
-				&& getOptions() != null && getOptions().length > 0) {
+				&& "false".equals(
+						JSystemProperties.getInstance().getPreference(FrameworkOptions.ADD_DEFAULTS_CURRENT_TO_PARAM))
+				&& !isValueInOptions(inValue) && getOptions() != null && getOptions().length > 0) {
 			inValue = getOptions()[0];
 		}
 
@@ -299,8 +304,8 @@ public class Parameter {
 
 	public Object[] getOptions() {
 		// if parameter not set to disable then perform the option add
-		if (!"false".equals(JSystemProperties.getInstance().getPreference(
-				FrameworkOptions.ADD_DEFAULTS_CURRENT_TO_PARAM))) {
+		if (!"false".equals(
+				JSystemProperties.getInstance().getPreference(FrameworkOptions.ADD_DEFAULTS_CURRENT_TO_PARAM))) {
 			/**
 			 * if the defaultValue is not part of the options add it to the
 			 * options.
