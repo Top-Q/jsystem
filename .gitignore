@@ -38,3 +38,6 @@ myFile.txt
 *.xml.versionsBackup
 difido.properties
 remoteDifido.properties
+jsystem-miscellaneous/jsystem-maven-plugin/bin/
+jsystem-miscellaneous/jsystem-services-so/bin/
+jsystem-miscellaneous/jsystem-services-tests/bin/
