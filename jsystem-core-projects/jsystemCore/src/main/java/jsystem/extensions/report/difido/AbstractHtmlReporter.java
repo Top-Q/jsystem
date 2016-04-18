@@ -18,6 +18,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.Scanner;
@@ -450,35 +451,48 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 	protected void addScenarioProperties(ScenarioNode scenario) {
 		// We will also add all the different execution properties as
 		// container properties
-		try {
-			final String version = RunProperties.getInstance().getRunProperty("summary.Version");
-			if (!StringUtils.isEmpty(version)) {
-				scenario.addScenarioProperty("version", version);
-			}
-			final String build = RunProperties.getInstance().getRunProperty("summary.Build");
-			if (!StringUtils.isEmpty(build)) {
-				scenario.addScenarioProperty("build", build);
-			}
-			final String station = RunProperties.getInstance().getRunProperty("summary.Station");
-			if (!StringUtils.isEmpty(station)) {
-				scenario.addScenarioProperty("station", station);
-			}
-			final String user = RunProperties.getInstance().getRunProperty("summary.User");
-			if (!StringUtils.isEmpty(user)) {
-				scenario.addScenarioProperty("user", user);
-			}
-			final String sutFile = JSystemProperties.getInstance().getPreference(FrameworkOptions.USED_SUT_FILE);
-			if (!StringUtils.isEmpty(sutFile)) {
-				scenario.addScenarioProperty("sutFile", sutFile);
-			}
-			final String testDir = JSystemProperties.getInstance().getPreference(FrameworkOptions.TESTS_CLASS_FOLDER);
-			if (!StringUtils.isEmpty(testDir)) {
-				scenario.addScenarioProperty("testDir", testDir);
-			}
 
-		} catch (IOException e) {
-			e.printStackTrace();
+		try {
+			for (Object prop : RunProperties.getInstance().getRunProperties().keySet()){
+				if (!prop.toString().startsWith("summary.")){
+					continue;
+				}
+				final String value = RunProperties.getInstance().getRunProperty(prop + "");
+				if (!StringUtils.isEmpty(value)){
+					scenario.addScenarioProperty(prop.toString().replace("summary.", ""), value);
+				}
+			}
+		} catch (IOException e1) {
 		}
+//		try {
+//			final String version = RunProperties.getInstance().getRunProperty("summary.Version");
+//			if (!StringUtils.isEmpty(version)) {
+//				scenario.addScenarioProperty("version", version);
+//			}
+//			final String build = RunProperties.getInstance().getRunProperty("summary.Build");
+//			if (!StringUtils.isEmpty(build)) {
+//				scenario.addScenarioProperty("build", build);
+//			}
+//			final String station = RunProperties.getInstance().getRunProperty("summary.Station");
+//			if (!StringUtils.isEmpty(station)) {
+//				scenario.addScenarioProperty("station", station);
+//			}
+//			final String user = RunProperties.getInstance().getRunProperty("summary.User");
+//			if (!StringUtils.isEmpty(user)) {
+//				scenario.addScenarioProperty("user", user);
+//			}
+//			final String sutFile = JSystemProperties.getInstance().getPreference(FrameworkOptions.USED_SUT_FILE);
+//			if (!StringUtils.isEmpty(sutFile)) {
+//				scenario.addScenarioProperty("sutFile", sutFile);
+//			}
+//			final String testDir = JSystemProperties.getInstance().getPreference(FrameworkOptions.TESTS_CLASS_FOLDER);
+//			if (!StringUtils.isEmpty(testDir)) {
+//				scenario.addScenarioProperty("testDir", testDir);
+//			}
+//
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	@Override
