@@ -1,5 +1,19 @@
 package jsystem.extensions.report.difido;
 
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Properties;
+import java.util.Random;
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import il.co.topq.difido.model.Enums.ElementType;
 import il.co.topq.difido.model.Enums.Status;
 import il.co.topq.difido.model.execution.Execution;
@@ -10,28 +24,14 @@ import il.co.topq.difido.model.execution.ScenarioNode;
 import il.co.topq.difido.model.execution.TestNode;
 import il.co.topq.difido.model.test.ReportElement;
 import il.co.topq.difido.model.test.TestDetails;
-
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Random;
-import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import jsystem.extensions.report.difido.DifidoConfig.DifidoProperty;
 import jsystem.extensions.report.html.ExtendLevelTestReporter;
 import jsystem.framework.FrameworkOptions;
 import jsystem.framework.JSystemProperties;
-import jsystem.framework.RunProperties;
 import jsystem.framework.report.ExtendTestListener;
 import jsystem.framework.report.ListenerstManager;
 import jsystem.framework.report.Reporter.EnumReportLevel;
+import jsystem.framework.report.Summary;
 import jsystem.framework.report.TestInfo;
 import jsystem.framework.scenario.JTestContainer;
 import jsystem.framework.scenario.ScenarioHelpers;
@@ -448,36 +448,24 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 	 *            Newly created scenario.
 	 */
 	protected void addScenarioProperties(ScenarioNode scenario) {
-		// We will also add all the different execution properties as
-		// container properties
-		try {
-			final String version = RunProperties.getInstance().getRunProperty("summary.Version");
-			if (!StringUtils.isEmpty(version)) {
-				scenario.addScenarioProperty("version", version);
+		// Adding the summary properties. Those also include the run properties
+		// that have a 'summary' prefix
+		final Properties summaryProperties = Summary.getInstance().getProperties();
+		for (Object key : summaryProperties.keySet()) {
+			final String value = summaryProperties.getProperty(key + "");
+			if (!StringUtils.isEmpty(value)) {
+				scenario.addScenarioProperty(key.toString(), value);
 			}
-			final String build = RunProperties.getInstance().getRunProperty("summary.Build");
-			if (!StringUtils.isEmpty(build)) {
-				scenario.addScenarioProperty("build", build);
-			}
-			final String station = RunProperties.getInstance().getRunProperty("summary.Station");
-			if (!StringUtils.isEmpty(station)) {
-				scenario.addScenarioProperty("station", station);
-			}
-			final String user = RunProperties.getInstance().getRunProperty("summary.User");
-			if (!StringUtils.isEmpty(user)) {
-				scenario.addScenarioProperty("user", user);
-			}
-			final String sutFile = JSystemProperties.getInstance().getPreference(FrameworkOptions.USED_SUT_FILE);
-			if (!StringUtils.isEmpty(sutFile)) {
-				scenario.addScenarioProperty("sutFile", sutFile);
-			}
-			final String testDir = JSystemProperties.getInstance().getPreference(FrameworkOptions.TESTS_CLASS_FOLDER);
-			if (!StringUtils.isEmpty(testDir)) {
-				scenario.addScenarioProperty("testDir", testDir);
-			}
-
-		} catch (IOException e) {
-			e.printStackTrace();
+		}
+		// We are adding some additional information that we may find
+		// interesting
+		final String sutFile = JSystemProperties.getInstance().getPreference(FrameworkOptions.USED_SUT_FILE);
+		if (!StringUtils.isEmpty(sutFile)) {
+			scenario.addScenarioProperty("sutFile", sutFile);
+		}
+		final String testDir = JSystemProperties.getInstance().getPreference(FrameworkOptions.TESTS_CLASS_FOLDER);
+		if (!StringUtils.isEmpty(testDir)) {
+			scenario.addScenarioProperty("testDir", testDir);
 		}
 	}
 
