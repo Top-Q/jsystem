@@ -265,13 +265,13 @@ public abstract class CliConnectionImpl extends SystemObjectImpl implements CliC
 			if (params.length < 5) {
 				throw new Exception("Unable to extract parameters from host: " + host);
 			}
-			terminal = new RS232(params[0], Integer.parseInt(params[1]), Integer.parseInt(params[2]), Integer.parseInt(params[3]), Integer
-					.parseInt(params[4]));
+			terminal = new RS232(params[0], Integer.parseInt(params[1]), Integer.parseInt(params[2]), Integer.parseInt(params[3]), Integer .parseInt(params[4]));
 		} else if (protocol.toLowerCase().equals(EnumConnectionType.SSH.value())) {
 			terminal = new SSH(host, user, password);
-		} else if (protocol.toLowerCase().equals(
-				EnumConnectionType.SSH_RSA.value())) {
+			((SSH)terminal).setPort(port);
+		} else if (protocol.toLowerCase().equals(EnumConnectionType.SSH_RSA.value())) {
 			terminal = new SSHWithRSA(host, user, password, privateKey);
+			((SSH)terminal).setPort(port);
 			prompts.add(new Prompt("$", false, true));
 			prompts.add(new Prompt("]$", false, true));
 			
