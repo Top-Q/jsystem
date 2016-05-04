@@ -35,8 +35,6 @@ public class SSH extends Terminal {
 	protected int destinationPort = -1;
 	
 	protected boolean xtermTerminal = true;
-
-	protected int port = 22;
 	
 	public SSH(String hostnameP, String usernameP, String passwordP) {
 		this(hostnameP, usernameP, passwordP, -1, -1, true);
@@ -57,11 +55,11 @@ public class SSH extends Terminal {
 	}
 
 	@Override
-	public void connect(int port) throws IOException {
+	public void connect() throws IOException {
 		boolean isAuthenticated = false;
 		/* Create a connection instance */
 
-		conn = new Connection(hostname, port);
+		conn = new Connection(hostname);
 
 		/* Now connect */
 
@@ -217,15 +215,6 @@ public class SSH extends Terminal {
 
 	protected void setDestinationPort(int destinationPort) {
 		this.destinationPort = destinationPort;
-	}
-
-	public void setPort(int port) {
-		this.port  = port;
-		
-	}
-
-	public int getPort() {
-		return port;
 	}
 
 

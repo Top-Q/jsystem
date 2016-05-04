@@ -24,7 +24,6 @@ public abstract class Terminal {
     ArrayList<Prompt> prompts = new ArrayList<Prompt>();
 
     public abstract void connect() throws IOException;
-    public abstract void connect(int port) throws IOException;
     public abstract void disconnect() throws IOException;
     public abstract boolean isConnected();
     public abstract String getConnectionName();
