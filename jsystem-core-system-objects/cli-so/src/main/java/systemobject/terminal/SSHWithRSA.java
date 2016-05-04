@@ -22,13 +22,16 @@ public class SSHWithRSA extends SSH {
 		privateKeyFile = privateKey;
 
 	}
-
 	@Override
 	public void connect() throws IOException {
+		connect(port);
+	}
+	@Override
+	public void connect(int port) throws IOException {
 		boolean isAuthenticated = false;
 		/* Create a connection instance */
 		System.out.println("Connet to Host with SSH and RSA private key");
-		conn = new Connection(hostname);
+		conn = new Connection(hostname, port);
 
 		/* Now connect */
 
