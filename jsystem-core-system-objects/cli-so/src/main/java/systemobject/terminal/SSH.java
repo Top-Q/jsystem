@@ -57,7 +57,7 @@ public class SSH extends Terminal {
 	}
 
 	@Override
-	public void connect(int port) throws IOException {
+	public void connect() throws IOException {
 		boolean isAuthenticated = false;
 		/* Create a connection instance */
 
