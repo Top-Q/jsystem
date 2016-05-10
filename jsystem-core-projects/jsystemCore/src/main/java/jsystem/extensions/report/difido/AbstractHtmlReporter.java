@@ -14,6 +14,8 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.jfree.util.Log;
+
 import il.co.topq.difido.model.Enums.ElementType;
 import il.co.topq.difido.model.Enums.Status;
 import il.co.topq.difido.model.execution.Execution;
@@ -349,6 +351,10 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 			try (Scanner scanner = new Scanner(testInfo.parameters)) {
 				while (scanner.hasNextLine()) {
 					final String parameter = scanner.nextLine();
+					if (parameter.split("=").length < 2) {
+						Log.warn("There is an illegal parameter '" + parameter + "' in test " + testName);
+						continue;
+					}
 					testDetails.addParameter(parameter.split("=")[0], parameter.split("=")[1]);
 				}
 
