@@ -11,10 +11,9 @@ import java.util.HashMap;
 import java.util.Properties;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.jfree.util.Log;
 
 import il.co.topq.difido.model.Enums.ElementType;
 import il.co.topq.difido.model.Enums.Status;
@@ -49,6 +48,8 @@ import junit.framework.Test;
  * 
  */
 public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, ExtendTestListener {
+
+	private static final Logger log = Logger.getLogger(AbstractHtmlReporter.class.getName());
 
 	private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm:ss:");
 
@@ -122,6 +123,7 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 
 	@Override
 	public void report(String title, final String message, int status, boolean bold, boolean html, boolean link) {
+		log.fine("Recieved report request with title '" + title + "'");
 		if (null == specialReportsElementsHandler) {
 			// This never suppose to happen, since it was initialized in the
 			// start test event.
@@ -282,6 +284,7 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 
 	@Override
 	public void addError(Test arg0, Throwable arg1) {
+		log.fine("Received error event");
 		if (DifidoConfig.getInstance().getBoolean(DifidoProperty.errorsToFailures)) {
 			// We don't want errors in the report, so we will change each error
 			// to failure.
@@ -293,12 +296,14 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 
 	@Override
 	public void addFailure(Test arg0, AssertionFailedError arg1) {
+		log.fine("Received failure event");
 		currentTest.setStatus(Status.failure);
 
 	}
 
 	@Override
 	public void endTest(Test arg0) {
+		log.fine("Received end test");
 		currentTest.setDuration(System.currentTimeMillis() - testStartTime);
 		writeTestDetails(testDetails);
 	}
@@ -310,6 +315,7 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 
 	@Override
 	public void addWarning(Test test) {
+		log.fine("Received warning event");
 		currentTest.setStatus(Status.warning);
 	}
 
@@ -321,6 +327,7 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 
 	@Override
 	public void startTest(TestInfo testInfo) {
+		log.fine("Recieved start test event");
 		specialReportsElementsHandler = new SpecialReportElementsHandler();
 		String testName = testInfo.meaningfulName;
 		if (null == testName || "null".equals(testName)) {
@@ -332,6 +339,7 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 		if (null == testName || "null".equals(testName)) {
 			testName = testInfo.className;
 		}
+		log.fine("Test name is " + testName);
 		currentTest = new TestNode(index++, testName, executionUid + "-" + index);
 		testStartTime = System.currentTimeMillis();
 		currentTest.setTimestamp(TIME_FORMAT.format(new Date(testStartTime)));
@@ -348,11 +356,12 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 		addPropertyIfExist("Test Documentation", testInfo.testDoc);
 		addPropertyIfExist("User Documentation", testInfo.userDoc);
 		if (!StringUtils.isEmpty(testInfo.parameters)) {
+			log.info("Adding parameters " + testInfo.parameters);
 			try (Scanner scanner = new Scanner(testInfo.parameters)) {
 				while (scanner.hasNextLine()) {
 					final String parameter = scanner.nextLine();
 					if (parameter.split("=").length < 2) {
-						Log.warn("There is an illegal parameter '" + parameter + "' in test " + testName);
+						log.warning("There is an illegal parameter '" + parameter + "' in test " + testName);
 						continue;
 					}
 					testDetails.addParameter(parameter.split("=")[0], parameter.split("=")[1]);
@@ -364,9 +373,22 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 		if (numOfAppearances > 0) {
 			currentTest.setName(currentTest.getName() + " (" + ++numOfAppearances + ")");
 		}
-		updateTestDirectory();
-		writeExecution(execution);
-		writeTestDetails(testDetails);
+		try {
+			updateTestDirectory();
+		} catch (Throwable t) {
+			log.severe("Failed updating test directory due to " + t.getMessage());
+			;
+		}
+		try {
+			writeExecution(execution);
+		} catch (Throwable t) {
+			log.severe("Failed writing execution due to " + t.getMessage());
+		}
+		try {
+			writeTestDetails(testDetails);
+		} catch (Throwable t) {
+			log.severe("Failed writing test details due to " + t.getMessage());
+		}
 	}
 
 	/**
@@ -414,11 +436,13 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 
 	@Override
 	public void endLoop(AntForLoop loop, int count) {
+		log.fine("Recieved end loop event");
 		currentScenario = (ScenarioNode) currentScenario.getParent();
 	}
 
 	@Override
 	public void startContainer(JTestContainer container) {
+		log.fine("Recieved start containter event");
 		if (firstTest) {
 			firstTest = false;
 			startRun();
@@ -477,6 +501,7 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 
 	@Override
 	public void endContainer(JTestContainer container) {
+		log.fine("Recieved end container event");
 		if (currentScenario.getParent() instanceof ScenarioNode) {
 			currentScenario = (ScenarioNode) currentScenario.getParent();
 
@@ -527,6 +552,7 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 
 	@Override
 	public void startLevel(String level, EnumReportLevel place) throws IOException {
+		log.fine("Recieved start level event");
 		ReportElement element = new ReportElement();
 		element.setTime(TIME_FORMAT.format(new Date()));
 		element.setTitle(level);
@@ -541,6 +567,7 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 
 	@Override
 	public void stopLevel() {
+		log.fine("Recieved stop level event");
 		ReportElement element = new ReportElement();
 		element.setTime(TIME_FORMAT.format(new Date()));
 		element.setType(ElementType.stopLevel);
