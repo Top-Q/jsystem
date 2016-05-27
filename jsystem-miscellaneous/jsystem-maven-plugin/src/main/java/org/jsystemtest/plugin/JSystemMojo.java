@@ -37,7 +37,7 @@ public class JSystemMojo extends AbstractMojo {
 	private static final String SCENARIO_PATH = "target/classes/scenarios";
 	private static final String SUT_PATH = "target/classes/sut";
 	private static final String TEST_PROPERTIES_FILE_EMPTY = ".testPropertiesFile_Empty";
-	private static final String DEFAULT_REPORTERS = "jsystem.extensions.report.html.LevelHtmlTestReporter;jsystem.framework.report.SystemOutTestReporter;jsystem.extensions.report.xml.XmlReporter";
+	private static final String DEFAULT_REPORTERS = "jsystem.extensions.report.difido.HtmlReporter;jsystem.framework.report.SystemOutTestReporter;jsystem.extensions.report.xml.XmlReporter;jsystem.extensions.report.junit.JUnitReporter";
 	private static final String DELIMITER = ",";
 
 	/**
@@ -111,7 +111,7 @@ public class JSystemMojo extends AbstractMojo {
 			if (!scenarioFilesArr[i].exists()) {
 				throw new MojoFailureException("Scenario file " + scenarioFilesArr[i] + " is not exist");
 			}
-			if (!sutFilesArr[i].exists()){
+			if (!sutFilesArr[i].exists()) {
 				throw new MojoFailureException("Sut file " + scenarioFilesArr[i] + " is not exist");
 			}
 			String scenarioName = scenario.split(DELIMITER)[i];
@@ -203,10 +203,8 @@ public class JSystemMojo extends AbstractMojo {
 
 		// Making sure that there are reporters configured in the properties
 		// file.
-		String reporterName = JUnitReporter.class.getName();
 		if (null == reporters) {
-			JSystemProperties.getInstance().setPreference(FrameworkOptions.REPORTERS_CLASSES,
-					DEFAULT_REPORTERS + ";" + reporterName);
+			JSystemProperties.getInstance().setPreference(FrameworkOptions.REPORTERS_CLASSES, DEFAULT_REPORTERS);
 		}
 
 		// Configure all other required parameters:
