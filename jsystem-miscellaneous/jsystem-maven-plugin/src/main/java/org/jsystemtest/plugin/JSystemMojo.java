@@ -5,13 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import jsystem.extensions.report.junit.JUnitReporter;
-import jsystem.framework.FrameworkOptions;
-import jsystem.framework.JSystemProperties;
-import jsystem.framework.scenario.RunningProperties;
-import jsystem.runner.AntExecutionListener;
-import jsystem.utils.StringUtils;
-
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -20,6 +13,13 @@ import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
 import org.jsystemtest.plugin.MultipleScenarioSuitExecutionFileParser.Execution;
+
+import jsystem.extensions.report.junit.JUnitReporter;
+import jsystem.framework.FrameworkOptions;
+import jsystem.framework.JSystemProperties;
+import jsystem.framework.scenario.RunningProperties;
+import jsystem.runner.AntExecutionListener;
+import jsystem.utils.StringUtils;
 
 /**
  * 
@@ -108,11 +108,20 @@ public class JSystemMojo extends AbstractMojo {
 		getLog().info("------------------------------------------------------------------------");
 
 		for (int i = 0; i < scenarioFilesArr.length; i++) {
-			final Project p = createNewAntProject(scenariosPath, scenarioFilesArr[i], scenario.split(DELIMITER)[i],
+			if (!scenarioFilesArr[i].exists()) {
+				throw new MojoFailureException("Scenario file " + scenarioFilesArr[i] + " is not exist");
+			}
+			if (!sutFilesArr[i].exists()){
+				throw new MojoFailureException("Sut file " + scenarioFilesArr[i] + " is not exist");
+			}
+			String scenarioName = scenario.split(DELIMITER)[i];
+			if (!scenarioName.startsWith("scenarios/")) {
+				scenarioName = "scenarios/" + scenarioName;
+			}
+			final Project p = createNewAntProject(scenariosPath, scenarioFilesArr[i], scenarioName,
 					sut.split(DELIMITER)[i]);
 
-			updateJSystemProperties(sutFilesArr[i], sut.split(DELIMITER)[i], scenarioFilesArr[i],
-					scenario.split(DELIMITER)[i]);
+			updateJSystemProperties(sutFilesArr[i], sut.split(DELIMITER)[i], scenarioFilesArr[i], scenarioName);
 			executeSingleScenario(scenarioFilesArr[i], p);
 		}
 		getLog().info("------------------------------------------------------------------------");
