@@ -32,10 +32,9 @@ public class DifidoClient {
 
 	public int addExecution(ExecutionDetails details) throws Exception {
 		final PostMethod method = new PostMethod(baseUri + "executions/");
-		method.setRequestHeader(new Header("Content-Type", "application/json"));
 		if (details != null) {
 			final String descriptionJson = new ObjectMapper().writeValueAsString(details);
-			method.setRequestEntity(new StringRequestEntity(descriptionJson));
+			method.setRequestEntity(new StringRequestEntity(descriptionJson,"application/json","utf-8"));
 		}
 		final int responseCode = client.executeMethod(method);
 		handleResponseCode(method, responseCode);
@@ -51,10 +50,9 @@ public class DifidoClient {
 
 	public int addMachine(int executionId, MachineNode machine) throws Exception {
 		PostMethod method = new PostMethod(baseUri + "executions/" + executionId + "/machines/");
-		method.setRequestHeader(new Header("Content-Type", "application/json"));
 		final ObjectMapper mapper = new ObjectMapper();
 		final String json = mapper.writeValueAsString(machine);
-		final RequestEntity entity = new StringRequestEntity(json);
+		final RequestEntity entity = new StringRequestEntity(json,"application/json","utf-8");
 		method.setRequestEntity(entity);
 		int responseCode = client.executeMethod(method);
 		handleResponseCode(method, responseCode);
@@ -63,10 +61,9 @@ public class DifidoClient {
 
 	public void updateMachine(int executionId, int machineId, MachineNode machine) throws Exception {
 		PutMethod method = new PutMethod(baseUri + "executions/" + executionId + "/machines/" + machineId);
-		method.setRequestHeader(new Header("Content-Type", "application/json"));
 		final ObjectMapper mapper = new ObjectMapper();
 		final String json = mapper.writeValueAsString(machine);
-		final RequestEntity entity = new StringRequestEntity(json);
+		final RequestEntity entity = new StringRequestEntity(json,"application/json","utf-8");
 		method.setRequestEntity(entity);
 		int responseCode = client.executeMethod(method);
 		handleResponseCode(method, responseCode);
@@ -74,10 +71,9 @@ public class DifidoClient {
 
 	public void addTestDetails(int executionId, TestDetails testDetails) throws Exception {
 		PostMethod method = new PostMethod(baseUri + "executions/" + executionId + "/details");
-		method.setRequestHeader(new Header("Content-Type", "application/json"));
 		final ObjectMapper mapper = new ObjectMapper();
 		final String json = mapper.writeValueAsString(testDetails);
-		final RequestEntity entity = new StringRequestEntity(json);
+		final RequestEntity entity = new StringRequestEntity(json,"application/json","utf-8");
 		method.setRequestEntity(entity);
 		final int responseCode = client.executeMethod(method);
 		handleResponseCode(method, responseCode);
