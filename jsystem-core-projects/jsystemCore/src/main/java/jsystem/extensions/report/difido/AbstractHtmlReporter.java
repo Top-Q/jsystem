@@ -327,6 +327,13 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 
 	@Override
 	public void startTest(TestInfo testInfo) {
+		if (firstTest) {
+			// If we run from IDE, we will not receive startContainer event, so
+			// we will need to call the startRun here. Issue #269
+			firstTest = false;
+			startRun();
+		}
+
 		log.fine("Recieved start test event");
 		specialReportsElementsHandler = new SpecialReportElementsHandler();
 		String testName = testInfo.meaningfulName;
