@@ -14,7 +14,6 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
 import org.jsystemtest.plugin.MultipleScenarioSuitExecutionFileParser.Execution;
 
-import jsystem.extensions.report.junit.JUnitReporter;
 import jsystem.framework.FrameworkOptions;
 import jsystem.framework.JSystemProperties;
 import jsystem.framework.scenario.RunningProperties;
@@ -67,8 +66,16 @@ public class JSystemMojo extends AbstractMojo {
 	/**
 	 */
 	public void execute() throws MojoExecutionException, MojoFailureException {
+		if (null == scenario) {
+			getLog().error("Please specify a valid scenario name. Scenario can't be " + scenario);
+			throw new MojoExecutionException("Please specify a valid scenario name. Scenario can't be " + scenario);
+		}
+		if (null == sut) {
+			getLog().error("Please specify a valid sut name. Sut can't be " + sut);
+			throw new MojoExecutionException("Please specify a valid sut name. Sut can't be " + sut);
+		}
 
-		getLog().info("changing user working dir to: " + mavenProject.getBasedir().getAbsolutePath());
+		getLog().info("Changing user working dir to: " + mavenProject.getBasedir().getAbsolutePath());
 		// This line is for setting the current folder to the project root
 		// folder. This is very important if we want to run the plug-in from the
 		// parent folder.
@@ -112,7 +119,7 @@ public class JSystemMojo extends AbstractMojo {
 				throw new MojoFailureException("Scenario file " + scenarioFilesArr[i] + " is not exist");
 			}
 			if (!sutFilesArr[i].exists()) {
-				throw new MojoFailureException("Sut file " + scenarioFilesArr[i] + " is not exist");
+				throw new MojoFailureException("Sut file " + sutFilesArr[i] + " is not exist");
 			}
 			String scenarioName = scenario.split(DELIMITER)[i];
 			if (!scenarioName.startsWith("scenarios/")) {
