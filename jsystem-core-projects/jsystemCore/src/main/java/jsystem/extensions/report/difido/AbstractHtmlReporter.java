@@ -348,6 +348,7 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 		}
 		log.fine("Test name is " + testName);
 		currentTest = new TestNode(index++, testName, executionUid + "-" + index);
+		currentTest.setClassName(testInfo.className);
 		testStartTime = System.currentTimeMillis();
 		currentTest.setTimestamp(TIME_FORMAT.format(new Date(testStartTime)));
 		currentScenario.addChild(currentTest);
