@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/Top-Q/jsystem.svg?branch=master)](https://travis-ci.org/Top-Q/jsystem)
+
 # JSystem Framework #
 
 [JSystem Site](http://www.jsystem.org/)</br>
