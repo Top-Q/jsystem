@@ -3,5 +3,5 @@ jdk:
   - oraclejdk8
 
 script: 
-  - mvn clean package -f jsystem-parent/pom.xml -DskipTests=true -P dist
+  - mvn clean install -f jsystem-parent/pom.xml -DskipTests=true -P dist
 
