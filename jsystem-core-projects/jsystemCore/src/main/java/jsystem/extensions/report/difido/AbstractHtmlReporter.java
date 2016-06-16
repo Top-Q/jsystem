@@ -77,6 +77,8 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 
 	private boolean firstTest = true;
 
+	private long lastMessageTime;
+
 	protected abstract void writeTestDetails(TestDetails testDetails);
 
 	protected abstract void writeExecution(Execution execution);
@@ -169,6 +171,13 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 			element.setType(ElementType.regular);
 		}
 		testDetails.addReportElement(element);
+		if (System.currentTimeMillis() - lastMessageTime <= DifidoConfig.getInstance()
+				.getLong(DifidoProperty.MIN_INTERVAL_BETWEEN_MESSAGES)) {
+			// We want to make sure the test does not stress the IO with
+			// messages. Issue #271
+			return;
+		}
+		lastMessageTime = System.currentTimeMillis();
 		writeTestDetails(testDetails);
 
 	}
@@ -285,7 +294,7 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 	@Override
 	public void addError(Test arg0, Throwable arg1) {
 		log.fine("Received error event");
-		if (DifidoConfig.getInstance().getBoolean(DifidoProperty.errorsToFailures)) {
+		if (DifidoConfig.getInstance().getBoolean(DifidoProperty.ERRORS_TO_FAILURES)) {
 			// We don't want errors in the report, so we will change each error
 			// to failure.
 			currentTest.setStatus(Status.failure);

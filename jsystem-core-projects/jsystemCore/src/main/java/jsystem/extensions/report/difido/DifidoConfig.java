@@ -94,8 +94,23 @@ class DifidoConfig {
 		return Boolean.parseBoolean(value);
 	}
 
+	long getLong(DifidoProperty property) {
+		String value = getString(property);
+		long longValue = 0;
+		try {
+			longValue = Long.parseLong(value);
+		} catch (Throwable t) {
+		}
+		return longValue;
+	}
+
 	enum DifidoProperty {
-		errorsToFailures("errors.to.failures", "false", "Replace each error with failure");
+
+		// @formatter:off
+		ERRORS_TO_FAILURES("errors.to.failures", "false", "Replace each error with failure"),
+		MIN_INTERVAL_BETWEEN_MESSAGES("min.interval.between.messages", "100",
+						"The min allowed interval between message in millis");
+		// @formatter:on
 
 		private String propName;
 
