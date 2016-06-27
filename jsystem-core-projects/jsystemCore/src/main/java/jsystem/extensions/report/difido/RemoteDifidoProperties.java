@@ -53,7 +53,7 @@ public class RemoteDifidoProperties {
 
 	public RemoteDifidoProperties() {
 		properties = new Properties();
-		final File propertiesFile = new File(FILE_NAME);
+		final File propertiesFile = new File(System.getProperty("user.dir"), FILE_NAME);
 		if (!propertiesFile.exists()) {
 			initDefaultProperties();
 		}

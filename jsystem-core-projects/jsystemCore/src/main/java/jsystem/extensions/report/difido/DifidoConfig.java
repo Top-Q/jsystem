@@ -32,7 +32,7 @@ class DifidoConfig {
 	}
 
 	private DifidoConfig() {
-		File configFile = new File(FILE_NAME);
+		File configFile = new File(System.getProperty("user.dir"), FILE_NAME);
 		if (!configFile.exists()) {
 			createDefaultConfigFile();
 		}
