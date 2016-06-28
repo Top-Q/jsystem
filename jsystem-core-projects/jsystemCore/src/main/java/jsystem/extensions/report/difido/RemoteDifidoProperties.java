@@ -106,7 +106,7 @@ public class RemoteDifidoProperties {
 				RemoteDifidoOptions.EXECUTION_PROPETIES.getDefaultValue());
 		//@formatter:on
 
-		final File propertiesFile = new File(FILE_NAME);
+		final File propertiesFile = new File(System.getProperty("user.dir"), FILE_NAME);
 		if (propertiesFile.exists()) {
 			propertiesFile.delete();
 		}

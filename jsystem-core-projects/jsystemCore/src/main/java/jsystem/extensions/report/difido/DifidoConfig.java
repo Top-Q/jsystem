@@ -41,7 +41,7 @@ class DifidoConfig {
 
 	private void readConfigFile() {
 		properties = new Properties();
-		try (FileInputStream in = new FileInputStream(FILE_NAME)) {
+		try (FileInputStream in = new FileInputStream(new File(System.getProperty("user.dir"), FILE_NAME))) {
 			properties.load(in);
 		} catch (IOException e) {
 			log.warning("Failed to read Difido configuration file");
@@ -53,7 +53,7 @@ class DifidoConfig {
 		for (DifidoProperty prop : DifidoProperty.values()) {
 			properties.setProperty(prop.propName, prop.defaultValue != null ? prop.defaultValue.toString() : "");
 		}
-		try (FileOutputStream out = new FileOutputStream(FILE_NAME)) {
+		try (FileOutputStream out = new FileOutputStream(new File(System.getProperty("user.dir"), FILE_NAME))) {
 			properties.store(out, "Difido report properties");
 
 		} catch (IOException e) {
