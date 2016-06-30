@@ -127,6 +127,7 @@
 				<include>*:jackson-annotations:*</include>
 				<include>*:jackson-core:*</include>
 				<include>*:difido-reports-common:*</include>
+				<include>*:jsystem-difido-reporter:*</include>
 			</includes>
 		</dependencySet>
 		<dependencySet>

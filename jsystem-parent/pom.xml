@@ -203,15 +203,16 @@
 				<version>1.4</version>
 			</dependency>
 			<dependency>
-				<groupId>il.co.topq.difido</groupId>
-				<artifactId>difido-reports-common</artifactId>
-				<version>1.4</version>
-			</dependency>
-			<dependency>
 				<groupId>xml-apis</groupId>
 				<artifactId>xml-apis</artifactId>
 				<version>1.4.01</version>
 			</dependency>
+			<dependency>
+				<groupId>org.jsystemtest</groupId>
+				<artifactId>jsystem-difido-reporter</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+
 		</dependencies>
 
 
