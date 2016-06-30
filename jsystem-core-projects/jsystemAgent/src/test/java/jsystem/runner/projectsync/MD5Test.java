@@ -6,6 +6,8 @@ package jsystem.runner.projectsync;
 import java.io.File;
 import java.util.Map;
 
+import org.junit.Ignore;
+
 import jsystem.runner.agent.ProjectComponent;
 import jsystem.runner.projectsync.MD5Calculator;
 import junit.framework.SystemTestCase;
@@ -20,6 +22,7 @@ import junit.framework.SystemTestCase;
  * @author goland
  *
  */
+@Ignore("Agent mechanism is deprected")
 public class MD5Test extends SystemTestCase {
 	
 	private MD5Calculator project1Calculator;

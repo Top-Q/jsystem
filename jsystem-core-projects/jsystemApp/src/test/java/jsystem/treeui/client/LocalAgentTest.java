@@ -10,6 +10,8 @@ import java.io.Writer;
 import java.net.URL;
 import java.util.Date;
 
+import org.junit.Ignore;
+
 import jsystem.framework.FrameworkOptions;
 import jsystem.framework.JSystemProperties;
 import jsystem.framework.fixture.RootFixture;
@@ -26,6 +28,7 @@ import com.aqua.services.fixtures.AgentFixture;
  * 
  * @author Guy Chen
  */
+@Ignore("Not supported anymore")
 public class LocalAgentTest extends SystemTestCase {
 
 	public AgentConnection agentSysObj;

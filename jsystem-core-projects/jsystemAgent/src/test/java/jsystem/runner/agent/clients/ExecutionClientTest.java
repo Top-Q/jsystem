@@ -3,8 +3,11 @@
  */
 package jsystem.runner.agent.clients;
 
+import org.junit.Ignore;
+
 import junit.framework.SystemTestCase;
 
+@Ignore("Agent mechanism is deprected")
 public class ExecutionClientTest extends SystemTestCase {
 	
 	private JSystemAgentClient client;

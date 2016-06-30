@@ -5,6 +5,8 @@ package com.aqua.services.fixtures;
 
 import java.io.File;
 
+import org.junit.Ignore;
+
 import jsystem.framework.RunProperties;
 import jsystem.framework.fixture.Fixture;
 import jsystem.runner.agent.ProjectComponent;
@@ -18,6 +20,7 @@ import com.aqua.services.AgentConnection;
  * @author KobiG
  */
 
+@Ignore("Agent mechanism is deprected")
 public class AgentDefaultProjectFixture extends Fixture {
 
 	private AgentConnection agentConnection;

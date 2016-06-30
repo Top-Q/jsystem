@@ -3,6 +3,8 @@
  */
 package jsystem.agent.client;
 
+import org.junit.Ignore;
+
 import jsystem.framework.report.ExecutionListener;
 import jsystem.framework.report.TestInfo;
 import jsystem.framework.scenario.JTestContainer;

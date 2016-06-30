@@ -9,6 +9,8 @@ import jsystem.runner.projectsync.ProjectZip;
 import junit.framework.SystemTestCase;
 import java.io.File;
 
+import org.junit.Ignore;
+
 /**
  * Unit test for MD5 calculation.
  * project1 is identical to project2
@@ -19,6 +21,7 @@ import java.io.File;
  * @author goland
  *
  */
+@Ignore("Agent mechanism is deprected")
 public class ProjectZipTest extends SystemTestCase {
 	
 	private ProjectZip projectZip;

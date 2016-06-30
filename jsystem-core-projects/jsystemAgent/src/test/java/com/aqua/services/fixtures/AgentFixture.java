@@ -5,6 +5,8 @@ package com.aqua.services.fixtures;
 
 import jsystem.framework.fixture.Fixture;
 
+import org.junit.Ignore;
+
 import com.aqua.services.AgentConnection;
 
 /**
@@ -13,7 +15,7 @@ import com.aqua.services.AgentConnection;
  * @author Guy Chen
  * 
  */
-
+@Ignore("Agent mechanism is deprected")
 public class AgentFixture extends Fixture {
 
 	// AgentConnection agentSysObj;

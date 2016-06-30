@@ -5,6 +5,8 @@ package jsystem.agent.client;
 
 import java.io.File;
 
+import org.junit.Ignore;
+
 import jsystem.framework.RunProperties;
 import jsystem.framework.scenario.Scenario;
 import jsystem.runner.agent.server.RunnerEngineExecutionState;
@@ -12,6 +14,7 @@ import junit.framework.SystemTestCase;
 
 import com.aqua.services.AgentConnection;
 
+@Ignore("Agent mechanism is deprected")
 public class RemoteAgentClientTest extends SystemTestCase {
 
 	private String agentHost = "10.0.0.28:8999";

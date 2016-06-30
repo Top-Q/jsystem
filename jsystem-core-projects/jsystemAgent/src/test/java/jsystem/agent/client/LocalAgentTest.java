@@ -9,6 +9,8 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.junit.Ignore;
+
 import jsystem.framework.FrameworkOptions;
 import jsystem.framework.JSystemProperties;
 import jsystem.framework.RunProperties;
@@ -33,6 +35,7 @@ import com.aqua.services.fixtures.AgentDefaultProjectFixture;
  * @author Guy Chen
  * 
  */
+@Ignore("Agent mechanism is deprected")
 public class LocalAgentTest extends SystemTestCase {
 
 	private AgentConnection agentSysObj;

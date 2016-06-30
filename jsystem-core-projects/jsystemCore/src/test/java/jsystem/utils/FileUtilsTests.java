@@ -3,22 +3,15 @@
  */
 package jsystem.utils;
 
-import java.io.File;
 import java.util.regex.Pattern;
-
-import junit.framework.SystemTestCase4;
 
 import org.junit.Assert;
 import org.junit.Test;
 
+import junit.framework.SystemTestCase4;
+
 public class FileUtilsTests extends SystemTestCase4 {
 
-	@Test
-	public void checkFileReplace() throws Exception {
-		File f = new File("report8.html");
-		int index = FileUtils.getLastLineWith(f,"<span\\s+class=.*?>");
-		FileUtils.replaceInFile(f, "<span\\s+class=.*?>","<span class=\"gogol555llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll\">",index);
-	}
 	
 	@Test
 	public void tryPattern() throws Exception {
