@@ -76,6 +76,7 @@ public class RemoteHtmlReporter extends AbstractHtmlReporter {
 	@Override
 	public void startRun() {
 		super.initModel();
+		super.startRun();
 		difidoProps = new RemoteDifidoProperties();
 		String host = null;
 		int port = 0;
