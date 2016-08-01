@@ -35,7 +35,9 @@ import jsystem.framework.report.Reporter.EnumReportLevel;
 import jsystem.framework.report.Summary;
 import jsystem.framework.report.TestInfo;
 import jsystem.framework.scenario.JTestContainer;
+import jsystem.framework.scenario.Scenario;
 import jsystem.framework.scenario.ScenarioHelpers;
+import jsystem.framework.scenario.ScenariosManager;
 import jsystem.framework.scenario.flow_control.AntFlowControl;
 import jsystem.framework.scenario.flow_control.AntForLoop;
 import jsystem.utils.StringUtils;
@@ -263,6 +265,18 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 
 	}
 
+	protected int calculateNumberOfPlannedTests() {
+		final Scenario scenario = ScenariosManager.getInstance().getCurrentScenario();
+		if (null == scenario) {
+			return 0;
+		}
+		int[] enabledTestsIds = scenario.getEnabledTestsIndexes();
+		if (null == enabledTestsIds) {
+			return 0; 
+		}
+		return enabledTestsIds.length;
+	}
+
 	private void updateIndex() {
 		if (null == execution) {
 			index = 0;
@@ -342,7 +356,6 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 			firstTest = false;
 			startRun();
 		}
-
 		log.fine("Recieved start test event");
 		specialReportsElementsHandler = new SpecialReportElementsHandler();
 		String testName = testInfo.meaningfulName;
@@ -412,7 +425,7 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 	 * This method is meant to be override. It is called at the start of the run
 	 */
 	public void startRun() {
-
+		execution.getLastMachine().setPlannedTests(calculateNumberOfPlannedTests());
 	}
 
 	/**
