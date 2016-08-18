@@ -1,17 +1,17 @@
 package jsystem.extensions.report.difido;
 
-import il.co.topq.difido.model.execution.Execution;
-import il.co.topq.difido.model.execution.ScenarioNode;
-import il.co.topq.difido.model.remote.ExecutionDetails;
-import il.co.topq.difido.model.test.TestDetails;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.apache.commons.io.FileUtils;
 import org.jfree.util.Log;
 
+import il.co.topq.difido.model.execution.Execution;
+import il.co.topq.difido.model.execution.ScenarioNode;
+import il.co.topq.difido.model.remote.ExecutionDetails;
+import il.co.topq.difido.model.test.TestDetails;
 import jsystem.extensions.report.difido.RemoteDifidoProperties.RemoteDifidoOptions;
 
 public class RemoteHtmlReporter extends AbstractHtmlReporter {
@@ -161,7 +161,6 @@ public class RemoteHtmlReporter extends AbstractHtmlReporter {
 		if (!enabled) {
 			return;
 		}
-
 		try {
 			client.updateMachine(executionId, machineId, execution.getLastMachine());
 		} catch (Exception e) {
@@ -193,11 +192,35 @@ public class RemoteHtmlReporter extends AbstractHtmlReporter {
 			return;
 		}
 		for (File file : files) {
-			try {
-				client.addFile(executionId, getTestDetails().getUid(), file);
-			} catch (Exception e) {
-				log.warning("Failed uploading file " + file.getName() + " to remote server due to " + e.getMessage());
-			}
+			uploadFileToServer(file);
+		}
+
+	}
+
+	private void uploadFileToServer(File file) {
+		try {
+			client.addFile(executionId, getTestDetails().getUid(), file);
+		} catch (Exception e) {
+			log.warning("Failed uploading file " + file.getName() + " to remote server due to " + e.getMessage());
+		}
+
+	}
+
+	@Override
+	public void saveFile(String fileName, byte[] content) {
+		final File tempFile = new File(System.getProperty("java.io.tmpdir"), fileName);
+		try {
+			tempFile.createNewFile();
+			FileUtils.writeByteArrayToFile(tempFile, content);
+		} catch (Exception e){
+			log.warning("Failed to write file content to file " + fileName);
+			tempFile.delete();
+			return;
+		}
+		try {
+			uploadFileToServer(tempFile);
+		} finally {
+			tempFile.delete();
 		}
 
 	}
