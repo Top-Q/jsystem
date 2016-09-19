@@ -51,7 +51,7 @@
 			<groupId>org.jsystemtest</groupId>
 			<artifactId>jsystemAnt</artifactId>
 			<version>${project.version}</version>
-			<scope>provided</scope>
+			
 		</dependency>
 		<dependency>
 			<groupId>org.apache.maven</groupId>
