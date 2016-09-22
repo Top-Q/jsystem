@@ -4,6 +4,9 @@
 	<groupId>\${groupId}</groupId>
 	<artifactId>\${artifactId}</artifactId>
 	<version>\${version}</version>
+	<properties>
+		<jsystem.version>${jsystem.dependency.version}</jsystem.version>
+	</properties>
 	<repositories>
 		<repository>
 			<id>top-q</id>
@@ -20,7 +23,7 @@
 		<dependency>
 			<groupId>org.jsystemtest</groupId>
 			<artifactId>jsystemApp</artifactId>
-			<version>${jsystem.dependency.version}</version>
+			<version>\${jsystem.version}</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -51,7 +54,7 @@
 			<plugin>
 				<groupId>org.jsystemtest</groupId>
 				<artifactId>jsystem-maven-plugin</artifactId>
-				<version>${jsystem.dependency.version}</version>
+				<version>\${jsystem.version}</version>
 				<dependencies>
 					<dependency>
 						<groupId>\${groupId}</groupId>
