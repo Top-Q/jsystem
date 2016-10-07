@@ -1,6 +1,6 @@
 package jsystem.extensions.report.difido;
 
-import il.co.topq.difido.model.test.TestDetails;
+import il.co.topq.difido.model.execution.TestNode;
 import jsystem.framework.JSystemProperties;
 import jsystem.utils.StringUtils;
 
@@ -31,13 +31,13 @@ class SpecialReportElementsHandler {
 	private int elementData = NONE;
 	private int spanTrace;
 	private boolean skipReportElement;
-	private final TestDetails testDetails;
+	private final TestNode test;
 	
 	
 
-	public SpecialReportElementsHandler(TestDetails testDetails) {
+	public SpecialReportElementsHandler(TestNode test) {
 		super();
-		this.testDetails = testDetails;
+		this.test = test;
 	}
 
 
@@ -61,22 +61,22 @@ class SpecialReportElementsHandler {
 		case NONE:
 			break;
 		case CLASS_DOC:
-			testDetails.addProperty("Class Documentation", title);
-			testDetails.setDescription(title);
+			test.addProperty("Class Documentation", title);
+			test.setDescription(title);
 			elementData = NONE;
 			return false;
 		case TEST_DOC:
-			testDetails.addProperty("Test Documentation", title);
-			testDetails.setDescription(title);
+			test.addProperty("Test Documentation", title);
+			test.setDescription(title);
 			elementData = NONE;
 			return false;
 		case USER_DOC:
-			testDetails.addProperty("User Documentation", title);
-			testDetails.setDescription(title);
+			test.addProperty("User Documentation", title);
+			test.setDescription(title);
 			elementData = NONE;
 			return false;
 		case TEST_BREADCUMBS:
-			testDetails.addProperty("Breadcrumb", title.replace("</span>", ""));
+			test.addProperty("Breadcrumb", title.replace("</span>", ""));
 			elementData = NONE;
 			// This also closes the span
 			spanTrace--;

@@ -53,11 +53,9 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 
 	private static final Logger log = Logger.getLogger(AbstractHtmlReporter.class.getName());
 
-	private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm:ss:");
+	private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm:ss");
 	
 	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd");
-
-	private static final SimpleDateFormat TIME_AND_DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd 'at' HH:mm:ss");
 
 	private Execution execution;
 
@@ -346,7 +344,6 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 
 	private void addPropertyIfExist(String propertyName, String property) {
 		if (!StringUtils.isEmpty(property)) {
-			testDetails.addProperty(propertyName, property);
 			currentTest.addProperty(propertyName, property);
 		}
 	}
@@ -378,10 +375,8 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 		currentTest.setTimestamp(TIME_FORMAT.format(new Date(testStartTime)));
 		currentTest.setDate(DATE_FORMAT.format(new Date(testStartTime)));
 		currentScenario.addChild(currentTest);
-		testDetails = new TestDetails(testName, currentTest.getUid());
-		testDetails.setTimeStamp(TIME_AND_DATE_FORMAT.format(new Date(testStartTime)));
+		testDetails = new TestDetails(currentTest.getUid());
 		if (!StringUtils.isEmpty(testInfo.comment)) {
-			testDetails.setDescription(testInfo.comment);
 			currentTest.setDescription(testInfo.comment);
 		}
 		addPropertyIfExist("Class", testInfo.className);
@@ -399,7 +394,6 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 						log.warning("There is an illegal parameter '" + parameter + "' in test " + testName);
 						continue;
 					}
-					testDetails.addParameter(parameter.split("=")[0], parameter.split("=")[1]);
 					currentTest.addParameter(parameter.split("=")[0], parameter.split("=")[1]);
 				}
 
@@ -563,7 +557,6 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 
 	@Override
 	public void addProperty(String key, String value) {
-		testDetails.addProperty(key, value);
 		currentTest.addProperty(key, value);
 	}
 
@@ -677,27 +670,20 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 			case NONE:
 				break;
 			case CLASS_DOC:
-				testDetails.addProperty("Class Documentation", title);
 				currentTest.addProperty("Class Documentation", title);
-				testDetails.setDescription(title);
 				elementData = NONE;
 				return false;
 			case TEST_DOC:
-				testDetails.addProperty("Test Documentation", title);
 				currentTest.addProperty("Test Documentation", title);
-				testDetails.setDescription(title);
 				currentTest.setDescription(title);
 				elementData = NONE;
 				return false;
 			case USER_DOC:
-				testDetails.addProperty("User Documentation", title);
 				currentTest.addProperty("User Documentation", title);
-				testDetails.setDescription(title);
 				currentTest.setDescription(title);
 				elementData = NONE;
 				return false;
 			case TEST_BREADCUMBS:
-				testDetails.addProperty("Breadcrumb", title.replace("</span>", ""));
 				currentTest.addProperty("Breadcrumb", title.replace("</span>", ""));
 				elementData = NONE;
 				// This also closes the span
