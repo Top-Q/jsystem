@@ -15,6 +15,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.Vector;
@@ -1289,7 +1290,7 @@ public class RunnerListenersManager extends DefaultReporterImpl implements JSyst
 		}
 		if (buffering) {
 			if (reportsBuffer == null) {
-				reportsBuffer = new ArrayList<ReportElement>();
+				reportsBuffer = Collections.synchronizedList(new ArrayList<ReportElement>());
 			}
 			ReportElement re = new ReportElement();
 			re.setTitle(level);
@@ -1335,7 +1336,7 @@ public class RunnerListenersManager extends DefaultReporterImpl implements JSyst
 		}
 		if (buffering) {
 			if (reportsBuffer == null) {
-				reportsBuffer = new ArrayList<ReportElement>();
+				reportsBuffer = Collections.synchronizedList(new ArrayList<ReportElement>());
 			}
 			ReportElement currentReportElement = new ReportElement();
 			currentReportElement.setOriginator(Thread.currentThread().getName());
@@ -1364,7 +1365,7 @@ public class RunnerListenersManager extends DefaultReporterImpl implements JSyst
 
 		if (buffering && !step) {
 			if (reportsBuffer == null) {
-				reportsBuffer = new ArrayList<ReportElement>();
+				reportsBuffer = Collections.synchronizedList(new ArrayList<ReportElement>());
 			}
 			ReportElement newReportElementInstance = new ReportElement();
 			newReportElementInstance.setTitle(title);

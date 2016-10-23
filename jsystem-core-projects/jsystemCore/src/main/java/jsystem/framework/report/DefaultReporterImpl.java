@@ -41,7 +41,7 @@ public abstract class DefaultReporterImpl implements Reporter {
 	/**
 	 * Used to buffer reports when startBufferReports is called
 	 */
-	protected ArrayList<ReportElement> reportsBuffer = null;
+	protected List<ReportElement> reportsBuffer = null;
 
 	protected boolean buffering = false;
 
