@@ -425,7 +425,7 @@ public class TestRunner extends BaseTestRunner implements StartRunner {
 						// Set copyright message
 						g2d.setColor(new Color(0x23, 0x1f, 0x20));
 						g2d.setFont(new Font("arial", Font.PLAIN, 10));
-						g2d.drawString(" Copyright 2005-2014 Ignis Software Tools Ltd. All rights reserved.", 101, 330);
+						g2d.drawString(" Copyright 2005-2016 Ignis Software Tools Ltd. All rights reserved.", 101, 330);
 						ss.update();
 
 						for (int j = 0; true; j++) {

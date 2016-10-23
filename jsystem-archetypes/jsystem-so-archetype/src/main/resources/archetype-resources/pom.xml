@@ -4,6 +4,9 @@
 	<groupId>\${groupId}</groupId>
 	<artifactId>\${artifactId}</artifactId>
 	<version>\${version}</version>
+	<properties>
+		<jsystem.version>${jsystem.dependency.version}</jsystem.version>
+	</properties>
 	<repositories>
 		<repository>
 			<id>top-q</id>
@@ -14,13 +17,13 @@
 		<dependency>
 			<groupId>org.jsystemtest</groupId>
 			<artifactId>jsystemCommon</artifactId>
-			<version>${jsystem.dependency.version}</version>
+			<version>\${jsystem.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.jsystemtest.systemobjects</groupId>
 			<artifactId>cli</artifactId>
-			<version>${jsystem.dependency.version}</version>
+			<version>\${jsystem.version}</version>
 		</dependency>
 	</dependencies>
 	<build>
