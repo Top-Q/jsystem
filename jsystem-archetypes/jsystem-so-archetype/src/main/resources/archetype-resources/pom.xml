@@ -6,6 +6,7 @@
 	<version>\${version}</version>
 	<properties>
 		<jsystem.version>${jsystem.dependency.version}</jsystem.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<repositories>
 		<repository>
