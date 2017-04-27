@@ -33,6 +33,7 @@ import java.util.EventListener;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Observable;
 import java.util.Properties;
 import java.util.TreeMap;
@@ -71,6 +72,8 @@ import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
+
+import org.jfree.util.Log;
 
 import jsystem.extensions.report.html.HtmlCodeWriter;
 import jsystem.extensions.scenarionamehook.ScenarioNameHookManager;
@@ -163,8 +166,6 @@ import jsystem.utils.StringUtils;
 import jsystem.utils.SwingUtils;
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
-
-import org.jfree.util.Log;
 
 public class TestsTableController extends Observable implements TestStatusListener, ActionListener, ExtendTestListener,
 		TreeSelectionListener, MouseListener, TreeExpansionListener, ScenarioListener {
@@ -271,6 +272,8 @@ public class TestsTableController extends Observable implements TestStatusListen
 	private JMenuItem popupExpandTreeRoot;
 
 	private JMenuItem popupCollapseTreeRoot;
+	
+	private List<JMenuItem> contextMenuPlugins;
 
 	private ScenarioTreeNode currentNode;
 
@@ -298,7 +301,7 @@ public class TestsTableController extends Observable implements TestStatusListen
 
 	private TreeMap<Integer, JTest> testByRow;
 	private int[] paths = null;
-	private JTest[] selectedTests;
+	JTest[] selectedTests;
 	private LinkedHashMap<Integer, JTest> clipboardTests;
 
 	/**
@@ -1811,6 +1814,17 @@ public class TestsTableController extends Observable implements TestStatusListen
 			// Limor Bortman
 			// return To Default for the test popup men
 			addResetToDefault();
+			
+			ContextMenuPlugin plugin = new ContextMenuPlugin(this);
+			if (plugin.shouldDisplayed(currentNode, null, null)){
+				contextMenuPlugins = new ArrayList<JMenuItem>();
+				JMenuItem pluginMenu = new JMenuItem(plugin.getItemName());
+				contextMenuPlugins.add(pluginMenu);
+				pluginMenu.addActionListener(plugin);
+				ListenerstManager.getInstance().addListener(plugin);
+				popupMenu.add(pluginMenu);
+				
+			}
 			return popupMenu;
 
 		} else if (type == ROOT_POP_UP) {
