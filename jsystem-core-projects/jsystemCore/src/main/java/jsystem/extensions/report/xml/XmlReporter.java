@@ -328,9 +328,6 @@ public class XmlReporter implements ExtendTestReporter, ExtendTestListener, SutL
 
 	@Override
 	public void startContainer(JTestContainer container) {
-		if (container.isRoot()) {
-			init();
-		}
 	}
 
 	@Override
