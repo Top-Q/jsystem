@@ -405,6 +405,17 @@ public enum GUIFrameworkOptions {
 			"It will limit the source file analysis. Please be aware that you should enter the jar name\n" +
 			"without the '.jar' extention"
 	),
+	
+	TESTS_JAR_NAME_PREFIX(
+			FrameworkOptions.TESTS_JAR_NAME_PREFIX,
+			true,
+			Group.ADVANCED,
+			"The name prefix of the jars that are located in the tests lib folder and will be \n" +
+			"scanned for building blocks. \n" +
+			"This is useful in cases in which we would like to create a system object with the \n" +
+			"basic system object building blocks included in the jar \n" +
+			"or when we want to create project with multiple building blocks modules \n"
+			),
 
 
 	/**
@@ -450,7 +461,7 @@ public enum GUIFrameworkOptions {
 	IGNORE_MEANINGFUL_NAME(
 			FrameworkOptions.IGNORE_MEANINGFUL_NAME,
 			true,
-			Group.BETA_FEATURES, 
+			Group.ADVANCED, 
 			
 			"Tests annotations provide the JRunner additional information about how to present test metadata. \n" +
 			"Normally when adding a test to the scenario, the scenario includes the class name and the test name. \n" +
@@ -470,7 +481,7 @@ public enum GUIFrameworkOptions {
 	SCENARIO_AS_TEST(
 			FrameworkOptions.SCENARIO_AS_TEST,
 			true,
-			Group.BETA_FEATURES, 			
+			Group.ADVANCED, 			
 			"When set to true, root scenario can be marked as a test. A scenario which is marked as a test, will be visualized as a test"+
 			"when added as a sub scenario and in the HTML report. \n"+
 			"In JSystem reports server the scenario will be count as a test for the statiistics"			
@@ -482,14 +493,14 @@ public enum GUIFrameworkOptions {
 	CMD_LINE_EXECUTER(
 			FrameworkOptions.CMD_LINE_EXECUTER,
 			true,
-			Group.BETA_FEATURES, 			
+			Group.ADVANCED, 			
 			"Indicates what command line executor engine should be chosen."			
 	),
 	
 	MAX_BUILDING_BLOCKS_NUMBER(
 			FrameworkOptions.MAX_BUILDING_BLOCKS_NUMBER,
 			true,
-			Group.BETA_FEATURES, 			
+			Group.ADVANCED, 			
 			"Set the maximum number of building blocks in a scenario"
 	),
 	
@@ -805,7 +816,7 @@ public enum GUIFrameworkOptions {
 	GENERIC_TABS(
 			FrameworkOptions.GENERIC_TABS,
 			true,
-			Group.BETA_FEATURES,
+			Group.ADVANCED,
 			"List of classes which implement jsystem.treeui.interfaces.JSystemTab (under JSystemApp)\n" +
 			"Use this property to add custom tabs. \n" +
 			"Once you update this field, The JSystem will restart and add the new tabs." +
@@ -817,7 +828,7 @@ public enum GUIFrameworkOptions {
 	DATA_PROVIDER_CLASSES(
 			FrameworkOptions.DATA_PROVIDER_CLASSES,
 			true,
-			Group.BETA_FEATURES,
+			Group.ADVANCED,
 			"Allow users to implement different data providers for the data driven building block.\n"+ 
 			"For example, database data provider, Excel data provider, etc..\n" +
 			"To create a new data provider one need to create a new Maven project and add JSystemAnt project "+
@@ -924,9 +935,8 @@ public enum GUIFrameworkOptions {
 		MAIL(3, "Mail"),
 		DISTRIBUTED_EXECUTION(4, "Distributed Execution"),
 		ADVANCED(5, "Advanced"),
-		BETA_FEATURES(6, "New Features"),
-		SOURCE_CONTROL(7, "Source Control"),
-		REPORTS_PUBLISHER(8,"Reports Publisher");
+		SOURCE_CONTROL(6, "Source Control"),
+		REPORTS_PUBLISHER(7,"Reports Publisher");
 		
 		private int index;
 		private String value;

@@ -36,6 +36,7 @@ import jsystem.utils.XmlUtils;
 import jsystem.utils.beans.AsmUtils;
 import jsystem.utils.beans.MethodElement;
 import junit.framework.SystemTestCase;
+import junit.framework.SystemTestCase4;
 import junit.framework.TestCase;
 
 import org.apache.xpath.XPathAPI;
@@ -234,7 +235,7 @@ public abstract class AssetNode extends DefaultMutableTreeNode implements Compar
 						Class testClass = LoadersManager.getInstance()
 								.getLoader().loadClass(className);
 
-						if (SystemTestCase.class.isAssignableFrom(testClass)) {
+						if (SystemTestCase4.class.isAssignableFrom(testClass)) {
 							children.add(new TestCaseNode(this, testClass));
 						}
 					} catch (Throwable ignore) {
@@ -293,7 +294,7 @@ public abstract class AssetNode extends DefaultMutableTreeNode implements Compar
 	}
 
 	private boolean exludedJar(File f) {
-		return true;
+		return false;
 	}
 
 	public Enumeration<Object> getAllChildren() {

@@ -860,7 +860,15 @@ public enum FrameworkOptions {
 			"",
 			false
 			),
-			
+	
+	TESTS_JAR_NAME_PREFIX(
+			"tests.jar.name.prefix",
+			"The name prefix of jar files that will be scanned for building blocks",
+			DataType.TEXT,
+			"so-",
+			true
+			),
+
 	SORT_ASSETS_TREE(
 			"sort.tests.tree",
 			"",
