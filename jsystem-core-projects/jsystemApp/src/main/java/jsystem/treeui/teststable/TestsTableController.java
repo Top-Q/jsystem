@@ -273,7 +273,7 @@ public class TestsTableController extends Observable implements TestStatusListen
 
 	private JMenuItem popupCollapseTreeRoot;
 	
-	private List<JMenuItem> contextMenuPlugins;
+	private List<ContextMenuPlugin> contextMenuPlugins;
 
 	private ScenarioTreeNode currentNode;
 
@@ -776,7 +776,17 @@ public class TestsTableController extends Observable implements TestStatusListen
 
 		setEdit(false, false, false, true, true, false);
 
+		initContextMenuPlugins();
+		
 		refreshTree();
+	}
+
+	private void initContextMenuPlugins() {
+		contextMenuPlugins = new ArrayList<ContextMenuPlugin>();
+		ContextMenuPlugin plugin = new PauseBBContextMenuPlugin();
+		plugin.init(this);
+		ListenerstManager.getInstance().addListener(plugin);
+		contextMenuPlugins.add(plugin);
 	}
 
 	private void setSelectionModel() {
@@ -1815,15 +1825,12 @@ public class TestsTableController extends Observable implements TestStatusListen
 			// return To Default for the test popup men
 			addResetToDefault();
 			
-			ContextMenuPlugin plugin = new ContextMenuPlugin(this);
-			if (plugin.shouldDisplayed(currentNode, null, null)){
-				contextMenuPlugins = new ArrayList<JMenuItem>();
-				JMenuItem pluginMenu = new JMenuItem(plugin.getItemName());
-				contextMenuPlugins.add(pluginMenu);
-				pluginMenu.addActionListener(plugin);
-				ListenerstManager.getInstance().addListener(plugin);
-				popupMenu.add(pluginMenu);
-				
+			for (ContextMenuPlugin plugin : contextMenuPlugins){
+				if (plugin.shouldDisplayed(currentNode, null, currentNode.getTest())){
+					JMenuItem pluginMenu = new JMenuItem(plugin.getItemName());
+					pluginMenu.addActionListener(plugin);
+					popupMenu.add(pluginMenu);
+				}
 			}
 			return popupMenu;
 
