@@ -36,6 +36,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Observable;
 import java.util.Properties;
+import java.util.StringTokenizer;
 import java.util.TreeMap;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -113,6 +114,7 @@ import jsystem.framework.sut.ChangeSutTest;
 import jsystem.guiMapping.JsystemMapping;
 import jsystem.runner.ErrorLevel;
 import jsystem.runner.agent.tests.PublishTest;
+import jsystem.runner.loader.LoadersManager;
 import jsystem.treeui.TestRunner;
 import jsystem.treeui.WaitDialog;
 import jsystem.treeui.actionItems.AddScenarioAction;
@@ -783,10 +785,24 @@ public class TestsTableController extends Observable implements TestStatusListen
 
 	private void initContextMenuPlugins() {
 		contextMenuPlugins = new ArrayList<ContextMenuPlugin>();
-		ContextMenuPlugin plugin = new PauseBBContextMenuPlugin();
-		plugin.init(this);
-		ListenerstManager.getInstance().addListener(plugin);
-		contextMenuPlugins.add(plugin);
+		String pluginNamesString = JSystemProperties.getInstance().getPreferenceOrDefault(FrameworkOptions.CONTEXT_MENU_PLUGIN_CLASSES);
+		if (StringUtils.isEmpty(pluginNamesString)) {
+			return;
+		}
+		StringTokenizer st = new StringTokenizer(pluginNamesString, ";");
+		while (st.hasMoreTokens()){
+			String pluginName = st.nextToken();
+			try {
+				Class<?> reporterClass = LoadersManager.getInstance().getLoader().loadClass(pluginName);
+				ContextMenuPlugin plugin = (ContextMenuPlugin)reporterClass.newInstance();
+				plugin.init(this);
+				ListenerstManager.getInstance().addListener(plugin);
+				contextMenuPlugins.add(plugin);
+			} catch (Exception e) {
+				log.log(Level.WARNING, "Failed to init context menu plugin " + pluginName +" due to " + e.getMessage());
+			}
+
+		}
 	}
 
 	private void setSelectionModel() {
@@ -1828,6 +1844,8 @@ public class TestsTableController extends Observable implements TestStatusListen
 			for (ContextMenuPlugin plugin : contextMenuPlugins){
 				if (plugin.shouldDisplayed(currentNode, null, currentNode.getTest())){
 					JMenuItem pluginMenu = new JMenuItem(plugin.getItemName());
+					if (plugin.getIcon() != null){
+						pluginMenu.setIcon(plugin.getIcon());					}
 					pluginMenu.addActionListener(plugin);
 					popupMenu.add(pluginMenu);
 				}
@@ -3941,6 +3959,10 @@ public class TestsTableController extends Observable implements TestStatusListen
 		return isOK;
 	}
 
+	public JTest[] getSelectedTests() {
+		return selectedTests;
+	}
+	
 
 }
 
@@ -3992,6 +4014,9 @@ class StatusBar extends JToolBar {
 
 		g.fillRect(0, 0, size.width, size.height);
 	}
+	
+	
+	
 
 
 

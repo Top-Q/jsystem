@@ -838,6 +838,13 @@ public enum GUIFrameworkOptions {
 			"After launching JSystem, the data provider should be selected in the property  data.driven.provider. \n"
 			),
 	
+	CONTEXT_MENU_PLUGIN_CLASSES (
+			FrameworkOptions.CONTEXT_MENU_PLUGIN_CLASSES,
+			true,
+			Group.ADVANCED,
+			"Allow users to implement plugins that will be added to the context menu of the scenario table\n" + 
+			"For more information pleases refer to the JSystem documentation"
+			),
 	
 	/**
 	 * SUT reader for handling sut

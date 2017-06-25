@@ -2,6 +2,8 @@ package jsystem.treeui.teststable;
 
 import java.awt.event.ActionListener;
 
+import javax.swing.ImageIcon;
+
 import jsystem.framework.scenario.JTest;
 import jsystem.framework.scenario.TestsContainer;
 
@@ -32,13 +34,6 @@ public interface ContextMenuPlugin extends ActionListener {
 	boolean shouldDisplayed(ScenarioTreeNode currentNode, TestsContainer container, JTest test);
 
 	/**
-	 * Get the item text that should appear in the context menu
-	 * 
-	 * @return
-	 */
-	String getItemName();
-
-	/**
 	 * Initialize the plugin
 	 * 
 	 * @param testsTableController
@@ -48,4 +43,21 @@ public interface ContextMenuPlugin extends ActionListener {
 	 *            <code>testsTableController.selectedTests</code> <br>
 	 */
 	void init(TestsTableController testsTableController);
+
+	/**
+	 * Get the item text that should appear in the context menu
+	 * 
+	 * @return
+	 */
+	String getItemName();
+
+	/**
+	 * The icon to display in the context menu. <br>
+	 * This is called before every rendering of the context menu so it can be
+	 * used to change the icon according to different scenarios.
+	 * 
+	 * @return The icon to dsiplay
+	 */
+	ImageIcon getIcon();
+
 }
