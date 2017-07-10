@@ -59,7 +59,6 @@ import jsystem.framework.system.TName;
 import jsystem.framework.system.TestNameServer;
 import jsystem.runner.ErrorLevel;
 import jsystem.runner.loader.LoadersManager;
-import jsystem.runner.remote.RemoteTestRunner;
 import jsystem.utils.DateUtils;
 import jsystem.utils.StackTraceUtil;
 import jsystem.utils.StringUtils;
@@ -124,8 +123,6 @@ public class RunnerListenersManager extends DefaultReporterImpl implements JSyst
 	boolean inTest = false;
 
 	boolean blockReporters = false;
-
-	RemoteTestRunner remoteRunner = null;
 
 	private EventParser parser;
 
