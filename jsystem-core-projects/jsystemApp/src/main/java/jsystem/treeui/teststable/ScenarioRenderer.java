@@ -229,7 +229,7 @@ public class ScenarioRenderer implements TreeCellRenderer {
 	}
 
 	/* This class will hold the text and tree table */
-	class TreeLabel extends JLabel {
+	public class TreeLabel extends JLabel {
 		/**
 		 * 
 		 */
@@ -267,7 +267,7 @@ public class ScenarioRenderer implements TreeCellRenderer {
 		}
 	}
 
-	class TreeJPanel extends JPanel {
+	public class TreeJPanel extends JPanel {
 		/**
 		 * 
 		 */

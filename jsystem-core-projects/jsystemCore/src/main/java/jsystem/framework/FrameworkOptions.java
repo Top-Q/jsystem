@@ -985,6 +985,15 @@ public enum FrameworkOptions {
 			false,
 			false),
 	
+	CONTEXT_MENU_PLUGIN_CLASSES(
+			"context.menu.plugin.classes",
+			"List of classes of context menu plugins",			
+			DataType.SEARCH_AND_MULTY_SELECT_LIST, 
+			"",
+			true, 
+			new String[] { "jsystem.treeui.teststable.ContextMenuPlugin" }),
+
+	
 	SCM_PLUGIN_CLASS(
 			"scm.class",
 			"Class name of the SCM plugin",			
