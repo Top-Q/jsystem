@@ -153,7 +153,8 @@ public class GenericObjectParameterProvider extends AbstractSerializingParameter
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 		Set<Object> keys = properties.keySet();
 		for(Object key: keys){
-			map.put(key.toString(), properties.getProperty(key.toString()));
+			if(!properties.getProperty(key.toString()).isEmpty())
+				map.put(key.toString(), properties.getProperty(key.toString()));
 		}
 		return map;
 	}
