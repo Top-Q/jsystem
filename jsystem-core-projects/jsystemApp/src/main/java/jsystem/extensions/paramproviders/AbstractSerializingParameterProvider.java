@@ -2,7 +2,9 @@ package jsystem.extensions.paramproviders;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.LinkedHashMap;
 import java.util.Properties;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,6 +27,16 @@ public abstract class AbstractSerializingParameterProvider implements ParameterP
 		// append the properties string
 		buf.append(writer.getBuffer().toString());
 		return convertToWindowsEol(buf.toString());
+	}
+	
+	protected static LinkedHashMap<String, String> propertiesToMap(Properties properties){
+		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+		Set<Object> keys = properties.keySet();
+		for(Object key: keys){
+			if(!properties.getProperty(key.toString()).isEmpty())
+				map.put(key.toString(), properties.getProperty(key.toString()));
+		}
+		return map;
 	}
 	
 	/**
