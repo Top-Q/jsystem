@@ -29,7 +29,7 @@ public abstract class AbstractSerializingParameterProvider implements ParameterP
 		return convertToWindowsEol(buf.toString());
 	}
 	
-	protected static LinkedHashMap<String, String> propertiesToMap(Properties properties){
+	protected LinkedHashMap<String, String> propertiesToMap(Properties properties){
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 		Set<Object> keys = properties.keySet();
 		for(Object key: keys){
