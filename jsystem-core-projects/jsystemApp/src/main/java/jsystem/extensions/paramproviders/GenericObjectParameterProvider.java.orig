@@ -149,6 +149,19 @@ public class GenericObjectParameterProvider extends AbstractSerializingParameter
 		return properties;
 	}
 	
+<<<<<<< 47de4a3812ecafd7d079cf01b1f334252faebfe8
+	private static LinkedHashMap<String, String> propertiesToMap(Properties properties){
+		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+		Set<Object> keys = properties.keySet();
+		for(Object key: keys){
+			if(!properties.getProperty(key.toString()).isEmpty())
+				map.put(key.toString(), properties.getProperty(key.toString()));
+		}
+		return map;
+	}
+=======
+
+>>>>>>> fixed issue #293
 
 	@Override
 	public void setProviderConfig(String... args) {
