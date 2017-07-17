@@ -12,6 +12,10 @@
 .project
 .classpath
 .settings
+.metadata/
+.recommenders/
+Servers/
+my-infra-proj/
 
 #Intllij file
 *.iml
