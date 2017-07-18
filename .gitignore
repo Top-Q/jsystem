@@ -12,6 +12,9 @@
 .project
 .classpath
 .settings
+.metadata/
+.recommenders/
+Servers/
 
 #Intllij file
 *.iml
