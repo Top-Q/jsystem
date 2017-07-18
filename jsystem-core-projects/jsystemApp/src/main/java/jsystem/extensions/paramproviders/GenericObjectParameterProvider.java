@@ -24,67 +24,73 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class GenericObjectParameterProvider extends AbstractSerializingParameterProvider{
+public class GenericObjectParameterProvider extends AbstractSerializingParameterProvider {
 
 	private static Logger log = Logger.getLogger(GenericObjectParameterProvider.class.getName());
-	
-	public GenericObjectParameterProvider(){
+
+	public GenericObjectParameterProvider() {
 	}
 
 	@Override
 	public String getAsString(Object o) {
 		// if the input object is null or is of type String return
-		if(o == null){
+		if (o == null) {
 			return null;
 		}
-		if(o instanceof String){
-			return (String)o;
+		if (o instanceof String) {
+			return (String) o;
 		}
 
-
 		ArrayList<BeanElement> beanElements = BeanUtils.getBeans(o.getClass(), true, true, BeanUtils.getBasicTypes());
-		
+
 		// build properties object from the given object
 		Properties properties = new Properties();
-		for(BeanElement be: beanElements){
-			if(be.getGetMethod() == null){
+		for (BeanElement be : beanElements) {
+			if (be.getGetMethod() == null) {
 				continue;
 			}
 			try {
 				Object value = be.getGetMethod().invoke(o, new Object[0]);
-				if(value != null){
+				if (value != null) {
 					String propertyValue = StringUtils.advancedToString(value);
 					properties.setProperty(be.getName(), propertyValue);
 				}
 			} catch (Exception e) {
-				log.log(Level.WARNING,"Fail to invoke the getter: " + be.getName(), e);
+				log.log(Level.WARNING, "Fail to invoke the getter: " + be.getName(), e);
 			}
 		}
-		
+
 		return propetiesToString(o.getClass().getName(), properties);
 	}
-
 
 	@Override
 	public Object getFromString(String stringRepresentation) throws Exception {
 		// if the input is null return null object
-		if(stringRepresentation == null){
+		if (stringRepresentation == null) {
 			return null;
 		}
 		// first extract the class name
 		int classEndIndex = stringRepresentation.indexOf(';');
-		if(classEndIndex < 0){
+		if (classEndIndex < 0) {
 			return null;
 		}
 		String className = stringRepresentation.substring(0, classEndIndex);
-		
+
 		// then extract the string to be load as properties object
 		String propertiesString = stringRepresentation.substring(classEndIndex + 1);
+
+		StringBuilder propertiesSb = new StringBuilder();
+		for (String line : propertiesString.split("\\r?\\n")) {
+			if (line.contains("\\"))
+				line = line.replace("\\", "\\\\");
+			propertiesSb.append(line);
+		}
+		
 		Properties properties = new Properties();
 		try {
-			properties.load(new StringReader(propertiesString));
+			properties.load(new StringReader(propertiesSb.toString()));
 		} catch (IOException e1) {
-			log.log(Level.WARNING, "Fail to load properties: " + propertiesString, e1);
+			log.log(Level.WARNING, "Fail to load properties: " + propertiesSb.toString(), e1);
 			return null;
 		}
 		// create the class from the input string
@@ -105,24 +111,25 @@ public class GenericObjectParameterProvider extends AbstractSerializingParameter
 	}
 
 	@Override
-	public synchronized Object showUI(Component parent, Scenario currentScenario, RunnerTest rtest, Class<?> classType, Object object,Parameter parameter) throws Exception {
+	public synchronized Object showUI(Component parent, Scenario currentScenario, RunnerTest rtest, Class<?> classType,
+			Object object, Parameter parameter) throws Exception {
 		ArrayList<BeanElement> beanElements = BeanUtils.getBeans(classType, true, true, BeanUtils.getBasicTypes());
 
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 		String[] properties = getProeprties(beanElements);
 		Properties prop = BeanDefaultsExtractor.getBeanDefaults(classType, properties);
-		for(BeanElement be: beanElements){
+		for (BeanElement be : beanElements) {
 			map.put(be.getName(), prop.getProperty(be.getName()));
 		}
-		if(object != null){
-			if((!(classType.isAssignableFrom(object.getClass())))){
+		if (object != null) {
+			if ((!(classType.isAssignableFrom(object.getClass())))) {
 				object = getFromString(object.toString());
 			}
 
 			Properties oProperties = BeanUtils.objectToProperties(object, beanElements);
-			for(BeanElement be: beanElements){
+			for (BeanElement be : beanElements) {
 				String value = oProperties.getProperty(be.getName());
-				if(value != null){
+				if (value != null) {
 					map.put(be.getName(), value);
 				}
 			}
@@ -136,19 +143,19 @@ public class GenericObjectParameterProvider extends AbstractSerializingParameter
 		dialog.setLocation(screenWidth / 4, screenHeight / 5);
 
 		dialog.setModalityType(ModalityType.APPLICATION_MODAL);
-		if(dialog.showAndWaitForApprove()){
+		if (dialog.showAndWaitForApprove()) {
 			return BeanUtils.propertiesToObject(classType, map);
 		}
 		return object;
 	}
-	private static String[] getProeprties(ArrayList<BeanElement> beanElements){
+
+	private static String[] getProeprties(ArrayList<BeanElement> beanElements) {
 		String[] properties = new String[beanElements.size()];
-		for(int i = 0; i < beanElements.size(); i++){
+		for (int i = 0; i < beanElements.size(); i++) {
 			properties[i] = beanElements.get(i).getName();
 		}
 		return properties;
 	}
-	
 
 	@Override
 	public void setProviderConfig(String... args) {
