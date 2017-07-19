@@ -11,7 +11,7 @@ import jsystem.framework.TestProperties;
 import jsystem.framework.scenario.UseProvider;
 import junit.framework.SystemTestCase4;
 
-public class TestParameterProviderExampe extends SystemTestCase4 {
+public class TestParameterProviderExample extends SystemTestCase4 {
 
 	private SampleBean bean;
 	private SampleBean[] beanArr;
