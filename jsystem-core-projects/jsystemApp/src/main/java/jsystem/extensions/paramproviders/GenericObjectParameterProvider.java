@@ -83,7 +83,7 @@ public class GenericObjectParameterProvider extends AbstractSerializingParameter
 		for (String line : propertiesString.split("\\r?\\n")) {
 			if (line.contains("\\"))
 				line = line.replace("\\", "\\\\");
-			propertiesSb.append(line);
+			propertiesSb.append(line+"\r\n");
 		}
 		
 		Properties properties = new Properties();
