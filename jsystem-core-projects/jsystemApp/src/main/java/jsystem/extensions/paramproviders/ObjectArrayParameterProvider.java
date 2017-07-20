@@ -85,11 +85,19 @@ public class ObjectArrayParameterProvider extends AbstractSerializingParameterPr
 
 		// then extract the string to be load as properties object
 		String propertiesString = stringRepresentation.substring(classEndIndex + 1);
+		
+		StringBuilder propertiesSb = new StringBuilder();
+		for (String line : propertiesString.split("\\r?\\n")) {
+			if (line.contains("\\") && !line.contains("\\:"))
+				line = line.replace("\\", "\\\\");
+			propertiesSb.append(line+"\r\n");
+		}
+		
 		Properties properties = new Properties();
 		try {
-			properties.load(new StringReader(propertiesString));
+			properties.load(new StringReader(propertiesSb.toString()));
 		} catch (IOException e1) {
-			log.log(Level.WARNING, "Fail to load properties: " + propertiesString, e1);
+			log.log(Level.WARNING, "Fail to load properties: " + propertiesSb.toString(), e1);
 			return null;
 		}
 		// create the class from the input string
