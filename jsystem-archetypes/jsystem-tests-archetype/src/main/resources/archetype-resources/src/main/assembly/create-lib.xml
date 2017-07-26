@@ -9,6 +9,18 @@
 	<includeBaseDirectory>false</includeBaseDirectory>
 
 	<id>create-lib</id>
+	<fileSets>
+		<fileSet>
+			<!-- We are adding this file to prevent from the assembly plugin to fail 
+				in case there are no jars to add to the lib folder -->
+			<outputDirectory></outputDirectory>
+			<directory>src/main/assembly</directory>
+			<includes>
+				<include>empty.txt</include>
+			</includes>
+		</fileSet>
+	</fileSets>
+
 	<dependencySets>
 		<dependencySet>
 			<excludes>
@@ -19,7 +31,7 @@
 				<exclude>*:jsystemApp:*</exclude>
 				<exclude>*:jsystemAgent:*</exclude>
 				<exclude>*:jsystem-launcher:*</exclude>
-				
+
 				<!-- JSystem third party -->
 				<exclude>*:ant:*</exclude>
 				<exclude>*:ant-launcher:*</exclude>
@@ -51,7 +63,7 @@
 				<exclude>*:commons-logging:*</exclude>
 				<exclude>*:commons-logging-api:*</exclude>
 				<exclude>*:looks:*</exclude>
-				<exclude>javax.mail:mail:*</exclude>				
+				<exclude>javax.mail:mail:*</exclude>
 				<exclude>*:tftp4java-server:*</exclude>
 				<exclude>*:tftp4java-client:*</exclude>
 				<exclude>*:commons-net:*</exclude>
@@ -74,8 +86,9 @@
 				<exclude>*:jackson-core:*</exclude>
 				<exclude>*:jackson-databind:*</exclude>
 				<exclude>*:difido-reports-common:*</exclude>
-								
-				<!-- The project artifact should not be in the lib folder because it should be read from the classes folder-->
+
+				<!-- The project artifact should not be in the lib folder because it 
+					should be read from the classes folder -->
 				<exclude>*:\${artifactId}:*</exclude>
 			</excludes>
 		</dependencySet>
