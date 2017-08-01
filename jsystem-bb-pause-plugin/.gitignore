@@ -1,0 +1,24 @@
+# generic files to ignore
+*.log
+*.tmp
+*~
+*.lock
+*.DS_Store
+*.swp
+*.out
+[Tt]humbs.db
+
+#Eclipse files
+.project
+.classpath
+.settings
+
+#Intllij file
+*.iml
+.idea/
+
+#Java and Maven
+*.class
+*.jar
+target
+lib
