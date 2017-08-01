@@ -1,3 +1,0 @@
-@echo off
-echo Copying to %RUNNER_ROOT%\lib\jython...
-copy *.py "%RUNNER_ROOT%\lib\jython"

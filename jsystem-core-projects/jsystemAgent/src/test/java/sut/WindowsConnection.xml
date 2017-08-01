@@ -1,8 +1,0 @@
-<sut>
-	<AgentConnection>
-		<class>com.aqua.services.AgentConnection</class>
-		<agentHost>buildServerIp:8999</agentHost>
-		<runAgent>/runAgent.bat</runAgent>
-		<runnerDir> </runnerDir>
-	</AgentConnection>
-</sut>

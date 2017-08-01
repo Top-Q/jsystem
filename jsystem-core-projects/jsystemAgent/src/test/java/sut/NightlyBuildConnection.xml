@@ -1,8 +1,0 @@
-<sut>
-	<AgentConnection>
-		<class>com.aqua.services.AgentConnection</class>
-		<agentHost>172.20.0.22:8999</agentHost>
-		<runAgent>/runAgent</runAgent>
-		<runnerDir> </runnerDir>
-	</AgentConnection>
-</sut>

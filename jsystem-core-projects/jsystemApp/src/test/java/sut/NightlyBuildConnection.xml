@@ -1,9 +1,0 @@
-<sut>
-	<AgentConnection>
-		<class>com.aqua.services.AgentConnection</class>
-		<agentHost>${serverIp}:8999</agentHost>
-		<jsystemHomeDir>/media/sda1/jsystem/runner</jsystemHomeDir>
-		<agentDir>/media/sda1/testDir/runner/</agentDir>
-		<agentAutomationRemoteDir>/media/sda1/</agentAutomationRemoteDir>
-	</AgentConnection>
-</sut>

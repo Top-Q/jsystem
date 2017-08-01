@@ -1,8 +1,0 @@
-<sut>
-	<ftpClient>
-		<class>com.aqua.filetransfer.ftp.FTPClient</class>
-		<server>localhost</server>		
-		<username>aqua</username>
-		<password>aqua</password>		
-	</ftpClient>	 
-</sut>

@@ -1,4 +1,0 @@
-#!/bin/sh
-export JSYSTEM_MAIN=jsystem.runner.agent.server.RunnerAgentMain
-export JMX="-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=8999 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl.need.client.auth=false -Dcom.sun.management.jmxremote.ssl=false"
-./runBase $1 $2 $3 $4 $5 $6

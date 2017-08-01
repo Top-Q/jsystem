@@ -1,9 +1,0 @@
-<project name="lll" basedir="./" default="ddd">
-	<taskdef name="jsystem" classname="org.apache.tools.ant.taskdefs.optional.jsystem.JSystemTask"/>
-	<target name="ddd">
-		<jsystem showoutput="true">
-			<sysproperty key="my.prop" value="fjfjfj"/>			 
-			<test name="MyTest.testRun"/>
-		</jsystem>
-	</target>
-</project>
