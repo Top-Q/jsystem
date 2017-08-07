@@ -6,6 +6,7 @@
 package jsystem.framework.scenario;
 
 import java.io.File;
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -110,7 +111,12 @@ import org.w3c.dom.NodeList;
  * the sorting (ascending/descending , by Alph-betic order/type....)
  * 
  */
-public class RunnerTest implements JTest, UIHandler {
+public class RunnerTest implements JTest, UIHandler, Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	protected static Logger log = Logger.getLogger(RunnerTest.class.getName());
 

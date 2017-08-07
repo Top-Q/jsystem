@@ -644,7 +644,20 @@ public class ListenerstManager extends DefaultReporterImpl implements
 
 	@Override
 	public void endContainer(JTestContainer container) {
-		// TODO Auto-generated method stub
+		if (isSilent()) {
+			return;
+		}
+		for (int i = 0; i < listeners.size(); i++) {
+			Object o = listeners.get(i);
+			if (o instanceof ExtendTestListener) {
+				ExtendTestListener tl = (ExtendTestListener) o;
+				try {
+					tl.endContainer(container);
+				} catch (Throwable ex) {
+					log.log(Level.SEVERE, "Failed to send end container to extend test listener", ex);
+				}
+			}
+		}
 
 	}
 
@@ -656,7 +669,20 @@ public class ListenerstManager extends DefaultReporterImpl implements
 
 	@Override
 	public void startContainer(JTestContainer container) {
-		// TODO Auto-generated method stub
+		if (isSilent()) {
+			return;
+		}
+		for (int i = 0; i < listeners.size(); i++) {
+			Object o = listeners.get(i);
+			if (o instanceof ExtendTestListener) {
+				ExtendTestListener tl = (ExtendTestListener) o;
+				try {
+					tl.startContainer(container);
+				} catch (Throwable ex) {
+					log.log(Level.SEVERE, "Failed to send start container to extend test listener", ex);
+				}
+			}
+		}
 
 	}
 

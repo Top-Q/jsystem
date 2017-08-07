@@ -6,6 +6,7 @@ package jsystem.runner.remote;
 import java.util.Properties;
 
 import jsystem.framework.report.ExecutionListener;
+import jsystem.framework.scenario.JTestContainer;
 
 public interface RemoteExecutor {
 
@@ -16,37 +17,37 @@ public interface RemoteExecutor {
 	 * @param walker the scenario walker
 	 * @throws Exception
 	 */
-	public abstract void run(String antFile, String[] targets, Properties additionalProps) throws Exception;
+	void run(String antFile, String[] targets, Properties additionalProps) throws Exception;
 
 	/**
 	 * Close the executor
 	 *
 	 */
-	public abstract void exit();
+	void exit();
 
 	/**
 	 * Interrupt the execution
 	 *
 	 */
-	public abstract void interruptTest();
+	void interruptTest();
 
 	/**
 	 * Pause the execution
 	 *
 	 */
-	public abstract void pause();
+	void pause();
 
 	/**
 	 * Stop the execution
 	 *
 	 */
-	public abstract void gracefulStop();
+	void gracefulStop();
 	
 	/**
 	 * Resume the execution
 	 *
 	 */
-	public abstract void resume();
+	void resume();
 
 	/**
 	 * sets the listener to notify when running of tests ended
@@ -54,13 +55,22 @@ public interface RemoteExecutor {
 	 * @param runEndListener
 	 *            the listener
 	 */
-	public abstract void setRunEndListener(ExecutionListener runEndListener);
+	void setRunEndListener(ExecutionListener runEndListener);
 	
 	/**
 	 * check if a test has started
 	 * @return	true if a startTest event was received
 	 */
-	public boolean isTestStarted();
+	boolean isTestStarted();
+	
+	void startLoop(String name, int count);
+
+	void endLoop(String name, int count);
+
+	void startContainer(JTestContainer container);
+
+	void endContainer(JTestContainer container);
+
 
 
 }

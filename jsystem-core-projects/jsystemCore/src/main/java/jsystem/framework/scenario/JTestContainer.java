@@ -3,6 +3,7 @@
  */
 package jsystem.framework.scenario;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -42,7 +43,12 @@ import org.w3c.dom.NodeList;
  * A JTestContainer represents a container of JTests
  * 
  */
-public abstract class JTestContainer implements JTest {
+public abstract class JTestContainer implements JTest, Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	protected static Logger log = Logger.getLogger(JTestContainer.class.getName());
 
 	private String name;
@@ -129,9 +135,9 @@ public abstract class JTestContainer implements JTest {
 					newContainer = AntForLoop.fromElement(this, element);
 				} else if (tag.equals(AntIfCondition.XML_TAG)) {
 					newContainer = AntIfCondition.fromElement(this, element);
-				}else if (tag.equals(AntDataDriven.XML_TAG)) {
+				} else if (tag.equals(AntDataDriven.XML_TAG)) {
 					newContainer = AntDataDriven.fromElement(this, element);
-				}else if (tag.equals(AntIfElse.XML_TAG)) {
+				} else if (tag.equals(AntIfElse.XML_TAG)) {
 					newContainer = AntIfElse.fromElement(this, element);
 				} else if (tag.equals(AntIfElseIf.XML_TAG)) {
 					newContainer = AntIfElseIf.fromElement(this, element);
@@ -173,7 +179,7 @@ public abstract class JTestContainer implements JTest {
 	 * 
 	 * Ant (XML) transformation methods
 	 * 
-	 * ********************************************************************************************/
+	 ********************************************************************************************/
 	public static String getRandomUUID() {
 		return UUID.randomUUID().toString();
 	}
@@ -235,7 +241,7 @@ public abstract class JTestContainer implements JTest {
 	 * 
 	 * Scenario model update and querying methods
 	 * 
-	 * ********************************************************************************************/
+	 ********************************************************************************************/
 	public int getRootIndex(JTest test) {
 		if (test == null) {
 			return -1;
@@ -798,7 +804,7 @@ public abstract class JTestContainer implements JTest {
 				for (AntFlowControl t : allFlowControls) {
 					uuid = t.getFlowFullUUID();
 					testsHash.put(uuid, t);
-				}				
+				}
 			} else if (test instanceof RunnerFixture) {
 				RunnerTest rt = (RunnerFixture) test;
 				testsHash.put(uuid, rt);
@@ -1072,9 +1078,10 @@ public abstract class JTestContainer implements JTest {
 			if (allTests.elementAt(i) instanceof RunnerTest) {
 				RunnerTest rt = (RunnerTest) allTests.elementAt(i);
 				if (test instanceof SystemTest) {
-					//ITAI: There are cases in which the test is without uuid. 
-					//This can happen if we failed to initialize it. It would be
-					//Handled later on in the flow so don't worry about it.
+					// ITAI: There are cases in which the test is without uuid.
+					// This can happen if we failed to initialize it. It would
+					// be
+					// Handled later on in the flow so don't worry about it.
 					if (((SystemTest) test).getFullUUID() == null
 							|| ((SystemTest) test).getFullUUID().equals(rt.getFullUUID())) {
 						return rt;

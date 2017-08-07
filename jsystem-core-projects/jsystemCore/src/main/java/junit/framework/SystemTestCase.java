@@ -3,6 +3,7 @@
  */
 package junit.framework;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 import jsystem.extensions.handlers.UIEventHandler;
@@ -87,7 +88,12 @@ import jsystem.framework.system.SystemObjectManager;
  * @see Sut
  * @author Guy Arieli
  */
-public abstract class SystemTestCase extends TestCase implements SystemTest, UIEventHandler, ValidationHandler {
+public abstract class SystemTestCase extends TestCase implements SystemTest, UIEventHandler, ValidationHandler, Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Analyze object can be used to run analyzers that don't require
 	 * SystemObject

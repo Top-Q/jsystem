@@ -5,6 +5,7 @@
  */
 package jsystem.framework.scenario;
 
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -33,7 +34,12 @@ import jsystem.utils.beans.BeanUtils;
  * 
  * @author guy.arieli, golan.derazon
  */
-public class Parameter {
+public class Parameter implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private static Logger log = Logger.getLogger(Parameter.class.getName());
 
 	public enum ParameterType {

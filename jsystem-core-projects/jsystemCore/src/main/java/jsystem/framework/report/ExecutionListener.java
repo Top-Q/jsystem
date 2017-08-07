@@ -4,17 +4,20 @@
 package jsystem.framework.report;
 
 import jsystem.runner.ErrorLevel;
+
 /**
  * General execution events.
+ * 
  * @author goland
  */
 public interface ExecutionListener extends ExtendTestListener {
-	
-	public void remoteExit();
 
-	public void remotePause();
+	void remoteExit();
 
-	public void executionEnded(String scenarioName);
-	
-	public void errorOccured(String title,String message,ErrorLevel level);
+	void remotePause();
+
+	void executionEnded(String scenarioName);
+
+	void errorOccured(String title, String message, ErrorLevel level);
+
 }

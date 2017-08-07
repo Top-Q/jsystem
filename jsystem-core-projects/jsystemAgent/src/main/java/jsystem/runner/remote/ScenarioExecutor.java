@@ -19,6 +19,7 @@ import jsystem.framework.JSystemProperties;
 import jsystem.framework.RunProperties;
 import jsystem.framework.GeneralEnums.RunMode;
 import jsystem.framework.report.ExecutionListener;
+import jsystem.framework.report.ExtendTestListener;
 import jsystem.framework.report.JSystemListeners;
 import jsystem.framework.report.ListenerstManager;
 import jsystem.framework.report.RunnerListenersManager;
@@ -30,13 +31,14 @@ import jsystem.framework.scenario.RunnerTest;
 import jsystem.framework.scenario.RunningProperties;
 import jsystem.framework.scenario.Scenario;
 import jsystem.framework.scenario.ScenarioHelpers;
+import jsystem.framework.scenario.ScenarioListener;
 import jsystem.framework.scenario.ScenariosManager;
 import jsystem.framework.scenario.flow_control.AntForLoop;
 import jsystem.runner.ErrorLevel;
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
 
-public class ScenarioExecutor implements ExecutionListener {
+public class ScenarioExecutor implements ExecutionListener, ExtendTestListener {
 
 	/**
 	 * signals if current run should stop
@@ -98,6 +100,7 @@ public class ScenarioExecutor implements ExecutionListener {
 			throw new Exception("Only internal tests/scenarios can be executed with this method");
 		}
 		executionListener = RunnerListenersManager.getInstance();
+		executionListener.addListener(this);
 		createEmptyPropsFile();
 		executor = null;
 				
@@ -133,6 +136,7 @@ public class ScenarioExecutor implements ExecutionListener {
 	 */
 	public void execute() throws Exception {
 		executionListener = RunnerListenersManager.getInstance();
+		executionListener.addListener(this);
 
 		parseRunMode();
 		
@@ -558,8 +562,7 @@ public class ScenarioExecutor implements ExecutionListener {
 
 	@Override
 	public void endContainer(JTestContainer container) {
-		// TODO Auto-generated method stub
-		
+		getExecutor().endContainer(container);
 	}
 
 	@Override
@@ -570,8 +573,7 @@ public class ScenarioExecutor implements ExecutionListener {
 
 	@Override
 	public void startContainer(JTestContainer container) {
-		// TODO Auto-generated method stub
-		
+		getExecutor().startContainer(container);
 	}
 
 	@Override

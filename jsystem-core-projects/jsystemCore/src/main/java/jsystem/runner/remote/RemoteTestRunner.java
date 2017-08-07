@@ -3,11 +3,16 @@
  */
 package jsystem.runner.remote;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.net.Socket;
+import java.nio.charset.Charset;
+import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -44,14 +49,15 @@ import org.apache.tools.ant.BuildListener;
  * RemoteMessage enum. To execute the RemoteTestRunner the main method is called
  * with the host and port of the runner vm.
  */
-public class RemoteTestRunner extends DefaultReporterImpl implements ExtendTestListener, FixtureListener, SutListener, BuildListener {
-	
+public class RemoteTestRunner extends DefaultReporterImpl
+		implements ExtendTestListener, FixtureListener, SutListener, BuildListener {
+
 	static Logger log = Logger.getLogger(RemoteTestRunner.class.getName());
-	
+
 	boolean silent = false;
-	
+
 	public enum RemoteMessage {
-		
+
 		/**
 		 * Send flush events to all the reports
 		 */
@@ -64,7 +70,7 @@ public class RemoteTestRunner extends DefaultReporterImpl implements ExtendTestL
 		 * Set the reporter to be silent (<--)
 		 */
 		M_SET_SILENT,
-		
+
 		/**
 		 * Set the reporter to be silent (<--)
 		 */
@@ -204,7 +210,7 @@ public class RemoteTestRunner extends DefaultReporterImpl implements ExtendTestL
 		 * end current report level
 		 */
 		M_STOP_LEVEL,
-		
+
 		/**
 		 * end current report level
 		 */
@@ -254,7 +260,7 @@ public class RemoteTestRunner extends DefaultReporterImpl implements ExtendTestL
 		 * Synchronization response
 		 */
 		M_SYNCHED,
-		
+
 		/**
 		 * Property message consisted of key and value
 		 */
@@ -269,19 +275,21 @@ public class RemoteTestRunner extends DefaultReporterImpl implements ExtendTestL
 		 */
 		M_CHECK_SYSTEM_OBJECT,
 
-		
 		/**
-		* save runner engine state
-		* @see RunnerStatePersistencyManager
-		*/
+		 * save runner engine state
+		 * 
+		 * @see RunnerStatePersistencyManager
+		 */
 		M_SAVE_STATE,
 
 		/**
 		 * Property message consisted of key and value
 		 */
-		M_CONTAINER_PROPERTY, 
-		
-		
+		M_CONTAINER_PROPERTY,
+
+		M_CONTAINER_START,
+
+		M_CONTAINER_END,
 
 	}
 
@@ -481,7 +489,7 @@ public class RemoteTestRunner extends DefaultReporterImpl implements ExtendTestL
 						sendMessage(mm);
 						log.fine("Send M_SYNCHED message");
 						break;
-						
+
 					case M_SHOW_CONFIRM_DIALOG:
 						/*
 						 * The test get the return value of the message and
@@ -492,7 +500,13 @@ public class RemoteTestRunner extends DefaultReporterImpl implements ExtendTestL
 							messageConfirmed = true;
 							fWriter.notifyAll();
 						}
-				
+
+						break;
+					case M_CONTAINER_START:
+						ListenerstManager.getInstance().startContainer(desrialize(m.getField(0), JTestContainer.class));
+						break;
+					case M_CONTAINER_END:
+						ListenerstManager.getInstance().startContainer(desrialize(m.getField(0), JTestContainer.class));
 						break;
 					default:
 						System.err.println("Unkown message type: " + m.getType());
@@ -504,6 +518,40 @@ public class RemoteTestRunner extends DefaultReporterImpl implements ExtendTestL
 				RemoteTestRunner.this.stop();
 			}
 		}
+
+	}
+
+	@SuppressWarnings("unchecked")
+	private static <T> T desrialize(String serializedObj, Class<T> type) {
+		final byte[] data = Base64.getDecoder().decode(serializedObj);
+		T e = null;
+		try (ByteArrayInputStream fileIn = new ByteArrayInputStream(data);
+				ObjectInputStream in = new ObjectInputStream(fileIn);) {
+			e = (T) in.readObject();
+		} catch (Exception i) {
+			log.log(Level.WARNING, "Failed to deserialize string", e);
+			return null;
+		}
+		return e;
+	}
+
+	private static String serialize(Serializable object) {
+		try (ByteArrayOutputStream strout = new ByteArrayOutputStream();
+				ObjectOutputStream out = new ObjectOutputStream(strout)) {
+			out.writeObject(object);
+			return Base64.getEncoder().encodeToString(strout.toByteArray());
+		} catch (Exception e) {
+			log.log(Level.WARNING, "Failed to serialize object", e);
+		}
+		return null;
+
+	}
+
+	public static void main(String[] args) throws Exception {
+		JTestContainer container = new Scenario(null, "scenarios/default");
+		String s = serialize(container);
+		JTestContainer c1 = desrialize(s, JTestContainer.class);
+		System.out.println(c1);
 	}
 
 	/**
@@ -586,19 +634,18 @@ public class RemoteTestRunner extends DefaultReporterImpl implements ExtendTestL
 		sendMessage(m);
 	}
 
-	public void initReporters(){
+	public void initReporters() {
 		Message m = new Message();
 		m.setType(RemoteMessage.M_INIT_REPORTER);
 		sendMessage(m);
 	}
-	
+
 	public void flushReporters() {
 		Message m = new Message();
 		m.setType(RemoteMessage.M_FLUSH_REPORTER);
 		sendMessage(m);
 	}
 
-	
 	public void endScenario() {
 		Message m = new Message();
 		m.setType(RemoteMessage.M_TEST_END);
@@ -650,7 +697,7 @@ public class RemoteTestRunner extends DefaultReporterImpl implements ExtendTestL
 					// ignore
 				}
 				fClientSocket = new Socket(fHost, fPort);
-				fWriter = new ObjectOutputStream(fClientSocket.getOutputStream()); //$NON-NLS-1$
+				fWriter = new ObjectOutputStream(fClientSocket.getOutputStream()); // $NON-NLS-1$
 				fReader = new ObjectInputStream(fClientSocket.getInputStream());
 				fReaderThread = new ReaderThread();
 				fReaderThread.start();
@@ -681,7 +728,7 @@ public class RemoteTestRunner extends DefaultReporterImpl implements ExtendTestL
 			// ignore
 		}
 	}
-	
+
 	private void synchronize() {
 		synchronized (fWriter) {
 			synchronize = false;
@@ -737,11 +784,11 @@ public class RemoteTestRunner extends DefaultReporterImpl implements ExtendTestL
 		sendMessage(m);
 		silent = status;
 	}
-	
+
 	public boolean isSilent() {
 		return silent;
 	}
-	
+
 	public void setTimeStamp(boolean enable) {
 		Message m = new Message();
 		m.setType(RemoteMessage.M_SET_TIME_STAMP);
@@ -781,8 +828,9 @@ public class RemoteTestRunner extends DefaultReporterImpl implements ExtendTestL
 		m.addField(failCause);
 		sendMessage(m);
 	}
-	
-	public void report(String title, String message, int status, boolean bold, boolean html, boolean step, boolean link, long time) {
+
+	public void report(String title, String message, int status, boolean bold, boolean html, boolean step, boolean link,
+			long time) {
 		Message m = new Message();
 		m.setType(RemoteMessage.M_REPORT);
 		m.addField(title);
@@ -808,13 +856,12 @@ public class RemoteTestRunner extends DefaultReporterImpl implements ExtendTestL
 		m.addField(Boolean.toString(false));
 		sendMessage(m);
 	}
-	
-	public void startLevel(String level, EnumReportLevel place)
-			throws IOException {
+
+	public void startLevel(String level, EnumReportLevel place) throws IOException {
 		startLevel(level, place.value());
-		
+
 	}
-	
+
 	public void stopLevel() throws IOException {
 		Message m = new Message();
 		m.setType(RemoteMessage.M_STOP_LEVEL);
@@ -828,7 +875,7 @@ public class RemoteTestRunner extends DefaultReporterImpl implements ExtendTestL
 		sendMessage(m);
 
 	}
-	
+
 	public void setFailToPass(boolean failToPass) {
 		super.setFailToPass(failToPass);
 		Message m = new Message();
@@ -1032,7 +1079,7 @@ public class RemoteTestRunner extends DefaultReporterImpl implements ExtendTestL
 		m.addField(event.getTask().getTaskName());
 		sendMessage(m);
 	}
-	
+
 	public String getTestFullId(Test test) {
 		if (test == null) {
 			test = currentTest;
@@ -1097,7 +1144,7 @@ public class RemoteTestRunner extends DefaultReporterImpl implements ExtendTestL
 	 *            properties that contains the description, setup name, version
 	 *            and build (field name and values)
 	 * @param test
-	 * 			  the test that calls this method (for the Full Unique ID)
+	 *            the test that calls this method (for the Full Unique ID)
 	 * @throws Exception
 	 */
 	public Message sendPublishMessage(Message m, Test test) throws Exception {
@@ -1153,15 +1200,14 @@ public class RemoteTestRunner extends DefaultReporterImpl implements ExtendTestL
 	}
 
 	@Override
-	public void setContainerProperties(int ancestorLevel, String key,
-			String value) {
+	public void setContainerProperties(int ancestorLevel, String key, String value) {
 		Message m = new Message();
 		m.setType(RemoteMessage.M_CONTAINER_PROPERTY);
 		m.addField("" + ancestorLevel);
 		m.addField(key);
 		m.addField(value);
 		sendMessage(m);
-		
+
 	}
 
 }

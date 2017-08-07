@@ -3,8 +3,12 @@
  */
 package junit.framework;
 
+import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Map;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.runner.RunWith;
 
 import jsystem.extensions.handlers.UIEventHandler;
 import jsystem.extensions.handlers.ValidationHandler;
@@ -13,12 +17,12 @@ import jsystem.framework.analyzer.AnalyzerImpl;
 import jsystem.framework.scenario.Parameter;
 import jsystem.framework.scenario.ValidationError;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.runner.RunWith;
-
 @RunWith(JSystemJUnit4ClassRunner.class)
-public class SystemTestCase4 extends SystemTestCaseImpl implements SystemTest, UIEventHandler, ValidationHandler {
+public class SystemTestCase4 extends SystemTestCaseImpl implements SystemTest, UIEventHandler, ValidationHandler, Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public static AnalyzerImpl analyzer = null;
 	private String name;
 	static {

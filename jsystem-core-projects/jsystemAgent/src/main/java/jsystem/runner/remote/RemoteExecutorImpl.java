@@ -5,14 +5,17 @@
  */
 package jsystem.runner.remote;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Properties;
@@ -27,14 +30,13 @@ import jsystem.framework.report.ExecutionListener;
 import jsystem.framework.report.JSystemListeners;
 import jsystem.framework.report.ListenerstManager;
 import jsystem.framework.report.RunnerListenersManager;
+import jsystem.framework.scenario.JTestContainer;
 import jsystem.framework.scenario.RunnerTest;
 import jsystem.framework.scenario.RunningProperties;
 import jsystem.framework.scenario.ScenariosManager;
 import jsystem.runner.ErrorLevel;
 import jsystem.runner.WaitDialog;
 import jsystem.runner.WaitDialog.WaitDialogListner;
-import jsystem.runner.agent.publisher.Publisher;
-import jsystem.runner.agent.publisher.PublisherManager;
 import jsystem.runner.agent.tests.PublishTest;
 import jsystem.runner.remote.RemoteTestRunner.RemoteMessage;
 import jsystem.utils.StringUtils;
@@ -214,15 +216,15 @@ public class RemoteExecutorImpl implements RemoteExecutor {
 			cmdStringArray.add("-Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=y");
 		}
 
-		cmdStringArray.add("-D" + RunningProperties.CURRENT_FIXTURE_BASE + "="
-				+ FixtureManager.getInstance().getCurrentFixture());
+		cmdStringArray.add(
+				"-D" + RunningProperties.CURRENT_FIXTURE_BASE + "=" + FixtureManager.getInstance().getCurrentFixture());
 		cmdStringArray.add("-D" + RunningProperties.CURRENT_SCENARIO_NAME + "="
 				+ ScenariosManager.getInstance().getCurrentScenario().getName());
-		cmdStringArray.add("-D" + RunningProperties.FIXTURE_DISABLE_TAG + "="
-				+ FixtureManager.getInstance().isDisableFixture());
+		cmdStringArray.add(
+				"-D" + RunningProperties.FIXTURE_DISABLE_TAG + "=" + FixtureManager.getInstance().isDisableFixture());
 		cmdStringArray.add("-D" + RunningProperties.RUNNER_EXIST + "=true");
-		cmdStringArray.add("-D" + RunningProperties.JSYSTEM_AGENT + "="
-				+ System.getProperty(RunningProperties.JSYSTEM_AGENT));
+		cmdStringArray.add(
+				"-D" + RunningProperties.JSYSTEM_AGENT + "=" + System.getProperty(RunningProperties.JSYSTEM_AGENT));
 		for (int i = 0; i < vmParamsArr.length; i++) {
 			cmdStringArray.add(vmParamsArr[i]);
 		}
@@ -313,13 +315,14 @@ public class RemoteExecutorImpl implements RemoteExecutor {
 							return;
 						}
 						try {
-							reporter.report(m.getField(0), m.getField(1), Integer.parseInt(m.getField(2)), Boolean
-									.valueOf(m.getField(3)).booleanValue(), Boolean.valueOf(m.getField(4))
-									.booleanValue(), Boolean.valueOf(m.getField(5)).booleanValue(),
+							reporter.report(m.getField(0), m.getField(1), Integer.parseInt(m.getField(2)),
+									Boolean.valueOf(m.getField(3)).booleanValue(),
+									Boolean.valueOf(m.getField(4)).booleanValue(),
+									Boolean.valueOf(m.getField(5)).booleanValue(),
 									Boolean.valueOf(m.getField(6)).booleanValue(), Long.parseLong(m.getField(7)));
 						} catch (Throwable t) {
-							throw new Exception("Fail to report:\n" + StringUtils.getStackTrace(t) + "\n"
-									+ m.toString());
+							throw new Exception(
+									"Fail to report:\n" + StringUtils.getStackTrace(t) + "\n" + m.toString());
 						}
 						break;
 
@@ -351,8 +354,8 @@ public class RemoteExecutorImpl implements RemoteExecutor {
 						try {
 							reporter.closeAllLevels();
 						} catch (Throwable t) {
-							throw new Exception("Fail to close all Levels:\n" + StringUtils.getStackTrace(t) + "\n"
-									+ m.toString());
+							throw new Exception(
+									"Fail to close all Levels:\n" + StringUtils.getStackTrace(t) + "\n" + m.toString());
 						}
 						break;
 					case M_SAVE_FILE:
@@ -401,15 +404,14 @@ public class RemoteExecutorImpl implements RemoteExecutor {
 								.getRunnerTestByFullId(fullUuid).getTest());
 						break;
 					case M_ADD_ERROR:
-						reporter.addError(
-								ScenariosManager.getInstance().getCurrentScenario()
-										.getRunnerTestByFullId(m.getField(0)).getTest(), m.getField(1), m.getField(2));
+						reporter.addError(ScenariosManager.getInstance().getCurrentScenario()
+								.getRunnerTestByFullId(m.getField(0)).getTest(), m.getField(1), m.getField(2));
 						break;
 					case M_ADD_FAILURE:
 						reporter.addFailure(
-								ScenariosManager.getInstance().getCurrentScenario()
-										.getRunnerTestByFullId(m.getField(0)).getTest(), m.getField(1), m.getField(2),
-								Boolean.valueOf(m.getField(3)).booleanValue());
+								ScenariosManager.getInstance().getCurrentScenario().getRunnerTestByFullId(m.getField(0))
+										.getTest(),
+								m.getField(1), m.getField(2), Boolean.valueOf(m.getField(3)).booleanValue());
 						break;
 					case M_FIXTURE_START:
 						reporter.startFixturring();
@@ -473,8 +475,8 @@ public class RemoteExecutorImpl implements RemoteExecutor {
 						try {
 							reporter.addProperty(m.getField(0), m.getField(1));
 						} catch (Throwable t) {
-							throw new Exception("Fail to report:\n" + StringUtils.getStackTrace(t) + "\n"
-									+ m.toString());
+							throw new Exception(
+									"Fail to report:\n" + StringUtils.getStackTrace(t) + "\n" + m.toString());
 						}
 						break;
 					case M_BUILD_FINISH:
@@ -699,4 +701,47 @@ public class RemoteExecutorImpl implements RemoteExecutor {
 	public boolean isTestStarted() {
 		return testStarted;
 	}
+
+	@Override
+	public void startLoop(String name, int count) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void endLoop(String name, int count) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void startContainer(JTestContainer container) {
+		Message m = new Message();
+		m.setType(RemoteMessage.M_CONTAINER_START);
+		m.addField(serialize(container));
+		sendMessage(m);
+		log.fine("sent container start message");
+	}
+
+	@Override
+	public void endContainer(JTestContainer container) {
+		Message m = new Message();
+		m.setType(RemoteMessage.M_CONTAINER_END);
+		m.addField(serialize(container));
+		sendMessage(m);
+		log.fine("send container end message");
+
+	}
+	
+	private static String serialize(Serializable object) {
+		try (ByteArrayOutputStream strout = new ByteArrayOutputStream() ; ObjectOutputStream out = new ObjectOutputStream(strout)){
+			out.writeObject(object);
+			return  Base64.getEncoder().encodeToString(strout.toByteArray());
+		}catch (Exception e) {
+			log.log(Level.WARNING, "Failed to serialize object", e);
+		}
+		return null;
+		
+	}
+
 }
