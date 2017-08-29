@@ -40,6 +40,21 @@ public class SSH extends Terminal {
 		this(hostnameP, usernameP, passwordP, -1, -1, true);
 	}
 	
+	
+	/**
+	 * Constructor with Destination port
+	 * if destinationPort specified in this constructor no LocalPortForwarder will be used
+	 *
+	 * @param  hostnameP IP or Hostname of the destination machine
+	 * @param  usernameP username for SSH auth
+	 * @param  passwordP Password for SSH auth
+	 * @param  destinationPort custom destination Port for ssh connection
+	 */
+	public SSH(String hostnameP, String usernameP, String passwordP, int destinationPort) {
+		this(hostnameP, usernameP, passwordP, -1, destinationPort, true);
+	}
+	
+	
 	public SSH(String hostnameP, String usernameP, String passwordP, int sourceTunnelPort, int destinationTunnelPort) {
 		this(hostnameP, usernameP, passwordP, sourceTunnelPort, destinationTunnelPort, true);
 	}
@@ -59,10 +74,14 @@ public class SSH extends Terminal {
 		boolean isAuthenticated = false;
 		/* Create a connection instance */
 
-		conn = new Connection(hostname);
+		if (destinationPort > -1) {
+			conn = new Connection(hostname,destinationPort);
+		}
+		else {
+			conn = new Connection(hostname);
+		}
 
 		/* Now connect */
-
 		conn.connect();
 
 		// Check what connection options are available to us
