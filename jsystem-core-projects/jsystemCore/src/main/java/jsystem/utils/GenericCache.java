@@ -15,8 +15,8 @@ import java.util.ArrayList;
  * used) entry is dropped.
  * <p>
  * This class is thread-safe. All methods of this class are synchronized.<br>
- * Author: Christian d'Heureuse (<a
- * href="http://www.source-code.biz">www.source-code.biz</a>)<br>
+ * Author: Christian d'Heureuse
+ * (<a href="http://www.source-code.biz">www.source-code.biz</a>)<br>
  * License: <a href="http://www.gnu.org/licenses/lgpl.html">LGPL</a>.
  */
 public class GenericCache<K, V> {
@@ -34,10 +34,8 @@ public class GenericCache<K, V> {
 	 */
 	public GenericCache(int cacheSize) {
 		this.cacheSize = cacheSize;
-		int hashTableCapacity = (int) Math
-				.ceil(cacheSize / hashTableLoadFactor) + 1;
-		map = new LinkedHashMap<K, V>(hashTableCapacity, hashTableLoadFactor,
-				true) {
+		int hashTableCapacity = (int) Math.ceil(cacheSize / hashTableLoadFactor) + 1;
+		map = new LinkedHashMap<K, V>(hashTableCapacity, hashTableLoadFactor, true) {
 			// (an anonymous inner class)
 			private static final long serialVersionUID = 1;
 
@@ -54,20 +52,20 @@ public class GenericCache<K, V> {
 	 * 
 	 * @param key
 	 *            the key whose associated value is to be returned.
-	 * @return the value associated to this key, or null if no value with this
-	 *         key exists in the cache.
+	 * @return the value associated to this key, or null if no value with this key
+	 *         exists in the cache.
 	 */
 	public synchronized V get(K key) {
 		return map.get(key);
 	}
-	
-    public synchronized boolean containsKey(Object key) {
+
+	public synchronized boolean containsKey(Object key) {
 		return map.containsKey(key);
 	}
 
 	/**
-	 * Adds an entry to this cache. If the cache is full, the LRU (least
-	 * recently used) entry is dropped.
+	 * Adds an entry to this cache. If the cache is full, the LRU (least recently
+	 * used) entry is dropped.
 	 * 
 	 * @param key
 	 *            the key with which the specified value is to be associated.
@@ -95,13 +93,13 @@ public class GenericCache<K, V> {
 	}
 
 	/**
-	 * Returns a <code>Collection</code> that contains a copy of all cache
-	 * entries.
+	 * Returns a <code>Collection</code> that contains a copy of all cache entries.
 	 * 
 	 * @return a <code>Collection</code> with a copy of the cache content.
 	 */
 	public synchronized Collection<Map.Entry<K, V>> getAll() {
 		return new ArrayList<Map.Entry<K, V>>(map.entrySet());
 	}
+
 
 } // end class LRUCache
