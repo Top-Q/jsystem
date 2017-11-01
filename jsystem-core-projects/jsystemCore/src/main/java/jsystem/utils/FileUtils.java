@@ -6,6 +6,8 @@ package jsystem.utils;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,12 +33,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.Scanner;
+import java.util.Set;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
@@ -453,57 +459,55 @@ public class FileUtils {
 	 * @param destinationFile
 	 *            String
 	 * @throws IOException
-	 * If Failed to create new zip file
+	 *             If Failed to create new zip file
 	 */
-	public static void zipDirectory(final String directory,final String fileExtention,final String destinationFile, boolean report) throws IOException
-			 {
-		
-	    	File srcFolder = new File(directory);
-	    	if(srcFolder != null && srcFolder.isDirectory())
-		    {
-	    		Iterator<File> i = org.apache.commons.io.FileUtils.iterateFiles(srcFolder, null, true);
-//	    		Iterator<File> i = FileUtils.iterateFiles(srcFolder, new String []{"xcf"}, true);
-                        /*
-                           public static Iterator<File> iterateFiles(File directory, String[] extensions, boolean recursive)
-                           directory - the directory to search in
-                           extensions - an array of extensions, ex. {"java","xml"}. If this parameter is null, all files are returned.
-                           recursive - if true all subdirectories are searched as well
-                         */
-	    		File zipFile = new File(destinationFile);
-	    		zipFile.createNewFile();
-	    		
-	    		
-	    		OutputStream outputStream = null;
-	    		ArchiveOutputStream zipOutputStream = null;
-	    		
-	    		try {
-	    			outputStream = new FileOutputStream(zipFile);
-	    			zipOutputStream = new ZipArchiveOutputStream(outputStream);
-	    			int srcFolderLength = srcFolder.getAbsolutePath().length() + 1;  // +1 to remove the last file separator
-	    			while(i.hasNext())
-	    			{
-	    				File file = i.next();	    			
-	    				String relativePath  = file.getAbsolutePath().substring(srcFolderLength);
-	    				ArchiveEntry zipArchiveEntry = new ZipArchiveEntry(relativePath);
-	    				zipOutputStream.putArchiveEntry(zipArchiveEntry);
-	    				FileInputStream fis = null;
-	    				try {
-	    					fis = new FileInputStream(file);
-	    					IOUtils.copy(fis, zipOutputStream);    			
-	    				}finally{
-	    					fis.close();
-	    				}
-	    				zipOutputStream.closeArchiveEntry();
-	    			}
-	    			
-	    		}finally{
-	    			zipOutputStream.flush();
-	    			zipOutputStream.finish();
-	    			zipOutputStream.close();
-	    		}
-		    }
+	public static void zipDirectory(final String directory, final String fileExtention, final String destinationFile,
+			boolean report) throws IOException {
 
-		
+		File srcFolder = new File(directory);
+		if (srcFolder != null && srcFolder.isDirectory()) {
+			Iterator<File> i = org.apache.commons.io.FileUtils.iterateFiles(srcFolder, null, true);
+			// Iterator<File> i = FileUtils.iterateFiles(srcFolder, new String []{"xcf"},
+			// true);
+			/*
+			 * public static Iterator<File> iterateFiles(File directory, String[]
+			 * extensions, boolean recursive) directory - the directory to search in
+			 * extensions - an array of extensions, ex. {"java","xml"}. If this parameter is
+			 * null, all files are returned. recursive - if true all subdirectories are
+			 * searched as well
+			 */
+			File zipFile = new File(destinationFile);
+			zipFile.createNewFile();
+
+			OutputStream outputStream = null;
+			ArchiveOutputStream zipOutputStream = null;
+
+			try {
+				outputStream = new FileOutputStream(zipFile);
+				zipOutputStream = new ZipArchiveOutputStream(outputStream);
+				int srcFolderLength = srcFolder.getAbsolutePath().length() + 1; // +1 to remove the last file separator
+				while (i.hasNext()) {
+					File file = i.next();
+					String relativePath = file.getAbsolutePath().substring(srcFolderLength);
+					ArchiveEntry zipArchiveEntry = new ZipArchiveEntry(relativePath);
+					zipOutputStream.putArchiveEntry(zipArchiveEntry);
+					FileInputStream fis = null;
+					try {
+						fis = new FileInputStream(file);
+						IOUtils.copy(fis, zipOutputStream);
+					} finally {
+						fis.close();
+					}
+					zipOutputStream.closeArchiveEntry();
+				}
+
+			} finally {
+				zipOutputStream.flush();
+				zipOutputStream.finish();
+				zipOutputStream.close();
+			}
+		}
+
 	}
 
 	/**
@@ -641,8 +645,8 @@ public class FileUtils {
 	}
 
 	private static InputStream getInputStream(String tarFileName) throws IOException {
-		if (tarFileName.substring(tarFileName.lastIndexOf(".") + 1, tarFileName.lastIndexOf(".") + 3).equalsIgnoreCase(
-				"gz")) {
+		if (tarFileName.substring(tarFileName.lastIndexOf(".") + 1, tarFileName.lastIndexOf(".") + 3)
+				.equalsIgnoreCase("gz")) {
 			log.log(Level.INFO, "Creating an GZIPInputStream for the file");
 			return new GZIPInputStream(new FileInputStream(new File(tarFileName)));
 		} else {
@@ -733,9 +737,9 @@ public class FileUtils {
 	}
 
 	/**
-	 * Reads a file from file system and returns its content as a byte array.
-	 * The file can be either a binary file or a text file. The method supports
-	 * files with maximum size of {@link Integer.MAX_VALUE}
+	 * Reads a file from file system and returns its content as a byte array. The
+	 * file can be either a binary file or a text file. The method supports files
+	 * with maximum size of {@link Integer.MAX_VALUE}
 	 */
 	public static byte[] readFile(File file) throws Exception {
 		if (!file.exists()) {
@@ -761,9 +765,9 @@ public class FileUtils {
 	}
 
 	/**
-	 * Calculates the MD5 digest of a file. If given file is a directory, the
-	 * method calculates the MD5 recursivelly. The method supports files with
-	 * maximum size of {@link Integer.MAX_VALUE}
+	 * Calculates the MD5 digest of a file. If given file is a directory, the method
+	 * calculates the MD5 recursivelly. The method supports files with maximum size
+	 * of {@link Integer.MAX_VALUE}
 	 */
 	public static String getMD5(File file) throws Exception {
 		if (!file.exists()) {
@@ -778,9 +782,8 @@ public class FileUtils {
 	}
 
 	/**
-	 * Gets a file and a {@link MessageDigest} instance, calculates file's
-	 * digest and update given {@link MessageDigest} instance with file's
-	 * digest.
+	 * Gets a file and a {@link MessageDigest} instance, calculates file's digest
+	 * and update given {@link MessageDigest} instance with file's digest.
 	 */
 	public static void updateMessageDigest(File file, MessageDigest md) throws Exception {
 		if (file.isFile()) {
@@ -834,9 +837,9 @@ public class FileUtils {
 	}
 
 	/**
-	 * Returns first <code>endOffset</code> characters of file
-	 * <code>filename</code> as String. Should be used for small files. To load
-	 * to memory big files please use: {@link #charSequenceFromFile(String)}
+	 * Returns first <code>endOffset</code> characters of file <code>filename</code>
+	 * as String. Should be used for small files. To load to memory big files please
+	 * use: {@link #charSequenceFromFile(String)}
 	 */
 	public static String sequentialSequenceFromFile(String filename, long endOffset) throws Exception {
 		File f = new File(filename);
@@ -898,8 +901,8 @@ public class FileUtils {
 		String filePathAsString = file.getCanonicalPath();
 		int dirIndex = filePathAsString.indexOf(baseDirAsString);
 		if (dirIndex == -1) {
-			throw new IllegalArgumentException("Directory path is not part of file path. directory = "
-					+ baseDirAsString + " scenario path = " + filePathAsString);
+			throw new IllegalArgumentException("Directory path is not part of file path. directory = " + baseDirAsString
+					+ " scenario path = " + filePathAsString);
 		}
 		return filePathAsString.substring(dirIndex + baseDirAsString.length() + 1);
 	}
@@ -972,6 +975,9 @@ public class FileUtils {
 	 * @return Properties object of the file
 	 * @throws IOException
 	 */
+
+	private final static Set<String> beansCache = new HashSet<>();
+
 	public static Properties loadPropertiesFromFile(String fileName) throws IOException {
 		fileName = replaceSeparator(fileName);
 		log.finest("Loading properties from file " + fileName);
@@ -982,6 +988,29 @@ public class FileUtils {
 			input = new FileInputStream(fileName);
 			inputStreamReader = new InputStreamReader(input, "UTF-8");
 			p.load(inputStreamReader);
+			for (Object paramKey : p.keySet()) {
+				if (paramKey.toString().endsWith("Bean")
+						&& !beansCache.contains(p.get(paramKey.toString()).toString())) {
+					beansCache.add(p.get(paramKey.toString()).toString());
+					String[] beanParamValueProp = p.get(paramKey.toString()).toString().split("\r\n");
+					StringBuilder beanParamValueFixedSB = new StringBuilder();
+					for (String line : beanParamValueProp) {
+						if (!line.contains("="))
+							continue;
+						String[] keyValuePairArr = line.split("=", 2);
+
+						Pattern twoOrMoreBackslashesPattern = Pattern.compile(".*([\\\\])\\1{1,}.*");
+						if (twoOrMoreBackslashesPattern.matcher(keyValuePairArr[1]).find()) {
+							String fixedParamValBackslash = null;
+							fixedParamValBackslash = keyValuePairArr[1].replace("\\\\", "\\");
+							beanParamValueFixedSB.append(keyValuePairArr[0] + "=" + fixedParamValBackslash + "\r\n");
+
+						} else
+							beanParamValueFixedSB.append(line + "\r\n");
+					}
+					p.setProperty(paramKey.toString(), beanParamValueFixedSB.toString());
+				}
+			}
 			return p;
 		} finally { // close input stream
 			if (inputStreamReader != null) {
@@ -991,6 +1020,31 @@ public class FileUtils {
 				input.close();
 			}
 		}
+	}
+
+	public static Properties loadBeanPropertiesFromFile(String fileName) throws IOException {
+
+		Properties properties = new Properties();
+		try (FileInputStream input = new FileInputStream(fileName);
+				InputStreamReader inputStreamReader = new InputStreamReader(input, "UTF-8");
+				BufferedReader bfr = new BufferedReader(inputStreamReader);
+				ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+
+			String readLine = null;
+			while ((readLine = bfr.readLine()) != null) {
+				//In JsystemApp -> GenericObjectParameterPRovider & array Provider,
+				//for some reason, inject this string prop representation into another
+				//properties file, in there the 2nd properies file treats every backslash 
+				//as a special char as well, therefore, were multiplying the backslashes twice on purpose
+
+				out.write(readLine.replace("\\", "\\\\\\\\").getBytes());
+				out.write("\n".getBytes());
+			} // while
+
+			InputStream is = new ByteArrayInputStream(out.toByteArray());
+			properties.load(is);
+		}
+		return properties;
 	}
 
 	/**
@@ -1146,13 +1200,14 @@ public class FileUtils {
 	}
 
 	/**
-	 * in-place replacement of text in file. Replaces <code>lookFor</code>
-	 * regular expression with <code>replaceWith</code> in line number
-	 * <code>lineIndex</code>.</br> If <code>lookFor</code> is not found in line
-	 * number <code>lineIndex</code> file remains as is.</br> The method support
-	 * only replacement of text with text which is shorter or same length. If
-	 * the <code>replaceWith</code> is longer from <code>lookFor</code> run time
-	 * exception is thrown.
+	 * in-place replacement of text in file. Replaces <code>lookFor</code> regular
+	 * expression with <code>replaceWith</code> in line number
+	 * <code>lineIndex</code>.</br>
+	 * If <code>lookFor</code> is not found in line number <code>lineIndex</code>
+	 * file remains as is.</br>
+	 * The method support only replacement of text with text which is shorter or
+	 * same length. If the <code>replaceWith</code> is longer from
+	 * <code>lookFor</code> run time exception is thrown.
 	 * 
 	 * @see #getLastLineWith
 	 */
@@ -1180,16 +1235,15 @@ public class FileUtils {
 	}
 
 	/**
-	 * in-place remove of a given buffer, starting a given line in a file, if
-	 * the contain string is contained
+	 * in-place remove of a given buffer, starting a given line in a file, if the
+	 * contain string is contained
 	 * 
 	 * @param fileName
 	 *            the file to remove from
 	 * @param lineIndex
 	 *            the line index to start removing from
 	 * @param contain
-	 *            the String that should be contained in the given buffer to
-	 *            remove
+	 *            the String that should be contained in the given buffer to remove
 	 * @throws IOException
 	 */
 	public static void removeStartingOfLine(File fileName, int lineIndex, String contain) throws IOException {
@@ -1221,8 +1275,8 @@ public class FileUtils {
 	}
 
 	/**
-	 * Given a list of files, returns all the files which exist and that the
-	 * process can't write to.
+	 * Given a list of files, returns all the files which exist and that the process
+	 * can't write to.
 	 */
 	public static List<File> getFilesCannotAccess(File... files) {
 		ArrayList<File> failAccess = new ArrayList<File>();
@@ -1253,54 +1307,55 @@ public class FileUtils {
 	}
 
 	public static void deleteDirectory(File dir) {
-		if(dir.isDirectory()){
-			 
-    		//directory is empty, then delete it
-    		if(dir.list().length==0){
-    			dir.delete();
-    		}else{
-    		   //list all the directory contents
-        	   String files[] = dir.list();
-        	   for (String temp : files) {
-        	      //construct the file structure
-        	      File fileDelete = new File(dir, temp);
-        	      //recursive delete
-        	      deleteDirectory(fileDelete);
-        	   }
- 
-        	   //check the directory again, if empty then delete it
-        	   if(dir.list().length==0){
-        		   dir.delete();
-        	   }
-    		}
- 
-    	}else{
-    		//if file, then delete it
-    		dir.delete();
-    	}
-    }
-	
-	public static void moveDirectory(String sourceDirectory, String destinationDirectory){
+		if (dir.isDirectory()) {
+
+			// directory is empty, then delete it
+			if (dir.list().length == 0) {
+				dir.delete();
+			} else {
+				// list all the directory contents
+				String files[] = dir.list();
+				for (String temp : files) {
+					// construct the file structure
+					File fileDelete = new File(dir, temp);
+					// recursive delete
+					deleteDirectory(fileDelete);
+				}
+
+				// check the directory again, if empty then delete it
+				if (dir.list().length == 0) {
+					dir.delete();
+				}
+			}
+
+		} else {
+			// if file, then delete it
+			dir.delete();
+		}
+	}
+
+	public static void moveDirectory(String sourceDirectory, String destinationDirectory) {
 		File dir = new File(sourceDirectory);
-		if(!dir.isDirectory()){
+		if (!dir.isDirectory()) {
 			log.log(Level.INFO, sourceDirectory + " is not a directory!");
 			return;
 		}
-		if(!dir.exists()){
+		if (!dir.exists()) {
 			log.log(Level.INFO, sourceDirectory + " does not exist!");
 			return;
 		}
-		//Move folder
+		// Move folder
 		File[] files = dir.listFiles();
-		
+
 		// Destination directory
-		File newDirectory = new File(JSystemProperties.getInstance().getPreference(FrameworkOptions.LOG_FOLDER) + "\\log_" + String.valueOf(System.currentTimeMillis()));
-		if(!newDirectory.mkdir()){
+		File newDirectory = new File(JSystemProperties.getInstance().getPreference(FrameworkOptions.LOG_FOLDER)
+				+ "\\log_" + String.valueOf(System.currentTimeMillis()));
+		if (!newDirectory.mkdir()) {
 			log.log(Level.INFO, "Create Directory Failed!");
 			return;
 		}
-		
-		for(File file : files){
+
+		for (File file : files) {
 			if (!file.renameTo(new File(newDirectory, file.getName()))) {
 				log.log(Level.INFO, "Moving Failed!");
 				return;

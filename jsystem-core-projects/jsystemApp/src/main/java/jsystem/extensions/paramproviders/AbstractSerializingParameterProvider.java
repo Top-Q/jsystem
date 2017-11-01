@@ -2,17 +2,24 @@ package jsystem.extensions.paramproviders;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import jsystem.framework.scenario.ParameterProvider;
 
-
 public abstract class AbstractSerializingParameterProvider implements ParameterProvider {
 	private static Logger log = Logger.getLogger(GenericObjectParameterProvider.class.getName());
+	private static Set<String> cache = new HashSet<>();
+	private static int counter = 0;
+	
 	
 	protected String propetiesToString(String className, Properties properties) {
 		StringWriter writer = new StringWriter();
@@ -21,38 +28,40 @@ public abstract class AbstractSerializingParameterProvider implements ParameterP
 		} catch (IOException e) {
 			log.log(Level.WARNING, "Fail to store the property object to the StringWriter", e);
 		}
-        StringBuilder buf = new StringBuilder();
+		StringBuilder buf = new StringBuilder();
 		// append the class name then ';'
-		buf.append(className);buf.append(';');
+		buf.append(className);
+		buf.append(';');
 		// append the properties string
 		buf.append(writer.getBuffer().toString());
 		return convertToWindowsEol(buf.toString());
 	}
-	
-	protected LinkedHashMap<String, String> propertiesToMap(Properties properties){
+
+	protected LinkedHashMap<String, String> propertiesToMap(Properties properties) {
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 		Set<Object> keys = properties.keySet();
-		for(Object key: keys){
-			if(!properties.getProperty(key.toString()).isEmpty())
+		for (Object key : keys) {
+			if (!properties.getProperty(key.toString()).isEmpty())
 				map.put(key.toString(), properties.getProperty(key.toString()));
 		}
 		return map;
 	}
-	
+
 	/**
-	 * IMPORTANT: ITAI - This is done for supporting Linux and Mac environments. DO NOT REMOVE!
+	 * IMPORTANT: ITAI - This is done for supporting Linux and Mac environments. DO
+	 * NOT REMOVE!
 	 * 
 	 * If EOL is in Linux style, change it to Windows style.
 	 * 
-	 * @param str String that contains eol 
+	 * @param str
+	 *            String that contains eol
 	 * @return
 	 */
-	protected String convertToWindowsEol(String str){
-		if (!str.contains("\r\n")){
+	protected String convertToWindowsEol(String str) {
+		if (!str.contains("\r\n")) {
 			return str.replace("\n", "\r\n");
 		}
 		return str;
-	
 	}
 
 
