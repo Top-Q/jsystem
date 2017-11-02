@@ -107,7 +107,7 @@ public class Summary {
 		File summaryFile = new File(SUMMARY_FILE_NAME);
 		if (summaryFile.exists()) {
 			try {
-				properties = FileUtils.loadPropertiesFromFile(SUMMARY_FILE_NAME);
+				properties = FileUtils.loadBeanPropertiesFromFile(SUMMARY_FILE_NAME);
 			} catch (Exception exception) {
 				log.log(Level.WARNING, "Fail to load summary properties", exception);
 			}
