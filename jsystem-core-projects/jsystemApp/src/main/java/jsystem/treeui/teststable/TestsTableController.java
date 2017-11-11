@@ -1840,20 +1840,8 @@ public class TestsTableController extends Observable implements TestStatusListen
 			// Limor Bortman
 			// return To Default for the test popup men
 			addResetToDefault();
-			
-			for (ContextMenuPlugin plugin : contextMenuPlugins){
-				if (plugin.shouldDisplayed(currentNode, null, currentNode.getTest())){
-					JMenuItem pluginMenu = new JMenuItem(plugin.getItemName());
-					if (plugin.getIcon() != null){
-						pluginMenu.setIcon(plugin.getIcon());					}
-					pluginMenu.addActionListener(plugin);
-					popupMenu.add(pluginMenu);
-				}
-			}
-			return popupMenu;
 
 		} else if (type == ROOT_POP_UP) {
-			popupMenu = new JPopupMenu();
 
 			if (comment) {
 				popupCommentItem = new JMenuItem("Comment Item");
@@ -1923,10 +1911,8 @@ public class TestsTableController extends Observable implements TestStatusListen
 
 			// return To Default for the test Root menu
 			addResetToDefault();
-			return popupMenu;
 
 		} else if (type == SCEN_POP_UP) {
-			popupMenu = new JPopupMenu();
 
 			// Scenario popup Menu
 
@@ -2015,11 +2001,10 @@ public class TestsTableController extends Observable implements TestStatusListen
 					popupMenu.add(editOnlyLocallyItem);
 				}
 			} catch (Exception e) {
-
+				
 			}
 			// Limor Bortman
 			addResetToDefault();
-			return popupMenu;
 		} else if (type == FIXTURE_POP_UP) {
 
 			if (comment) {
@@ -2029,7 +2014,6 @@ public class TestsTableController extends Observable implements TestStatusListen
 			}
 
 			popupMenu.add(RemoveItemAction.getInstance());
-			return popupMenu;
 		}
 		// Added in order to resolve bug #266
 		else if (type == FLOW_POP_UP) {
@@ -2077,9 +2061,20 @@ public class TestsTableController extends Observable implements TestStatusListen
 				popupMenu.add(popupExpandTree);
 			}
 
-			return popupMenu;
 		}
-		return null;
+		
+		// Handling the context menu plugins. 
+		for (ContextMenuPlugin plugin : contextMenuPlugins){
+			if (plugin.shouldDisplayed(currentNode, null, currentNode.getTest())){
+				JMenuItem pluginMenu = new JMenuItem(plugin.getItemName());
+				if (plugin.getIcon() != null){
+					pluginMenu.setIcon(plugin.getIcon());					}
+				pluginMenu.addActionListener(plugin);
+				popupMenu.add(pluginMenu);
+			}
+		}
+
+		return popupMenu;
 	}
 
 	// Limor Bortman

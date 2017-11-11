@@ -33,7 +33,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Enumeration;
+<<<<<<< HEAD
 import java.util.HashMap;
+=======
+>>>>>>> 08b4e31ad6fff144a3d011e47b656d702f11de0c
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -1028,12 +1031,18 @@ public class FileUtils {
 		}
 	}
 	
+<<<<<<< HEAD
 	private static final Pattern singleBackSlashExistsPattern = Pattern.compile("(?<![\\\\])[\\\\](?![\\\\:\\\\n\\\\r\\\\t\\\\b\\\\f\\\\'\\\\\\\"])");
+=======
+>>>>>>> 08b4e31ad6fff144a3d011e47b656d702f11de0c
 	
 	public static Properties loadBeanPropertiesFromFile(String fileName) throws IOException {
 
 		Properties properties = new Properties();
+<<<<<<< HEAD
 		
+=======
+>>>>>>> 08b4e31ad6fff144a3d011e47b656d702f11de0c
 		try (FileInputStream input = new FileInputStream(fileName);
 				InputStreamReader inputStreamReader = new InputStreamReader(input, "UTF-8");
 				BufferedReader bfr = new BufferedReader(inputStreamReader);
@@ -1045,11 +1054,17 @@ public class FileUtils {
 				//for some reason, inject this string prop representation into another
 				//properties file, in there the 2nd properies file treats every backslash 
 				//as a special char as well, therefore, were multiplying the backslashes twice on purpose
+<<<<<<< HEAD
 				Matcher singleBackslashSearch = singleBackSlashExistsPattern.matcher(readLine);
 				if(singleBackslashSearch.find())
 					out.write(readLine.replace("\\", "\\\\\\\\").getBytes());
 				else out.write(readLine.getBytes());
 					out.write("\n".getBytes());
+=======
+
+				out.write(readLine.replace("\\", "\\\\\\\\").getBytes());
+				out.write("\n".getBytes());
+>>>>>>> 08b4e31ad6fff144a3d011e47b656d702f11de0c
 			} // while
 
 			InputStream is = new ByteArrayInputStream(out.toByteArray());
