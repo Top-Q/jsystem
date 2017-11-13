@@ -109,10 +109,12 @@ public class RunProperties {
 	
 	/**
 	 */
+	private volatile Properties runProperties = null;
+	
 	private synchronized Properties loadProperties() throws IOException{
 		Properties p = new Properties();
 		if (runPropertiesFile.getAbsoluteFile().exists()) {
-			p = FileUtils.loadBeanPropertiesFromFile(runPropertiesFile.getAbsolutePath());
+			p = runProperties != null ? runProperties : FileUtils.loadBeanPropertiesFromFile(runPropertiesFile.getAbsolutePath());
 			log.log(java.util.logging.Level.CONFIG,"load run properties at :"+runPropertiesFile.getAbsolutePath());
 		}else{
 			log.log(java.util.logging.Level.CONFIG,"the run properties doesn't exist,return new Properties object");

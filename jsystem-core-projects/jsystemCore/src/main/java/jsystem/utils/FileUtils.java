@@ -33,14 +33,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.Vector;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
@@ -979,7 +983,8 @@ public class FileUtils {
 	 * @throws IOException
 	 */
 	
-
+	
+	
 	public static Properties loadPropertiesFromFile(String fileName) throws IOException {
 		fileName = replaceSeparator(fileName);
 		log.finest("Loading properties from file " + fileName);
@@ -991,7 +996,7 @@ public class FileUtils {
 			inputStreamReader = new InputStreamReader(input, "UTF-8");
 			p.load(inputStreamReader);
 			for (Object paramKey : p.keySet()) {
-				if (paramKey.toString().endsWith("Bean")
+				if ( paramKey.toString().endsWith("Bean")
 						&& !beansCache.contains(p.get(paramKey.toString()).toString())) {
 					beansCache.add(p.get(paramKey.toString()).toString());
 					String[] beanParamValueProp = p.get(paramKey.toString()).toString().split("\r\n");
@@ -1024,33 +1029,43 @@ public class FileUtils {
 		}
 	}
 	
-	
-	public static Properties loadBeanPropertiesFromFile(String fileName) throws IOException {
 
+	private static final Pattern singleBackSlashExistsPattern = Pattern.compile("(?<![\\\\])[\\\\](?![\\\\:\\\\n\\\\r\\\\t\\\\b\\\\f\\\\'\\\\\\\"])");
+
+
+	public static Properties loadBeanPropertiesFromFile(String fileName) throws IOException {
+	
 		Properties properties = new Properties();
+		
 		try (FileInputStream input = new FileInputStream(fileName);
 				InputStreamReader inputStreamReader = new InputStreamReader(input, "UTF-8");
 				BufferedReader bfr = new BufferedReader(inputStreamReader);
 				ByteArrayOutputStream out = new ByteArrayOutputStream()) {
 
 			String readLine = null;
+			
 			while ((readLine = bfr.readLine()) != null) {
 				//In JsystemApp -> GenericObjectParameterPRovider & array Provider,
 				//for some reason, inject this string prop representation into another
 				//properties file, in there the 2nd properies file treats every backslash 
 				//as a special char as well, therefore, were multiplying the backslashes twice on purpose
-
-				out.write(readLine.replace("\\", "\\\\\\\\").getBytes());
-				out.write("\n".getBytes());
+				//Matcher singleBackslashSearch = singleBackSlashExistsPattern.matcher(readLine);
+				//if(singleBackslashSearch.find())
+					out.write(readLine.replace("\\", "\\\\\\\\").getBytes());
+		//	else out.write(readLine.getBytes());
+					out.write("\n".getBytes());
 			} // while
 
 			InputStream is = new ByteArrayInputStream(out.toByteArray());
 			properties.load(is);
+			
 		}
 		return properties;
 	}
 
-
+	
+	
+	
 	/**
 	 * save given properties to a file
 	 * 
@@ -1064,6 +1079,9 @@ public class FileUtils {
 	 */
 	public static synchronized void savePropertiesToFile(Properties properties, String fileName, boolean addDate)
 			throws IOException {
+
+		if(fileName.endsWith(".run.properties")) return ;
+
 		log.finest("Saving properties to file " + fileName);
 		if (addDate) {
 
