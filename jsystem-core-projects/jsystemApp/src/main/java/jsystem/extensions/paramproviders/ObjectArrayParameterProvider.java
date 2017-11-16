@@ -85,9 +85,11 @@ public class ObjectArrayParameterProvider extends AbstractSerializingParameterPr
 
 		// then extract the string to be load as properties object
 		String propertiesString = stringRepresentation.substring(classEndIndex + 1);
-		
 		Properties properties = new Properties();
 		try {
+			// Since we don't want to lose the backslashes, we need to replace each of the single backslashes with 
+			// double backslashes before loading the string to the properties object
+			propertiesString = propertiesString.replaceAll("(?<!\\\\)\\\\(?!\\\\)", "\\\\\\\\");
 			properties.load(new StringReader(propertiesString));
 		} catch (IOException e1) {
 			log.log(Level.WARNING, "Fail to load properties: " + propertiesString, e1);
@@ -177,7 +179,6 @@ public class ObjectArrayParameterProvider extends AbstractSerializingParameterPr
 		}
 		return object;
 	}
-
 
 	private static LinkedHashMap<String, String> propertiesToMapBeanOrder(Properties properties,
 			ArrayList<BeanElement> elements) {
