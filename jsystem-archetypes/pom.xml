@@ -7,11 +7,11 @@
     <parent>
 		<groupId>org.jsystemtest</groupId>
 		<artifactId>jsystem-parent</artifactId>
-		<version>6.1.08-SNAPSHOT</version>
+		<version>6.1.08</version>
 		<relativePath>../jsystem-parent</relativePath>
 	</parent>
 	<properties>
-		<jsystem.version>6.1.08-SNAPSHOT</jsystem.version>
+		<jsystem.version>6.1.08</jsystem.version>
 	</properties>
 	<modules>
 		<module>jsystem-so-archetype</module>
