@@ -328,6 +328,9 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 	public void endTest(Test arg0) {
 		log.fine("Received end test");
 		currentTest.setDuration(System.currentTimeMillis() - testStartTime);
+		// In case scenario properties were added during the test run, we want
+		// also to add them to the scenario model
+		addScenarioProperties(currentScenario);
 		writeTestDetails(testDetails);
 	}
 

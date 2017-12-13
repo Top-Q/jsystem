@@ -23,6 +23,9 @@
 target
 lib
 
+#Pydev project
+.pydevproject
+
 #JSystem files
 .ant.properties
 .testPropertiesFile_Empty
