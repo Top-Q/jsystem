@@ -41,8 +41,9 @@ public abstract class AbstractSerializingParameterProvider implements ParameterP
 	protected static String multiplySingleBackslashes(String content) {
 		// The regular expression will search for backslashes and will perform
 		// negative look behind for another backslash and negative look forward
-		// for backslashes and other special characters
-		return content.replaceAll("(?<!\\\\)\\\\(?![:!=#\\\\])", "\\\\\\\\");
+		// for backslashes and other special characters <br>
+		// Special characters include: ! : = # <space> 
+		return content.replaceAll("(?<!\\\\)\\\\(?![:!=#\\s\\\\])", "\\\\\\\\");
 	}
 
 	protected LinkedHashMap<String, String> propertiesToMap(Properties properties) {
