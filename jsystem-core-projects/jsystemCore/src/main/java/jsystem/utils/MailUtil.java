@@ -3,10 +3,7 @@
  */
 package jsystem.utils;
 
-import java.io.File;
-import java.security.Security;
-import java.util.ArrayList;
-import java.util.Properties;
+import jsystem.framework.system.SystemObjectImpl;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -26,8 +23,10 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.search.FromTerm;
 import javax.mail.search.SubjectTerm;
-
-import jsystem.framework.system.SystemObjectImpl;
+import java.io.File;
+import java.security.Security;
+import java.util.ArrayList;
+import java.util.Properties;
 
 /**
  * this class is used for sending\receiving mail<br>
@@ -169,7 +168,8 @@ public class MailUtil extends SystemObjectImpl{
 			props.put("mail.smtp.socketFactory.fallback", "false");
 		}
 
-		Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
+
+		Security.addProvider(javax.net.ssl.SSLContext.getDefault().getProvider());
 
 		props.put("mail.smtp.host", smtpHostName);
 
@@ -302,7 +302,7 @@ public class MailUtil extends SystemObjectImpl{
 	
 	/**
 	 * get all mail messages matching the given subject filter and numbers
-	 * @param fromAddress	if not null or empty string will filter messages
+	 * @param mailFrom	if not null or empty string will filter messages
 	 * @param amount		the amount of messages to get
 	 * @param firstIsOldest if true then the indexes will be counted from the oldest, otherwise counted from the newest
 	 * @param deleteMessages if True will mark messages for deletion
