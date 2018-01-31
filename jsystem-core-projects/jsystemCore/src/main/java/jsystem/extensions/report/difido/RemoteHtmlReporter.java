@@ -10,8 +10,6 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import org.jfree.util.Log;
-
 import jsystem.extensions.report.difido.RemoteDifidoProperties.RemoteDifidoOptions;
 
 public class RemoteHtmlReporter extends AbstractHtmlReporter {
@@ -66,7 +64,7 @@ public class RemoteHtmlReporter extends AbstractHtmlReporter {
 			try {
 				client.endExecution(executionId);
 			} catch (Exception e) {
-				Log.warn("Failed to close execution with id " + executionId);
+				log.warning("Failed to close execution with id " + executionId);
 			}
 			executionId = -1;
 		}
