@@ -33,7 +33,7 @@ public class ExtendsTestCaseClassLoader extends ClassLoader {
 
 	/** default excluded paths */
 	private String[] defaultExclusions = { "junit.framework.", "junit.extensions.", "junit.runner.", "jsystem.",
-			"org.apache.xpath.", "org.apache.commons.", "org.apache.log4j." , "java.","sun.","javax.", "org.junit." 
+			"org.apache.xpath.", "org.apache.commons.", "org.apache.log4j." , "java.","sun.","javax.", "org.junit.","jdk.internal.reflect." 
 	// fix to support use of xpath in java 1.4
 	};
 
