@@ -6,6 +6,7 @@ package jsystem.utils;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
 
 /**
  * The class purpose is to give the ability to handle encrypted and decrypted Strings within JuniTest infra-structures.
@@ -42,14 +43,15 @@ public class Encryptor {
 		ecipher.init(Cipher.ENCRYPT_MODE, key);
 		dcipher.init(Cipher.DECRYPT_MODE, key);
 
+
 		// Encode the string into bytes using utf-8
-		byte[] utf8 = str.getBytes("UTF8");
+		byte[] utf8 = str.getBytes(StandardCharsets.UTF_8);
 
 		// Encrypt
 		byte[] enc = ecipher.doFinal(utf8);
 
 		// Encode bytes to base64 to get a string
-		return (java.util.Base64.getEncoder().encode(enc)) + ENCRYPTION_TERMINATING_STRING;
+		return (java.util.Base64.getEncoder().encodeToString(enc)) + ENCRYPTION_TERMINATING_STRING;
 	}
 
 	/**
@@ -71,7 +73,7 @@ public class Encryptor {
 		ecipher.init(Cipher.ENCRYPT_MODE, key);
 		dcipher.init(Cipher.DECRYPT_MODE, key);
 		// Decode base64 to get bytes
-		byte[] dec = java.util.Base64.getDecoder().decode(str);
+		byte[] dec = java.util.Base64.getDecoder().decode(str.getBytes(StandardCharsets.UTF_8));
 
 		// Decrypt
 		byte[] utf8 = dcipher.doFinal(dec);
