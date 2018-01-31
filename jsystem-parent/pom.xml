@@ -229,7 +229,13 @@
                     <encoding>UTF-8</encoding>
                     <compilerArgs>
                         <arg>--add-modules</arg><arg>java.xml.bind</arg>
+                        <arg>--add-modules</arg><args>java.desktop</args>
+                        <arg>--add-exports</arg><arg>java.desktop/sun.awt=ALL-UNNAMED</arg>
                     </compilerArgs>
+
+                    <!--<compilerArgs>-->
+                        <!--<arg>&#45;&#45;add-modules</arg><arg>java.desktop</arg>-->
+                    <!--</compilerArgs>-->
                 </configuration>
             </plugin>
             <plugin>

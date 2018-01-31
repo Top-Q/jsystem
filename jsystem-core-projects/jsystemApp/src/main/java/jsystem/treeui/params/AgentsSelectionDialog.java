@@ -3,30 +3,20 @@
  */
 package jsystem.treeui.params;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Vector;
-
-import javax.swing.Action;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-
 import jsystem.runner.agent.clients.JSystemAgentClient;
 import jsystem.runner.agent.server.RunnerEngine.ConnectionState;
 import jsystem.treeui.actionItems.IgnisAction;
 import jsystem.treeui.client.JSystemAgentClientsPool;
 import jsystem.treeui.images.ImageCenter;
 import jsystem.utils.StringUtils;
+
+import javax.swing.*;
+import javax.swing.table.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Vector;
 
 /**
  * Agents chooser for the parameters panel.
@@ -85,7 +75,7 @@ public class AgentsSelectionDialog extends JDialog {
 	}
 
 	private void buildAgentsListTableModel() throws Exception {
-		Vector<Object> model = new Vector<Object>();
+		Vector<Vector> model = new Vector<>();
 		JSystemAgentClient[] clients = (JSystemAgentClient[]) JSystemAgentClientsPool.getClients(null);
 		for (JSystemAgentClient client : clients) {
 			Vector<Object> clientRow = getJSystemAgentDataVector(client);
@@ -132,7 +122,7 @@ public class AgentsSelectionDialog extends JDialog {
 	class AgentSelectTableModel extends DefaultTableModel {
 		private static final long serialVersionUID = 1L;
 
-		AgentSelectTableModel(Vector<Object> model, Vector<String> columns) {
+		AgentSelectTableModel(Vector<Vector> model, Vector<String> columns) {
 			super(model, columns);
 		}
 

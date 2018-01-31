@@ -3,41 +3,6 @@
  */
 package jsystem.treeui.agents;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dialog;
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.Vector;
-
-import javax.management.Notification;
-import javax.management.NotificationListener;
-import javax.management.remote.JMXConnectionNotification;
-import javax.swing.Action;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-
 import jsystem.framework.scenario.DistributedExecutionHelper;
 import jsystem.framework.scenario.ScenariosManager;
 import jsystem.runner.ErrorLevel;
@@ -56,6 +21,20 @@ import jsystem.treeui.utilities.ProgressBarPanel;
 import jsystem.treeui.utilities.Task;
 import jsystem.utils.ProgressNotifier;
 import jsystem.utils.StringUtils;
+
+import javax.management.Notification;
+import javax.management.NotificationListener;
+import javax.management.remote.JMXConnectionNotification;
+import javax.swing.*;
+import javax.swing.event.*;
+import javax.swing.table.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.Vector;
 
 /**
  * Agents management dialog.
@@ -145,7 +124,7 @@ public class AgentsDialog extends JDialog {
 	}
 
 	private void buildAgentsListTableModel() throws Exception {
-		Vector<Object> model = new Vector<Object>();
+		Vector<Vector> model = new Vector<>();
 		RunnerEngine[] clients = JSystemAgentClientsPool.getClients(null);
 		for (RunnerEngine client : clients) {
 			Vector<Object> clientRow = getJSystemAgentDataVector(client, false);
@@ -231,7 +210,7 @@ public class AgentsDialog extends JDialog {
 	}
 
 	class AgentListTableModel extends DefaultTableModel {
-		AgentListTableModel(Vector<Object> model, Vector<String> columns) {
+		AgentListTableModel(Vector<Vector> model, Vector<String> columns) {
 			super(model, columns);
 		}
 

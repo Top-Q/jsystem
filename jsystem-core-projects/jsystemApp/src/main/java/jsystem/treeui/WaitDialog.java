@@ -3,29 +3,14 @@
  */
 package jsystem.treeui;
 
-import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.Dialog;
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.concurrent.Executors;
-import java.util.logging.Logger;
-
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.SwingWorker;
-
+import jsystem.framework.TestRunnerFrame;
 import sun.awt.AppContext;
 
-import jsystem.framework.TestRunnerFrame;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.concurrent.Executors;
+import java.util.logging.Logger;
 
 /**
  * WaitDialog This is just a frame with a JLabel in it and no buttons used for

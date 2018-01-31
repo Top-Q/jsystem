@@ -3,17 +3,15 @@
  */
 package jsystem.treeui.tree;
 
-import java.lang.reflect.Method;
-import java.util.Collections;
-import java.util.List;
-import java.util.Vector;
-
 import jsystem.framework.FrameworkOptions;
 import jsystem.framework.JSystemProperties;
 import jsystem.treeui.TestFilterManager;
 import junit.framework.TestCase;
-
 import org.junit.internal.runners.JUnit4TestCaseParser;
+
+import java.lang.reflect.Method;
+import java.util.List;
+import java.util.Vector;
 
 public class TestCaseNode extends AssetNode {
 
@@ -25,7 +23,7 @@ public class TestCaseNode extends AssetNode {
 		super(parent, userObject);
 		aClass = userObject;
 
-		children = new Vector();
+		children = new Vector<>();
 		
 		if (TestCase.class.isAssignableFrom(userObject)) {
 			// JUnit 3 style class
@@ -36,7 +34,7 @@ public class TestCaseNode extends AssetNode {
 			createJUnit4TestNodes(userObject);
 		}
 		if("true".equals(JSystemProperties.getInstance().getPreferenceOrDefault(FrameworkOptions.SORT_ASSETS_TREE))){
-			Collections.sort(children);
+		    children.sort((o1, o2) -> ((TestCaseNode)o1).compareTo(o2));
 		}
 	}
 
