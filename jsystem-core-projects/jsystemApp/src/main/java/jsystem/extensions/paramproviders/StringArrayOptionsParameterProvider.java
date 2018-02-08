@@ -3,14 +3,14 @@
  */
 package jsystem.extensions.paramproviders;
 
-import java.awt.Component;
-
 import jsystem.framework.common.CommonResources;
 import jsystem.framework.scenario.Parameter;
 import jsystem.framework.scenario.ParameterProvider;
 import jsystem.framework.scenario.RunnerTest;
 import jsystem.framework.scenario.Scenario;
 import jsystem.utils.StringUtils;
+
+import java.awt.*;
 
 /**
  * @author golan.derazon
@@ -38,17 +38,19 @@ public class StringArrayOptionsParameterProvider implements ParameterProvider {
 		return StringUtils.split(stringRepresentation, DELIMITER);
 	}
 
-	@Override
-	public Object showUI(Component parent, Scenario currentScenario, RunnerTest runnerTest, Class<?> classType, Object object, Parameter parameter) {
-		OptionsMultiSelectDialog dialog = new OptionsMultiSelectDialog();
-		String[] selected = (object instanceof String) ? new String[] {object.toString()} : (String[]) object;
-		dialog.initDialog(parameter.getOptions(), selected);
-		if (dialog.isOkay()) {
-			return dialog.getSelectedOptions();
-		}else {
-			return selected;
-		}
-	}
+        @Override
+        public Object showUI(Component parent, Scenario currentScenario, RunnerTest runnerTest, Class<?> classType,
+                             Object object, Parameter parameter) {
+            OptionsMultiSelectDialog dialog = new OptionsMultiSelectDialog();
+            String selected = (object instanceof String) ? object.toString() :
+                              StringUtils.objectArrayToString(CommonResources.DELIMITER, object);
+            dialog.initDialog(parameter.getOptions(), selected);
+            if (dialog.isOkay()) {
+                return dialog.getSelectedOptions();
+            } else {
+                return selected;
+            }
+        }
 
 	@Override
 	public boolean isFieldEditable() {
