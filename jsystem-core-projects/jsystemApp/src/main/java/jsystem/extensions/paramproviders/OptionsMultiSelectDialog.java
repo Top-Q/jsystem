@@ -77,7 +77,7 @@ public class OptionsMultiSelectDialog extends JDialog {
 	}
 
 	private void buildOptionsListTableModel()  {
-		Vector<Vector> model = new Vector<Object>();
+        Vector<Vector<Object>> model = new Vector<>();
 		for (Object s : fullList) {
 			model.add(getOptionDataVector(s.toString()));
 		}
@@ -116,7 +116,7 @@ public class OptionsMultiSelectDialog extends JDialog {
 	class OptionsSelectTableModel extends DefaultTableModel{
 		private static final long serialVersionUID = 1L;
 		
-		OptionsSelectTableModel(Vector<Vector> model,Vector<String> columns){
+        OptionsSelectTableModel(Vector<Vector<Object>> model,Vector<String> columns){
 			super(model,columns);
 		}
 		@Override
