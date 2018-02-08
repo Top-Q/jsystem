@@ -3,39 +3,18 @@
  */
 package jsystem.treeui;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Cursor;
-import java.awt.Desktop;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.net.URI;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSeparator;
-
 import jsystem.framework.FrameworkOptions;
 import jsystem.framework.JSystemProperties;
 import jsystem.framework.common.CommonResources;
 import jsystem.treeui.images.ImageCenter;
 import jsystem.utils.ClassSearchUtil;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.net.URI;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * The About Version Dialog, activated from the Help Menu
@@ -120,7 +99,7 @@ public class About extends JDialog {
 		labelPanel.add(versionLabel);
 
 		// Add copyright
-		final JLabel copyrightLabel = new JLabel("<html> Copyright 2005-2016 <a href=\"www.top-q.co.il\">Top-Q</a>.</html>");
+		final JLabel copyrightLabel = new JLabel("<html> Copyright 2005-2018 <a href=\"www.top-q.co.il\">Top-Q</a>.</html>");
 		copyrightLabel.setOpaque(false);
 		copyrightLabel.setBorder(BorderFactory.createEmptyBorder(2, 4, 8, 4));
 		copyrightLabel.setFont(new Font("sansserif", Font.PLAIN, 12));

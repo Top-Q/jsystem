@@ -3,22 +3,11 @@
  */
 package jsystem.treeui;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.SplashScreen;
-import java.io.File;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.swing.JOptionPane;
-import javax.swing.UIManager;
-
+import com.jgoodies.looks.plastic.Plastic3DLookAndFeel;
 import jsystem.framework.FrameworkOptions;
+import jsystem.framework.GeneralEnums.CmdExecutor;
 import jsystem.framework.JSystemProperties;
 import jsystem.framework.TestRunnerFrame;
-import jsystem.framework.GeneralEnums.CmdExecutor;
 import jsystem.framework.common.CommonResources;
 import jsystem.framework.fixture.FixtureManager;
 import jsystem.framework.launcher.StartRunner;
@@ -47,7 +36,12 @@ import junit.framework.Test;
 import junit.framework.TestResult;
 import junit.runner.BaseTestRunner;
 
-import com.jgoodies.looks.plastic.Plastic3DLookAndFeel;
+import javax.swing.*;
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * TestRunner This class implements the main entry This class holds the tree
@@ -425,7 +419,7 @@ public class TestRunner extends BaseTestRunner implements StartRunner {
 						// Set copyright message
 						g2d.setColor(new Color(0x23, 0x1f, 0x20));
 						g2d.setFont(new Font("arial", Font.PLAIN, 10));
-						g2d.drawString(" Copyright 2005-2016 Ignis Software Tools Ltd. All rights reserved.", 101, 330);
+						g2d.drawString(" Copyright 2005-2018 Ignis Software Tools Ltd. All rights reserved.", 101, 330);
 						ss.update();
 
 						for (int j = 0; true; j++) {
