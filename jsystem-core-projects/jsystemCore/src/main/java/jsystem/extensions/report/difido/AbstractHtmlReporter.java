@@ -393,11 +393,18 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 			try (Scanner scanner = new Scanner(testInfo.parameters)) {
 				while (scanner.hasNextLine()) {
 					final String parameter = scanner.nextLine();
-					if (parameter.split("=").length < 2) {
+					if (!parameter.contains("=")) {
 						log.warning("There is an illegal parameter '" + parameter + "' in test " + testName);
 						continue;
 					}
-					currentTest.addParameter(parameter.split("=")[0], parameter.split("=")[1]);
+					// We are searching only for the first '"' since that in
+					// parameters providers there are usually more then one '"'
+					// sign if we will just split on the sign, we will lose a
+					// lot of the parameter value.
+					int equalsIndex = parameter.indexOf("=");
+					String key = parameter.substring(0, equalsIndex);
+					String value = parameter.substring(equalsIndex + 1);
+					addParameterToCurrentTest(key, value);
 				}
 
 			}
@@ -422,6 +429,26 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 			log.severe("Failed writing test details due to " + t.getMessage());
 		}
 	}
+
+	/**
+	 * Adding parameter to the current test. <br>
+	 * The importance of this method is that JSystem is adding additional
+	 * backslash to special characters like : = # \ .<br>
+	 * Since we don't want to see the additional backslashes in the report we
+	 * are cleaning them before adding them as parameter to the current test.
+	 * 
+	 * 
+	 * @param key
+	 * @param value
+	 */
+	private void addParameterToCurrentTest(String key, String value) {
+		// The regular expression will search for any backslash that has a
+		// special character after it or another backslash but do not have a
+		// backslash before and will replace it with nothing.
+		String noarmalizedValue = value.replaceAll("(?<!\\\\)\\\\(?=[:!=#\\\\])", "");
+		currentTest.addParameter(key, noarmalizedValue);
+	}
+
 
 	/**
 	 * This method is meant to be override. It is called at the start of the run
