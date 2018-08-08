@@ -653,7 +653,7 @@ public class ScenarioHelpers {
 			}
 		}
 	}
-
+	
 	public static Properties removeDeletedScenarioProperties(Properties properties, String scenarioName) throws Exception {
 		String lastTestFullUuid = "";
 		Properties sortedProperties = new SortedProperties();
@@ -662,6 +662,9 @@ public class ScenarioHelpers {
 		while (e1.hasMoreElements()) {
 			final Object key1 = e1.nextElement();
 			if (sortedProperties.get(key1) == null) {
+				continue;
+			}
+			if (key1.toString().indexOf(".") == -1) {
 				continue;
 			}
 			String testFullUuid = key1.toString().substring(0, key1.toString().indexOf("."));
