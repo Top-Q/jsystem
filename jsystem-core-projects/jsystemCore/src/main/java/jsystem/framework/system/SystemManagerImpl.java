@@ -40,13 +40,14 @@ import org.w3c.dom.NodeList;
  * 
  * All SystemObjects are gathered to a HashMap allowing retrieval of all pre-created SystemObjects
  */
-public class SystemManagerImpl implements SystemObjectManager, TestListener {
+public class SystemManagerImpl implements SystemObjectManager, TestListener, Runnable {
     private static Logger log = Logger.getLogger(SystemManagerImpl.class.getName());
     /*
      * Singleton object
      */
 	private static SystemManagerImpl manager = null;
-
+	private SystemObject soToClose; // Workaround to resolve issue #227. See details in the javadoc for the run() method
+	
     /**
      * Sut object for setup information
      */
@@ -57,16 +58,18 @@ public class SystemManagerImpl implements SystemObjectManager, TestListener {
      */
     private Map<String, SystemObject> systemObjects;
    
-    private SystemManagerImpl(){
-    	 resetSeystemObjectsMap();
+    private SystemManagerImpl(SystemObject soToClose){
+    	resetSeystemObjectsMap();
         ListenerstManager.getInstance().addListener(this);
+        this.soToClose = soToClose;
     }
+    
     public static SystemManagerImpl getInstance(){
         if (manager == null){
 		if (JSystemProperties.getInstance().isReporterVm() && JSystemProperties.getInstance().isJsystemRunner()) {
         		return null;
         	}
-            manager = new SystemManagerImpl();
+            manager = new SystemManagerImpl(null);
         }
         return manager;
     }
@@ -436,15 +439,20 @@ public class SystemManagerImpl implements SystemObjectManager, TestListener {
 			return;
 		}
 		
-		ArrayList<SystemObjectCloseThread>threads = new ArrayList<SystemObjectCloseThread>();
-		for(SystemObject so: sos){
-			SystemObjectCloseThread thread = new SystemObjectCloseThread(so);
+		ArrayList<Thread> threads = new ArrayList<>();
+		ArrayList<Long> timeouts = new ArrayList<>();
+		
+		for(SystemObject so : sos){
+			Thread thread = new Thread(new SystemManagerImpl(so)); // Workaround to resolve issue #227. See details in the javadoc for the run() method
 			threads.add(thread);
+			timeouts.add(so.getExitTimeout());
 			thread.start();
 		}
+		
 		if (exitTimeout == 0) { // not waiting
 			return;
 		}
+		
 		// Wait for all system objects to close at least exitTimeout milliseconds
 		while (System.currentTimeMillis() - System.currentTimeMillis() < exitTimeout){
 			if (threads.size() == 0) {
@@ -453,7 +461,7 @@ public class SystemManagerImpl implements SystemObjectManager, TestListener {
 			for(int i = 0; i < threads.size(); i++){
 				try {
 					// Wait for the system object close at least os.timeOut milliseconds  
-					threads.get(i).join(threads.get(i).getExitTimeout());
+					threads.get(i).join(timeouts.get(i));
 				} catch (InterruptedException e) {
 					// ignored
 				}
@@ -678,30 +686,22 @@ public class SystemManagerImpl implements SystemObjectManager, TestListener {
 		String xPath = "/sut/" + systemObject.getName();
         systemObjects.put(xPath, systemObject);		
 	}
-}
-
-class SystemObjectCloseThread extends Thread{
-
-	private static Logger log = Logger.getLogger(SystemObjectCloseThread.class.getName());
-	SystemObject so;
-	
-	public SystemObjectCloseThread(SystemObject so){
-		this.so = so;
-	}
-	
-	public void run(){
-		if(so != null){
-			setName("Close" + so.getName());
-			log.fine("Closing " + so.getName());
-			so.close();
-		}
-	}
 	
 	/**
-	 * @return time to wait for the system object to close
+	 * Workaround to resolve issue #227:
+	 * When executing from the Maven JSystem plugin, at this point in the execution, we can't instantiate
+	 * any class other than THIS class. Otherwise we get: java.lang.ClassNotFoundException
+	 * from org.codehaus.plexus.classworlds.strategy.SelfFirstStrategy.loadClass(SelfFirstStrategy.java:50)
+	 * Thus, we must use this class as the Runnable to close all system objects concurrently, instead of defining any
+	 * other Thread / Runnable class
+	 * @author Rony Byalsky
 	 */
-	public long getExitTimeout() {
-		return so.getExitTimeout();
+	@Override
+	public void run() {
+		
+		if (soToClose != null){
+			log.fine("Closing " + soToClose.getName());
+			soToClose.close();
+		}
 	}
-
 }
