@@ -12,6 +12,8 @@
 .project
 .classpath
 .settings
+.metadata/
+.recommenders/
 
 #Intllij file
 *.iml
