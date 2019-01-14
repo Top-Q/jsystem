@@ -75,11 +75,13 @@ public class HtmlReporter extends AbstractHtmlReporter {
 			JSystemProperties.getInstance().setPreference(FrameworkOptions.LOG_FOLDER, reportDir);
 		}
 	}
-	
+
 	@Override
 	public void startTest(TestInfo testInfo) {
 		super.startTest(testInfo);
-		executedTests++;
+		if (!testInfo.isHiddenInHTML) {
+			executedTests++;
+		}
 	}
 
 	@Override
@@ -333,6 +335,16 @@ public class HtmlReporter extends AbstractHtmlReporter {
 			}
 		}
 
+	}
+
+	protected void updateCalculatedNumberOfTestsDueToFailure() {
+		super.updateCalculatedNumberOfTestsDueToFailure();
+		if (getCurrentTest().isHideInHtml()) {
+			// we didn't count this test as executed since it is hidden in the
+			// HTML
+			// but since it failed, we do want it now to be counted.
+			executedTests++;
+		}
 	}
 
 	protected int calculateNumberOfPlannedTests() {

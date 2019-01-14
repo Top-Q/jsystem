@@ -183,7 +183,7 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 		writeTestDetails(testDetails);
 
 	}
-	
+
 	protected void addReportElement(ReportElement element) {
 		testDetails.addReportElement(element);
 	}
@@ -317,13 +317,25 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 		} else {
 			currentTest.setStatus(Status.error);
 		}
+		updateCalculatedNumberOfTestsDueToFailure();
 	}
 
 	@Override
 	public void addFailure(Test arg0, AssertionFailedError arg1) {
 		log.fine("Received failure event");
 		currentTest.setStatus(Status.failure);
+		updateCalculatedNumberOfTestsDueToFailure();
+	}
 
+	/**
+	 * If the test fails it will be shown in the HTML even if it set as hidden
+	 * in HTML, So will add it back to the number of tests in the machine
+	 * 
+	 */
+	protected void updateCalculatedNumberOfTestsDueToFailure() {
+		if (currentTest.isHideInHtml()) {
+			execution.getLastMachine().setPlannedTests(execution.getLastMachine().getPlannedTests() + 1);
+		}
 	}
 
 	@Override
@@ -379,6 +391,11 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 		testStartTime = System.currentTimeMillis();
 		currentTest.setTimestamp(TIME_FORMAT.format(new Date(testStartTime)));
 		currentTest.setDate(DATE_FORMAT.format(new Date(testStartTime)));
+		if (testInfo.isHiddenInHTML) {
+			currentTest.setHideInHtml(testInfo.isHiddenInHTML);
+			execution.getLastMachine().setPlannedTests(execution.getLastMachine().getPlannedTests() - 1);
+
+		}
 		currentScenario.addChild(currentTest);
 		testDetails = new TestDetails(currentTest.getUid());
 		if (!StringUtils.isEmpty(testInfo.comment)) {
@@ -773,7 +790,7 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 	protected Execution getExecution() {
 		return execution;
 	}
-	
+
 	protected ScenarioNode getCurrentScenario() {
 		return currentScenario;
 	}
@@ -785,7 +802,7 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 	protected int getIndex() {
 		return index;
 	}
-	
+
 	protected String getExecutionUid() {
 		return executionUid;
 	}
