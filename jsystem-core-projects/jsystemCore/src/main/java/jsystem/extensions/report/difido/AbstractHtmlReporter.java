@@ -53,9 +53,9 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 
 	private static final Logger log = Logger.getLogger(AbstractHtmlReporter.class.getName());
 
-	private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm:ss");
-	
-	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd");
+	protected static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm:ss");
+
+	protected static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd");
 
 	private Execution execution;
 
@@ -107,7 +107,7 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 		report(title, message, status, bold, false, false);
 	}
 
-	private ReportElement updateTimestampAndTitle(ReportElement element, String title) {
+	protected ReportElement updateTimestampAndTitle(ReportElement element, String title) {
 		Pattern pattern = Pattern.compile("(\\d{2}:\\d{2}:\\d{2}:)");
 		Matcher matcher = pattern.matcher(title);
 		if (matcher.find()) {
@@ -172,7 +172,7 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 		} else {
 			element.setType(ElementType.regular);
 		}
-		testDetails.addReportElement(element);
+		addReportElement(element);
 		if (System.currentTimeMillis() - lastMessageTime <= DifidoConfig.getInstance()
 				.getLong(DifidoProperty.MIN_INTERVAL_BETWEEN_MESSAGES)) {
 			// We want to make sure the test does not stress the IO with
@@ -182,6 +182,10 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 		lastMessageTime = System.currentTimeMillis();
 		writeTestDetails(testDetails);
 
+	}
+	
+	protected void addReportElement(ReportElement element) {
+		testDetails.addReportElement(element);
 	}
 
 	private File[] getAddedFiles(final String message) {
@@ -214,8 +218,8 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 		}
 		updateIndex();
 		generateUid();
-
-		addMachineToExecution();
+		execution = new Execution();
+		addMachineToExecution(execution);
 		if (JSystemProperties.getInstance().isExecutedFromIDE()) {
 			// We are running from the IDE, so there will be no scenario
 			currentScenario = new ScenarioNode("default");
@@ -242,13 +246,11 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 	 * create a new one.
 	 * 
 	 */
-	private void addMachineToExecution() {
-		MachineNode currentMachine = new MachineNode(getMachineName());
+	protected void addMachineToExecution(Execution execution) {
 		if (null == execution) {
-			execution = new Execution();
-			execution.addMachine(currentMachine);
-			return;
+			throw new NullPointerException("Execution object can't be null");
 		}
+		MachineNode currentMachine = new MachineNode(getMachineName());
 		// We are going to append to existing execution
 		MachineNode lastMachine = execution.getLastMachine();
 		if (null == lastMachine || null == lastMachine.getName()) {
@@ -272,7 +274,7 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 		}
 		int[] enabledTestsIds = scenario.getEnabledTestsIndexes();
 		if (null == enabledTestsIds) {
-			return 0; 
+			return 0;
 		}
 		return enabledTestsIds.length;
 	}
@@ -295,7 +297,7 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 		}
 	}
 
-	private static String getMachineName() {
+	protected static String getMachineName() {
 		String machineName;
 		try {
 			machineName = InetAddress.getLocalHost().getHostName();
@@ -448,7 +450,6 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 		String noarmalizedValue = value.replaceAll("(?<!\\\\)\\\\(?=[:!=#\\\\])", "");
 		currentTest.addParameter(key, noarmalizedValue);
 	}
-
 
 	/**
 	 * This method is meant to be override. It is called at the start of the run
@@ -772,9 +773,21 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 	protected Execution getExecution() {
 		return execution;
 	}
+	
+	protected ScenarioNode getCurrentScenario() {
+		return currentScenario;
+	}
 
 	protected TestDetails getTestDetails() {
 		return testDetails;
+	}
+
+	protected int getIndex() {
+		return index;
+	}
+	
+	protected String getExecutionUid() {
+		return executionUid;
 	}
 
 }
