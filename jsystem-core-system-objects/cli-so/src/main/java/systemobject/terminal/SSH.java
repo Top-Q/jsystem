@@ -3,7 +3,6 @@
  */
 package systemobject.terminal;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -16,31 +15,36 @@ import ch.ethz.ssh2.Session;
  * A terminal used for SSH Connection
  */
 public class SSH extends Terminal {
-	
+
 	protected String hostname;
 
 	protected String username;
 
 	protected String password;
-	
+
 	protected Connection conn = null;
 
 	protected Session sess = null;
-	
+
 	//ssh port forwarding
 	protected LocalPortForwarder lpf = null;
 
 	protected int sourcePort = -1;
 
 	protected int destinationPort = -1;
-	
+
 	protected boolean xtermTerminal = true;
-	
-	public SSH(String hostnameP, String usernameP, String passwordP) {
-		this(hostnameP, usernameP, passwordP, -1, -1, true);
+
+	/**
+	 * Is enabled the sudo terminal
+	 */
+	protected boolean enableSudoTerminal = true;
+
+	public SSH(String hostnameP, String usernameP, String passwordP, boolean enableSudoTerminal) {
+		this(hostnameP, usernameP, passwordP, -1, -1, true, enableSudoTerminal);
 	}
-	
-	
+
+
 	/**
 	 * Constructor with Destination port
 	 * if destinationPort specified in this constructor no LocalPortForwarder will be used
@@ -50,16 +54,16 @@ public class SSH extends Terminal {
 	 * @param  passwordP Password for SSH auth
 	 * @param  destinationPort custom destination Port for ssh connection
 	 */
-	public SSH(String hostnameP, String usernameP, String passwordP, int destinationPort) {
-		this(hostnameP, usernameP, passwordP, -1, destinationPort, true);
-	}
-	
-	
-	public SSH(String hostnameP, String usernameP, String passwordP, int sourceTunnelPort, int destinationTunnelPort) {
-		this(hostnameP, usernameP, passwordP, sourceTunnelPort, destinationTunnelPort, true);
+	public SSH(String hostnameP, String usernameP, String passwordP, int destinationPort, boolean enableSudoTerminal) {
+		this(hostnameP, usernameP, passwordP, -1, destinationPort, true, enableSudoTerminal);
 	}
 
-	public SSH(String hostnameP, String usernameP, String passwordP, int sourceTunnelPort, int destinationTunnelPort, boolean _xtermTerminal) {
+
+	public SSH(String hostnameP, String usernameP, String passwordP, int sourceTunnelPort, int destinationTunnelPort, boolean enableSudoTerminal) {
+		this(hostnameP, usernameP, passwordP, sourceTunnelPort, destinationTunnelPort, true, enableSudoTerminal);
+	}
+
+	public SSH(String hostnameP, String usernameP, String passwordP, int sourceTunnelPort, int destinationTunnelPort, boolean _xtermTerminal, boolean enableSudoTerminal) {
 		super();
 		hostname = hostnameP;
 		username = usernameP;
@@ -67,6 +71,7 @@ public class SSH extends Terminal {
 		sourcePort = sourceTunnelPort;
 		destinationPort =destinationTunnelPort;
 		xtermTerminal = _xtermTerminal;
+		this.enableSudoTerminal = enableSudoTerminal;
 	}
 
 	@Override
@@ -102,7 +107,7 @@ public class SSH extends Terminal {
 			// we can authenticate with a RSA private key
 			privateKeyAuthentication=true;
 		}
-		
+
 		/* Authenticate */
 		if (passAuthentication) {
 			try {
@@ -120,18 +125,19 @@ public class SSH extends Terminal {
 		if (sourcePort > -1 && destinationPort > -1) {
 			lpf = conn.createLocalPortForwarder(sourcePort, "localhost" , destinationPort);
 		}
-		
+
 		/* Create a session */
 		sess = conn.openSession();
-		
-		if (xtermTerminal) {
-			sess.requestPTY("xterm", 80, 24, 640, 480, null);
-		}else {
-			sess.requestPTY("dumb", 200, 50, 0, 0, null);
+		if(enableSudoTerminal) {
+			if (xtermTerminal) {
+				sess.requestPTY("xterm", 80, 24, 640, 480, null);
+			} else {
+				sess.requestPTY("dumb", 200, 50, 0, 0, null);
+			}
 		}
-		
+
 		sess.startShell();
-		
+
 		in =  sess.getStdout();
 		out = sess.getStdin();
 	}
@@ -163,7 +169,7 @@ public class SSH extends Terminal {
 	}
 
 	/**
-	 * The logic that one has to implement if "keyboard-interactive" 
+	 * The logic that one has to implement if "keyboard-interactive"
 	 * authentication shall be supported.
 	 */
 	class InteractiveLogic implements InteractiveCallback {
@@ -238,5 +244,5 @@ public class SSH extends Terminal {
 
 
 
-	
+
 }

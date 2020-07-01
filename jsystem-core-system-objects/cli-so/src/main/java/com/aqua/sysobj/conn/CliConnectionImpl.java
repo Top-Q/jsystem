@@ -37,8 +37,11 @@ import systemobject.terminal.VT100FilterInputStream;
  * 
  */
 public abstract class CliConnectionImpl extends SystemObjectImpl implements CliConnection {
-	
-	public static enum EnumConnectionType {    
+
+    // If enabled will use the sudo terminal
+	private boolean enableSudoTerminal = true;
+
+    public static enum EnumConnectionType {    
 		COM("com"),
 		RS232("rs232"),
 		TELNET("telnet"),
@@ -268,10 +271,10 @@ public abstract class CliConnectionImpl extends SystemObjectImpl implements CliC
 			terminal = new RS232(params[0], Integer.parseInt(params[1]), Integer.parseInt(params[2]), Integer.parseInt(params[3]), Integer
 					.parseInt(params[4]));
 		} else if (protocol.toLowerCase().equals(EnumConnectionType.SSH.value())) {
-			terminal = new SSH(host, user, password);
+			terminal = new SSH(host, user, password, enableSudoTerminal);
 		} else if (protocol.toLowerCase().equals(
 				EnumConnectionType.SSH_RSA.value())) {
-			terminal = new SSHWithRSA(host, user, password, privateKey);
+			terminal = new SSHWithRSA(host, user, password, privateKey, enableSudoTerminal);
 			prompts.add(new Prompt("$", false, true));
 			prompts.add(new Prompt("]$", false, true));
 			
@@ -830,5 +833,9 @@ public abstract class CliConnectionImpl extends SystemObjectImpl implements CliC
 	public void setPrivateKey(File privateKey) {
 		this.privateKey = privateKey;
 	}
+
+    public void setEnableSudoTerminal(boolean enableSudoTerminal){
+        this.enableSudoTerminal = enableSudoTerminal;
+    }
 
 }
