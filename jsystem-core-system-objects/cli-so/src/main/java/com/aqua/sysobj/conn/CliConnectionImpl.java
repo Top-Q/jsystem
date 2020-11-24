@@ -271,7 +271,7 @@ public abstract class CliConnectionImpl extends SystemObjectImpl implements CliC
 			terminal = new RS232(params[0], Integer.parseInt(params[1]), Integer.parseInt(params[2]), Integer.parseInt(params[3]), Integer
 					.parseInt(params[4]));
 		} else if (protocol.toLowerCase().equals(EnumConnectionType.SSH.value())) {
-			terminal = new SSH(host, user, password, enableSudoTerminal);
+			terminal = new SSH(host, user, password, port, enableSudoTerminal);
 		} else if (protocol.toLowerCase().equals(
 				EnumConnectionType.SSH_RSA.value())) {
 			terminal = new SSHWithRSA(host, user, password, privateKey, enableSudoTerminal);
