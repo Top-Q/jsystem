@@ -28,7 +28,7 @@ public class RemoteHtmlReporter extends AbstractHtmlReporter {
 
 	private int numOfFailures;
 
-	private RemoteDifidoProperties difidoProps;
+	protected RemoteDifidoProperties difidoProps;
 
 	private ExecutionDetails details;
 
