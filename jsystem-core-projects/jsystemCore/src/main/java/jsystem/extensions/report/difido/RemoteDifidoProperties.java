@@ -19,7 +19,7 @@ public class RemoteDifidoProperties {
 
 	private Properties properties;
 
-	enum RemoteDifidoOptions {
+	public enum RemoteDifidoOptions {
 		//@formatter:off
 		HOST("host", "localhost"), 
 		PORT("port", "8080"), 
@@ -36,7 +36,7 @@ public class RemoteDifidoProperties {
 
 		private String defaultValue;
 
-		private RemoteDifidoOptions(final String property, final String defaultValue) {
+		RemoteDifidoOptions(final String property, final String defaultValue) {
 			this.property = property;
 			this.defaultValue = defaultValue;
 		}
