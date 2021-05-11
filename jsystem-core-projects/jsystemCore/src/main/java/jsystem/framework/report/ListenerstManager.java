@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -364,7 +365,7 @@ public class ListenerstManager extends DefaultReporterImpl implements
 		}
 		if (buffering) {
 			if (reportsBuffer == null) {
-				reportsBuffer = new ArrayList<ReportElement>();
+				reportsBuffer = Collections.synchronizedList(new ArrayList<ReportElement>());
 			}
 			ReportElement re = new ReportElement();
 			re.setTitle(level);
@@ -384,7 +385,7 @@ public class ListenerstManager extends DefaultReporterImpl implements
 		}
 		if (buffering) {
 			if (reportsBuffer == null) {
-				reportsBuffer = new ArrayList<ReportElement>();
+				reportsBuffer = Collections.synchronizedList(new ArrayList<ReportElement>());
 			}
 			ReportElement re = new ReportElement();
 			re.setOriginator(Thread.currentThread().getName());
@@ -514,7 +515,7 @@ public class ListenerstManager extends DefaultReporterImpl implements
 		}
 		if (buffering) {
 			if (reportsBuffer == null) {
-				reportsBuffer = new ArrayList<ReportElement>();
+				reportsBuffer = Collections.synchronizedList(new ArrayList<ReportElement>());
 			}
 			ReportElement currentReportElement = new ReportElement();
 			currentReportElement.setTitle(title);
