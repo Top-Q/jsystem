@@ -63,6 +63,7 @@ public class RemoteHtmlReporter extends AbstractHtmlReporter {
 		if (executionId > 0 && !difidoProps.getPropertyAsBoolean(RemoteDifidoOptions.USE_SHARED_EXECUTION)) {
 			try {
 				client.endExecution(executionId);
+				client.addSerial(executionId);
 			} catch (Exception e) {
 				log.warning("Failed to close execution with id " + executionId);
 			}
