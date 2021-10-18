@@ -26,8 +26,8 @@ public class DifidoClient {
 	
 	private static final Logger log = Logger.getLogger(DifidoClient.class.getName());
 	
-	Properties testProp = new Properties();
-	final String PROP_FILE = "testsettings.properties";
+	Properties execProp = new Properties();
+	final String PROP_FILE = "execution.properties";
 
 	private static final String BASE_URI_TEMPLATE = "http://%s:%d/api/";
 	private final String baseUri;
@@ -50,9 +50,9 @@ public class DifidoClient {
 	}
 	
 	public void addSerial(int executionId) throws Exception {
-		testProp.load(new FileInputStream(PROP_FILE));
-		final PutMethod method = new PutMethod(baseUri + "executions/" + executionId + "?serial=" + testProp.getProperty("Serial"));
-		log.fine("addSerial URI: " + baseUri + "executions/" + executionId + "?serial=" + testProp.getProperty("Serial"));
+		execProp.load(new FileInputStream(PROP_FILE));
+		final PutMethod method = new PutMethod(baseUri + "executions/" + executionId + "?serial=" + execProp.getProperty("Serial"));
+		log.fine("addSerial URI: " + baseUri + "executions/" + executionId + "?serial=" + execProp.getProperty("Serial"));
 		method.setRequestHeader(new Header("Content-Type", "text/plain"));
 		final int responseCode = client.executeMethod(method);
 		handleResponseCode(method, responseCode);
