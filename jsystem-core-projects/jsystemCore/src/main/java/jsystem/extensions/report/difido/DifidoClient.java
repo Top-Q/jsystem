@@ -1,11 +1,8 @@
 package jsystem.extensions.report.difido;
 
-import il.co.topq.difido.model.execution.MachineNode;
-import il.co.topq.difido.model.remote.ExecutionDetails;
-import il.co.topq.difido.model.test.TestDetails;
-
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -22,12 +19,16 @@ import org.apache.commons.httpclient.methods.multipart.Part;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import il.co.topq.difido.model.execution.MachineNode;
+import il.co.topq.difido.model.remote.ExecutionDetails;
+import il.co.topq.difido.model.test.TestDetails;
+
 public class DifidoClient {
-	
+
 	private static final Logger log = Logger.getLogger(DifidoClient.class.getName());
-	
-	Properties execProp = new Properties();
-	final String PROP_FILE = "execution.properties";
+
+	private final Properties execProps;
+	private final String EXEC_PROPS_FILE = "execution.properties";
 
 	private static final String BASE_URI_TEMPLATE = "http://%s:%d/api/";
 	private final String baseUri;
@@ -36,6 +37,7 @@ public class DifidoClient {
 	public DifidoClient(String host, int port) {
 		baseUri = String.format(BASE_URI_TEMPLATE, host, port);
 		client = new HttpClient();
+		execProps = new Properties();
 	}
 
 	public int addExecution(ExecutionDetails details) throws Exception {
@@ -46,13 +48,17 @@ public class DifidoClient {
 		}
 		final int responseCode = client.executeMethod(method);
 		handleResponseCode(method, responseCode);
-		return Integer.parseInt(method.getResponseBodyAsString());
+		int executionId = Integer.parseInt(method.getResponseBodyAsString());
+		execProps.load(new FileInputStream(EXEC_PROPS_FILE));
+		execProps.clear();
+		execProps.setProperty("execution.id", Integer.toString(executionId));
+		execProps.store(new FileOutputStream(EXEC_PROPS_FILE), null);
+		return executionId;
 	}
-	
-	public void addSerial(int executionId) throws Exception {
-		execProp.load(new FileInputStream(PROP_FILE));
-		final PutMethod method = new PutMethod(baseUri + "executions/" + executionId + "?serial=" + execProp.getProperty("Serial"));
-		log.fine("addSerial URI: " + baseUri + "executions/" + executionId + "?serial=" + execProp.getProperty("Serial"));
+
+	public void updateSerialNumber(int executionId) throws Exception {
+		execProps.load(new FileInputStream(EXEC_PROPS_FILE));
+		final PutMethod method = new PutMethod(baseUri + "executions/" + executionId + "?serial=" + execProps.getProperty("execution.serial"));
 		method.setRequestHeader(new Header("Content-Type", "text/plain"));
 		final int responseCode = client.executeMethod(method);
 		handleResponseCode(method, responseCode);
@@ -63,6 +69,7 @@ public class DifidoClient {
 		method.setRequestHeader(new Header("Content-Type", "text/plain"));
 		final int responseCode = client.executeMethod(method);
 		handleResponseCode(method, responseCode);
+		execProps.clear();
 	}
 
 	public int addMachine(int executionId, MachineNode machine) throws Exception {

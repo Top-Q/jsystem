@@ -1,15 +1,14 @@
 package jsystem.extensions.report.difido;
 
-import il.co.topq.difido.model.execution.Execution;
-import il.co.topq.difido.model.execution.ScenarioNode;
-import il.co.topq.difido.model.remote.ExecutionDetails;
-import il.co.topq.difido.model.test.TestDetails;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import il.co.topq.difido.model.execution.Execution;
+import il.co.topq.difido.model.execution.ScenarioNode;
+import il.co.topq.difido.model.remote.ExecutionDetails;
+import il.co.topq.difido.model.test.TestDetails;
 import jsystem.extensions.report.difido.RemoteDifidoProperties.RemoteDifidoOptions;
 
 public class RemoteHtmlReporter extends AbstractHtmlReporter {
@@ -21,7 +20,6 @@ public class RemoteHtmlReporter extends AbstractHtmlReporter {
 	private boolean enabled;
 
 	private DifidoClient client;
-
 	private int executionId;
 
 	private int machineId;
@@ -60,12 +58,45 @@ public class RemoteHtmlReporter extends AbstractHtmlReporter {
 		// We are not using shared execution, that means that we are the only
 		// one that are using it and we just ended with it, so let's set it to
 		// not active
+		log.fine("endRun, executionId: " + executionId);
 		if (executionId > 0 && !difidoProps.getPropertyAsBoolean(RemoteDifidoOptions.USE_SHARED_EXECUTION)) {
 			try {
 				client.endExecution(executionId);
-				client.addSerial(executionId);
+				client.updateSerialNumber(executionId);
+				
+//              // PUT AND THEN CALL THIS FUNCTION INSIDE YOUR TEST!!!
+//				
+//				public void updateSerialNumber(String serialNum, boolean realTime) throws Exception {
+//					Properties execProps = new Properties();
+//					final String EXEC_PROPS_FILE = "execution.properties";
+//					try {
+//						execProps.load(new FileInputStream(EXEC_PROPS_FILE));
+//						execProps.setProperty("execution.serial", serialNum);
+//						execProps.store(new FileOutputStream(EXEC_PROPS_FILE), null);
+//						if (realTime) {
+//							RemoteDifidoProperties difidoProps = new RemoteDifidoProperties();;
+//							String host = difidoProps.getPropertyAsString(RemoteDifidoOptions.HOST);
+//							int port = Integer.parseInt(difidoProps.getPropertyAsString(RemoteDifidoOptions.PORT));
+//							String BASE_URI_TEMPLATE = "http://%s:%d/api/";
+//							String baseUri = String.format(BASE_URI_TEMPLATE, host, port);
+//							HttpClient client = new HttpClient();
+//							final PutMethod method = new PutMethod(baseUri + "executions/" + execProps.getProperty("execution.id") + "?serial=" + serialNum);
+//							method.setRequestHeader(new Header("Content-Type", "text/plain"));
+//							final int responseCode = client.executeMethod(method);
+//							if (responseCode != 200 && responseCode != 204) {
+//								throw new Exception("Request was not successful. Response is: " + responseCode + ".\n Response body: "
+//										+ method.getResponseBodyAsString());
+//							}
+//						}
+//					} catch (IOException e) {
+//						e.printStackTrace();
+//						log.warning("Update Serial number failed!");
+//					}	
+//				}
+				
 			} catch (Exception e) {
 				log.warning("Failed to close execution with id " + executionId);
+
 			}
 			executionId = -1;
 		}
@@ -88,6 +119,7 @@ public class RemoteHtmlReporter extends AbstractHtmlReporter {
 			port = Integer.parseInt(difidoProps.getPropertyAsString(RemoteDifidoOptions.PORT));
 			client = new DifidoClient(host, port);
 			executionId = prepareExecution();
+			log.fine("startRun: current executionId = " + executionId);
 			machineId = client.addMachine(executionId, getExecution().getLastMachine());
 			enabled = true;
 			log.fine(RemoteHtmlReporter.class.getName() + " was initialized successfully");
@@ -111,9 +143,11 @@ public class RemoteHtmlReporter extends AbstractHtmlReporter {
 
 		if (appendToExistingExecution && !forceNewExecution) {
 			if (id >= 0) {
+				log.fine("prepareExecution: current id = " + id);
 				return id;
 			}
 			if (executionId > 0) {
+				log.fine("prepareExecution: current executionId = " + executionId);
 				return executionId;
 			}
 
@@ -121,6 +155,9 @@ public class RemoteHtmlReporter extends AbstractHtmlReporter {
 		details = new ExecutionDetails(description, useSharedExecution);
 		details.setForceNew(forceNewExecution);
 		details.setExecutionProperties(properties);
+		log.fine("ADD DIFIDO EXECUTION : appendToExistingExecution:" + appendToExistingExecution + 
+				", useSharedExecution: " + useSharedExecution + ", description: " + description + 
+				", id: " + id + ", forceNewExecution: " + forceNewExecution + ", executionId: " + executionId);
 		return client.addExecution(details);
 	}
 
