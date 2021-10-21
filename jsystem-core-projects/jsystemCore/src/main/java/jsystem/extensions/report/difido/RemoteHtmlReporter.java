@@ -70,7 +70,11 @@ public class RemoteHtmlReporter extends AbstractHtmlReporter {
 //					Properties execProps = new Properties();
 //					final String EXEC_PROPS_FILE = "execution.properties";
 //					try {
-//						execProps.load(new FileInputStream(EXEC_PROPS_FILE));
+//				
+//						File f = new File(EXEC_PROPS_FILE);
+//						if (f.exists()) 			
+//							execProps.load(new FileInputStream(EXEC_PROPS_FILE));
+//	
 //						execProps.setProperty("execution.serial", serialNum);
 //						execProps.store(new FileOutputStream(EXEC_PROPS_FILE), null);
 //						if (realTime) {

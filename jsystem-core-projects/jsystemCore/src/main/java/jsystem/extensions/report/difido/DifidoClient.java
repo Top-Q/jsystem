@@ -49,8 +49,11 @@ public class DifidoClient {
 		final int responseCode = client.executeMethod(method);
 		handleResponseCode(method, responseCode);
 		int executionId = Integer.parseInt(method.getResponseBodyAsString());
-		execProps.load(new FileInputStream(EXEC_PROPS_FILE));
-		execProps.clear();
+		File f = new File(EXEC_PROPS_FILE);
+		if (f.exists()) {		
+			execProps.load(new FileInputStream(EXEC_PROPS_FILE));
+			execProps.clear();
+		}
 		execProps.setProperty("execution.id", Integer.toString(executionId));
 		execProps.store(new FileOutputStream(EXEC_PROPS_FILE), null);
 		return executionId;
