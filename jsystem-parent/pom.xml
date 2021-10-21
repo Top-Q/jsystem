@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.jsystemtest</groupId>
 	<artifactId>jsystem-parent</artifactId>
-	<version>6.1.12-SNAPSHOT</version>
+	<version>6.1.12-SIKLU</version>
 	<packaging>pom</packaging>
 	<name>jsystem-parent</name>
 	<organization>
@@ -29,6 +29,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<assembly.format>dir</assembly.format>
 		<topq.repository.rootUrl>http://maven.top-q.co.il</topq.repository.rootUrl>
+		<skipTests>True</skipTests>
 	</properties>
 
 	<dependencies>

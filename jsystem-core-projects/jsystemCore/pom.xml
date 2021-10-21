@@ -4,12 +4,12 @@
 	<parent>
 		<groupId>org.jsystemtest</groupId>
 		<artifactId>jsystem-parent</artifactId>
-		<version>6.1.12-SNAPSHOT</version>
+		<version>6.1.12-SIKLU</version>
 		<relativePath>../../jsystem-parent</relativePath>
 	</parent>
 	<artifactId>jsystemCore</artifactId>
 	<properties>
-		<runner.home>../jsystem-runner/target/jsystem-runner-${project.version}/jsystem-runner-${project.version}</runner.home>
+		<runner.home>../../jsystem-assembly/jsystem-runner/target/runner/runner</runner.home>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -81,11 +81,11 @@
 	</dependencies>
 	<build>
 		<plugins>
-			<!--plugin> <artifactId>maven-antrun-plugin</artifactId> <version>1.7</version> 
+			<plugin> <artifactId>maven-antrun-plugin</artifactId> <version>1.7</version> 
 				<executions> <execution> <phase>install</phase> <configuration> <target> 
 				<copy file="${project.build.directory}/${project.artifactId}-${project.version}.jar" 
-				todir="${basedir}/${runner.home}/lib" /> </target> </configuration> <goals> 
-				<goal>run</goal> </goals> </execution> </executions> </plugin -->
+				todir="${runner.home}/lib" /> </target> </configuration> <goals> 
+				<goal>run</goal> </goals> </execution> </executions> </plugin>
 		</plugins>
 	</build>
 </project>
