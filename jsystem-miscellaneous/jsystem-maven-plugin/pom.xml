@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>org.jsystemtest</groupId>
 		<artifactId>jsystem-parent</artifactId>
-		<version>6.1.12-SNAPSHOT</version>
+		<version>6.1.12-SIKLU</version>
 		<relativePath>../../jsystem-parent</relativePath>
 	</parent>
 	<repositories>
@@ -60,5 +60,4 @@
 		</dependency>
 	</dependencies>
 	<artifactId>jsystem-maven-plugin</artifactId>
-
 </project>

@@ -206,7 +206,7 @@
 			<dependency>
 				<groupId>il.co.topq.difido</groupId>
 				<artifactId>difido-reports-common</artifactId>
-				<version>2.2.05</version>
+				<version>3.0.00</version>
 			</dependency>
 			<dependency>
 				<groupId>xml-apis</groupId>
@@ -243,6 +243,25 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>1.5.1</version>
+				<executions>
+					<execution>
+						<id>default-deploy</id>
+						<phase>deploy</phase>
+						<goals>
+							<goal>deploy</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<serverId>nexus</serverId>
+					<nexusUrl>http://nexus.siklu.local/repository/Automation/</nexusUrl>
+					<skipStaging>true</skipStaging>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 	<modules>
@@ -254,13 +273,13 @@
 		<module>../jsystem-miscellaneous/jsystem-services-tests</module>
 	</modules>
 	<repositories>
-		<repository>
+		<!-- <repository>
 			<id>topq</id>
 			<url>${topq.repository.rootUrl}/content/groups/public</url>
-		</repository>
+		</repository> -->
 	</repositories>
 	<distributionManagement>
-		<repository>
+	<!-- 	<repository>
 			<id>topq</id>
 			<name>RepositoryProxy</name>
 			<url>${topq.repository.rootUrl}/content/repositories/releases</url>
@@ -269,13 +288,21 @@
 			<id>topq</id>
 			<name>RepositoryProxy</name>
 			<url>${topq.repository.rootUrl}/content/repositories/snapshots</url>
+		</snapshotRepository> -->
+		<snapshotRepository>
+			<id>Automation-snapshots</id>
+			<url>http://nexus.siklu.local/repository/Automation/</url>
 		</snapshotRepository>
+		<repository>
+			<id>Automation</id>
+			<url>http://nexus.siklu.local/repository/Automation/</url>
+		</repository>
 	</distributionManagement>
 	<pluginRepositories>
-		<pluginRepository>
+		<!-- <pluginRepository>
 			<id>topq</id>
 			<url>${topq.repository.rootUrl}/content/groups/public</url>
-		</pluginRepository>
+		</pluginRepository> -->
 	</pluginRepositories>
 	<profiles>
 		<profile>

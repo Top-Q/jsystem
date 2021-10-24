@@ -41,5 +41,37 @@
 			<artifactId>commons-io</artifactId>
 		</dependency>
 	</dependencies>
-
+<build>
+	<plugins>
+	<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>1.5.1</version>
+				<executions>
+					<execution>
+						<id>default-deploy</id>
+						<phase>deploy</phase>
+						<goals>
+							<goal>deploy</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<serverId>nexus</serverId>
+					<nexusUrl>http://nexus.siklu.local/repository/Automation/</nexusUrl>
+					<skipStaging>true</skipStaging>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<distributionManagement>
+		<snapshotRepository>
+			<id>Automation-snapshots</id>
+			<url>http://nexus.siklu.local/repository/Automation/</url>
+		</snapshotRepository>
+		<repository>
+			<id>Automation</id>
+			<url>http://nexus.siklu.local/repository/Automation/</url>
+		</repository>
+	</distributionManagement>
 </project>

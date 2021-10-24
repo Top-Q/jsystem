@@ -1,15 +1,16 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<parent>	
+	<parent>
 		<groupId>org.jsystemtest</groupId>
 		<artifactId>jsystem-parent</artifactId>
-		<version>6.1.12-SIKLU</version>	
+		<version>6.1.12-SIKLU</version>
 		<relativePath>../../jsystem-parent</relativePath>
 	</parent>
 	<artifactId>jsystemAgent</artifactId>
 	<dependencies>
-	<dependency>
+		<dependency>
 			<groupId>org.jsystemtest</groupId>
 			<artifactId>jsystemCommon</artifactId>
 			<version>${project.version}</version>
@@ -24,6 +25,6 @@
 			<artifactId>embeddedCatalina</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		
+
 	</dependencies>
 </project>

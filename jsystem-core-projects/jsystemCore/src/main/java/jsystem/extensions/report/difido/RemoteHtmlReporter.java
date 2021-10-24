@@ -2,6 +2,7 @@ package jsystem.extensions.report.difido;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -158,7 +159,7 @@ public class RemoteHtmlReporter extends AbstractHtmlReporter {
 		}
 		details = new ExecutionDetails(description, useSharedExecution);
 		details.setForceNew(forceNewExecution);
-		details.setExecutionProperties(properties);
+		details.setExecutionProperties(new HashMap<String,String>(properties));
 		log.fine("ADD DIFIDO EXECUTION : appendToExistingExecution:" + appendToExistingExecution + 
 				", useSharedExecution: " + useSharedExecution + ", description: " + description + 
 				", id: " + id + ", forceNewExecution: " + forceNewExecution + ", executionId: " + executionId);
