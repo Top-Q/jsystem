@@ -1,10 +1,11 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.jsystemtest.systemobjects</groupId>
 		<artifactId>jsystem-core-system-objects</artifactId>
-		<version>6.1.12-SIKLU</version>
+		<version>6.1.13-SIKLU</version>
 		<relativePath>..</relativePath>
 	</parent>
 	<artifactId>cli</artifactId>
@@ -15,9 +16,12 @@
 			<version>${jsystem.version}</version>
 			<scope>provided</scope>
 		</dependency>
+		<!-- <dependency> <groupId>ch.ethz.ganymed</groupId> <artifactId>ganymed-ssh2</artifactId> 
+			</dependency> -->
 		<dependency>
 			<groupId>ch.ethz.ganymed</groupId>
 			<artifactId>ganymed-ssh2</artifactId>
+			<version>263</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.comm</groupId>

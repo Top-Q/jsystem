@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.jsystemtest</groupId>
 	<artifactId>jsystem-parent</artifactId>
-	<version>6.1.12-SIKLU</version>
+	<version>6.1.13-SIKLU</version>
 	<packaging>pom</packaging>
 	<name>jsystem-parent</name>
 	<organization>
@@ -135,11 +135,16 @@
 				<artifactId>commons-net</artifactId>
 				<version>3.1</version>
 			</dependency>
-			<dependency>
+			<!-- <dependency>
 				<groupId>ch.ethz.ganymed</groupId>
 				<artifactId>ganymed-ssh2</artifactId>
 				<version>build210</version>
-			</dependency>
+			</dependency> -->
+			<dependency>
+			<groupId>ch.ethz.ganymed</groupId>
+			<artifactId>ganymed-ssh2</artifactId>
+			<version>263</version>
+		</dependency>
 			<dependency>
 				<groupId>javax.comm</groupId>
 				<artifactId>comm</artifactId>
