@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.jsystemtest.archetypes</groupId>
 		<artifactId>jsystem-archetypes</artifactId>
-		<version>6.1.13-SIKLU</version>
+		<version>6.1.14-SIKLU</version>
 		<relativePath>..</relativePath>
 	</parent>
 	<properties>

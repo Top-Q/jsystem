@@ -59,7 +59,7 @@ public class DifidoClient {
 		return executionId;
 	}
 
-	public void updateSerialNumber(int executionId) throws Exception {
+	public void updateScenarioName(int executionId) throws Exception {
 		execProps.load(new FileInputStream(EXEC_PROPS_FILE));
 		final PutMethod method = new PutMethod(baseUri + "executions/" + executionId + "?serial=" + execProps.getProperty("execution.serial"));
 		method.setRequestHeader(new Header("Content-Type", "text/plain"));
@@ -67,6 +67,14 @@ public class DifidoClient {
 		handleResponseCode(method, responseCode);
 	}
 
+	public void updateSerialNumber(int executionId) throws Exception {
+		execProps.load(new FileInputStream(EXEC_PROPS_FILE));
+		final PutMethod method = new PutMethod(baseUri + "executions/" + executionId + "?serial=" + execProps.getProperty("execution.serial"));
+		method.setRequestHeader(new Header("Content-Type", "text/plain"));
+		final int responseCode = client.executeMethod(method);
+		handleResponseCode(method, responseCode);
+	}
+	
 	public void endExecution(int executionId) throws Exception {
 		final PutMethod method = new PutMethod(baseUri + "executions/" + executionId + "?active=false");
 		method.setRequestHeader(new Header("Content-Type", "text/plain"));

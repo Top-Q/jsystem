@@ -11,6 +11,8 @@ import il.co.topq.difido.model.execution.ScenarioNode;
 import il.co.topq.difido.model.remote.ExecutionDetails;
 import il.co.topq.difido.model.test.TestDetails;
 import jsystem.extensions.report.difido.RemoteDifidoProperties.RemoteDifidoOptions;
+import jsystem.framework.FrameworkOptions;
+import jsystem.framework.JSystemProperties;
 
 public class RemoteHtmlReporter extends AbstractHtmlReporter {
 
@@ -130,7 +132,7 @@ public class RemoteHtmlReporter extends AbstractHtmlReporter {
 			log.fine(RemoteHtmlReporter.class.getName() + " was initialized successfully");
 		} catch (Throwable t) {
 			enabled = false;
-			log.warning("Failed to init " + RemoteHtmlReporter.class.getName() + "connection with host '" + host + ":"
+			log.warning("Failed to init " + RemoteHtmlReporter.class.getName() + " connection with host '" + host + ":"
 					+ port + "' due to " + t.getMessage());
 		}
 
@@ -141,11 +143,21 @@ public class RemoteHtmlReporter extends AbstractHtmlReporter {
 		final boolean appendToExistingExecution = difidoProps
 				.getPropertyAsBoolean(RemoteDifidoOptions.APPEND_TO_EXISTING_EXECUTION);
 		final boolean useSharedExecution = difidoProps.getPropertyAsBoolean(RemoteDifidoOptions.USE_SHARED_EXECUTION);
-		final String description = difidoProps.getPropertyAsString(RemoteDifidoOptions.DESCRIPTION);
+		String description = difidoProps.getPropertyAsString(RemoteDifidoOptions.DESCRIPTION);
+
 		final int id = difidoProps.getPropertyAsInt(RemoteDifidoOptions.EXISTING_EXECUTION_ID);
 		final boolean forceNewExecution = difidoProps.getPropertyAsBoolean(RemoteDifidoOptions.FORCE_NEW_EXECUTION);
 		final Map<String, String> properties = difidoProps.getPropertyAsMap(RemoteDifidoOptions.EXECUTION_PROPETIES);
 
+		//add SUT=<sutFileName> - remove the .xml 
+		String sutFile = JSystemProperties.getInstance().getPreference(FrameworkOptions.USED_SUT_FILE);
+		log.fine("prepareExecution: current sutFile = " + sutFile);
+		properties.put("SUT", (null == sutFile) ? "" : sutFile.replaceAll(".xml", ""));
+		//add Scenario=<scenarioName> - remove preceding scenarios/ path
+		String scen = JSystemProperties.getInstance().getPreference(FrameworkOptions.CURRENT_SCENARIO);
+		log.fine("prepareExecution: current scenarioName = " + scen);
+		properties.put("Scenario", (null == scen) ? "" : scen.replace("scenarios/",""));
+			
 		if (appendToExistingExecution && !forceNewExecution) {
 			if (id >= 0) {
 				log.fine("prepareExecution: current id = " + id);

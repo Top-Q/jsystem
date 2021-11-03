@@ -4,14 +4,14 @@
 	<parent>
 		<groupId>org.jsystemtest</groupId>
 		<artifactId>jsystem-parent</artifactId>
-		<version>6.1.13-SIKLU</version>		
+		<version>6.1.14-SIKLU</version>		
 		<relativePath>../jsystem-parent</relativePath>
 	</parent>
 	<artifactId>jsystem-core-system-objects</artifactId>
 	<groupId>org.jsystemtest.systemobjects</groupId>
 	<packaging>pom</packaging>
 	<properties>
-		<jsystem.version>6.1.13-SIKLU</jsystem.version>
+		<jsystem.version>6.1.14-SIKLU</jsystem.version>
 	</properties>
 	<modules>
 		<module>cli-so</module>

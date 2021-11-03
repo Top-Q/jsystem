@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.jsystemtest</groupId>
 	<artifactId>jsystem-parent</artifactId>
-	<version>6.1.13-SIKLU</version>
+	<version>6.1.14-SIKLU</version>
 	<packaging>pom</packaging>
 	<name>jsystem-parent</name>
 	<organization>
@@ -211,7 +211,7 @@
 			<dependency>
 				<groupId>il.co.topq.difido</groupId>
 				<artifactId>difido-reports-common</artifactId>
-				<version>3.0.00</version>
+				<version>3.1.01-SIKLU</version>
 			</dependency>
 			<dependency>
 				<groupId>xml-apis</groupId>
