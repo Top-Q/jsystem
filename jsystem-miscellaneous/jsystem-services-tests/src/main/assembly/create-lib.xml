@@ -35,7 +35,6 @@
 				<exclude>*:jfreechart:*</exclude>
 				<exclude>*:junit:*</exclude>
 				<exclude>*:jython:*</exclude>
-				<exclude>*:log4j:*</exclude>
 				<exclude>*:logkit:*</exclude>
 				<exclude>*:mail:*</exclude>
 				<exclude>*:qdox:*</exclude>

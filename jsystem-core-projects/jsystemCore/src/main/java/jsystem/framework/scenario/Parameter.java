@@ -11,12 +11,11 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.springframework.util.ObjectUtils;
-
 import jsystem.extensions.report.html.HtmlCodeWriter;
 import jsystem.framework.FrameworkOptions;
 import jsystem.framework.JSystemProperties;
 import jsystem.framework.common.CommonResources;
+import jsystem.utils.ObjectUtils;
 import jsystem.utils.StringUtils;
 import jsystem.utils.beans.BeanUtils;
 

@@ -39,13 +39,13 @@ import jsystem.framework.scripts.ScriptExecutor;
 import jsystem.framework.scripts.ScriptsEngineManager;
 import jsystem.runner.loader.LoadersManager;
 import jsystem.utils.DateUtils;
+import jsystem.utils.ObjectUtils;
 import jsystem.utils.StringUtils;
 import jsystem.utils.XmlUtils;
 import junit.framework.SystemTest;
 import junit.framework.Test;
 import junit.framework.TestResult;
 
-import org.springframework.util.ObjectUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
