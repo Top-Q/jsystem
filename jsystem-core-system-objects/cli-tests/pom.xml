@@ -6,14 +6,14 @@
 		<parent>
 		<groupId>org.jsystemtest</groupId>
 		<artifactId>jsystem-parent</artifactId>
-		<version>6.1.14-SIKLU</version>
+		<version>6.1.15-SIKLU</version>
 		<relativePath>../../jsystem-parent</relativePath>
 	</parent>
 	<dependencies>
 		<dependency>
 			<groupId>org.jsystemtest</groupId>
 			<artifactId>jsystemApp</artifactId>
-			<version>6.1.14-SIKLU</version>
+			<version>6.1.15-SIKLU</version>
 		</dependency>
 	</dependencies>
 	<build>
