@@ -38,7 +38,7 @@ public enum FrameworkOptions {
 			DataType.BOOLEAN, 
 			true,
 			false),
-	
+
 	/**
 	 * tag for the tests classes folder
 	 */
@@ -140,7 +140,7 @@ public enum FrameworkOptions {
 			DataType.TEXT, 
 			"jsystem/extensions/report/html/resources/default.css",
 			false),
-			
+
 	/**
 	 * The color for the warning in the html report (default: FF6600)
 	 */
@@ -152,12 +152,12 @@ public enum FrameworkOptions {
 			false),
 
 	HTML_PACKAGE_LIST (
-		"html.package.list",
-		"Points to a properties file which contains the links that will be shown in the upper left area of the html report",
-		DataType.TEXT,
-		false,
-		false
-	),
+			"html.package.list",
+			"Points to a properties file which contains the links that will be shown in the upper left area of the html report",
+			DataType.TEXT,
+			false,
+			false
+			),
 
 	/**
 	 * Disable the summary report
@@ -169,24 +169,24 @@ public enum FrameworkOptions {
 			false,
 			false),
 
-			/**
-			 * Disable the summary report
-			 */
+	/**
+	 * Disable the summary report
+	 */
 	SAVE_REPORTERS_ON_RUN_END(
-					"save.reporters.on.run.end", 
-					"When set to true, reporters (HTML,XML,summary) are saved only on run end and before publish.", 
-					DataType.BOOLEAN,
-					false,
-					false),
-					
-   SAVE_REPORTERS_INTERVAL(
-                   "flush.reporters.interval",
-                   "How often to flush reports when save.reporters.on.run.end is turned on in seconds",
-                   DataType.NUMERIC,
-                   10,
-                   false),
-										
-			
+			"save.reporters.on.run.end", 
+			"When set to true, reporters (HTML,XML,summary) are saved only on run end and before publish.", 
+			DataType.BOOLEAN,
+			false,
+			false),
+
+	SAVE_REPORTERS_INTERVAL(
+			"flush.reporters.interval",
+			"How often to flush reports when save.reporters.on.run.end is turned on in seconds",
+			DataType.NUMERIC,
+			10,
+			false),
+
+
 	/**
 	 * A list of shutdown thread (will be executed on system exit)
 	 */
@@ -218,7 +218,7 @@ public enum FrameworkOptions {
 			"",
 			true, 
 			new String[] { "jsystem.framework.report.TestReporter" }),
-	
+
 	REPORTER_DELETE_CURRENT(
 			"reporter.delete.current", 
 			"Delete current report when init the reports", 
@@ -226,8 +226,8 @@ public enum FrameworkOptions {
 			"",
 			true 
 			),
-		
-	
+
+
 	/**
 	 * Set the scenario editor
 	 */
@@ -237,7 +237,7 @@ public enum FrameworkOptions {
 			DataType.DIRECTORY, 
 			"",
 			false),
-	
+
 	SCENARIO_NAME_HOOK (
 			"scenario.name.hook",
 			"A hook for manipulating scenario name",
@@ -245,23 +245,23 @@ public enum FrameworkOptions {
 			"",
 			false, 
 			new String[]{"jsystem.extensions.scenarionamehook.ScenarioNameHook"}),
-	
-			
+
+
 	CACHE_SCENARIO_PROPERTIES (
-					"cache.scenario.properties",
-					"Enables the scenarios properties caching mechanis. " +
+			"cache.scenario.properties",
+			"Enables the scenarios properties caching mechanis. " +
 					"NOTICE: This is an experimental feature, use it on your own risk.  ",
 					DataType.BOOLEAN,
 					false,
 					false),
-		
+
 	HALT_ON_SCENARIO_ERROR (
-					"halt.on.scenario.error",
-					"",
-					DataType.BOOLEAN, 
-					false,
-					false),
-	
+			"halt.on.scenario.error",
+			"",
+			DataType.BOOLEAN, 
+			false,
+			false),
+
 
 	/**
 	 * XML editor
@@ -273,7 +273,7 @@ public enum FrameworkOptions {
 			"",
 			false, 
 			new String[] { "Search criteria for XML editor" }),
-	 
+
 
 	/**
 	 * Used SUT file
@@ -314,7 +314,7 @@ public enum FrameworkOptions {
 			DataType.BOOLEAN, 
 			false,
 			true),
-	
+
 
 	/**
 	 * Html browser name
@@ -325,7 +325,7 @@ public enum FrameworkOptions {
 			DataType.FILE, 
 			"",
 			false),
-	
+
 
 	/**
 	 * List of packages to exclude on class loading
@@ -336,7 +336,7 @@ public enum FrameworkOptions {
 			DataType.TEXT, 
 			"",
 			false),
-	
+
 
 	/**
 	 * List of packages to include on class loading
@@ -347,7 +347,7 @@ public enum FrameworkOptions {
 			DataType.TEXT, 
 			"",
 			false),
-	
+
 	/**
 	 * parameters for the test vm
 	 */
@@ -357,7 +357,7 @@ public enum FrameworkOptions {
 			DataType.TEXT,
 			"",
 			false),
-	
+
 
 	/**
 	 * Execute the tests in debug mode
@@ -389,7 +389,7 @@ public enum FrameworkOptions {
 			DataType.BOOLEAN, 
 			false,
 			false),
-	
+
 	/**
 	 * run mode
 	 */
@@ -410,7 +410,7 @@ public enum FrameworkOptions {
 			DataType.BOOLEAN, 
 			false,
 			false),
-	
+
 	/**
 	 * SUT editor
 	 */
@@ -431,14 +431,14 @@ public enum FrameworkOptions {
 			DataType.FILE,
 			"",
 			false),
-			
+
 	STDOUT_FILE_APPEND(
 			"stdout.file.append", 
 			"Is appened to output file", 
 			DataType.BOOLEAN,
 			false,
 			false),
-	
+
 
 	/**
 	 * Disable the print to the console
@@ -449,7 +449,7 @@ public enum FrameworkOptions {
 			DataType.BOOLEAN,
 			false,
 			false),
-	
+
 
 	/**
 	 * Repeat
@@ -481,7 +481,7 @@ public enum FrameworkOptions {
 			"true",
 			false,
 			new String[] { "true","false","never","never-5.1"}),
-	
+
 
 	/**
 	 * if true, enables the option to see fixtures on test tree.
@@ -502,8 +502,8 @@ public enum FrameworkOptions {
 			DataType.DIRECTORY, 
 			"",
 			false),
-	
-	
+
+
 	/**
 	 * the name of the application to run.
 	 */
@@ -513,7 +513,7 @@ public enum FrameworkOptions {
 			DataType.FILE, 
 			"",
 			false),
-	
+
 
 	/**
 	 * Set the maxtimeout to wait on system exit were -1 is infinit, 0 is
@@ -525,7 +525,7 @@ public enum FrameworkOptions {
 			DataType.NUMERIC, 
 			"",
 			false),
-	
+
 
 	/**
 	 * List of used scripts engine
@@ -537,7 +537,7 @@ public enum FrameworkOptions {
 			"",
 			false, 
 			new String[] { "Search criteria for scripts engine" }),
-	
+
 
 	/**
 	 * Demo feature enabled
@@ -589,7 +589,7 @@ public enum FrameworkOptions {
 			DataType.FILE,
 			"",
 			false),
-		
+
 	/**
 	 * mail host server, jsystem using it to send email
 	 */
@@ -599,7 +599,7 @@ public enum FrameworkOptions {
 			DataType.TEXT,
 			"",
 			false),
-	
+
 	/**
 	 * the account name of the user that sends the mail
 	 */
@@ -609,7 +609,7 @@ public enum FrameworkOptions {
 			DataType.TEXT,
 			"",
 			false),
-	
+
 	/**
 	 * the user name of the sending mail
 	 */
@@ -619,7 +619,7 @@ public enum FrameworkOptions {
 			DataType.TEXT,
 			"",
 			false),
-	
+
 	/**
 	 * the password of the sending account
 	 */
@@ -629,7 +629,7 @@ public enum FrameworkOptions {
 			DataType.PASSWORD,
 			"",
 			false),
-	
+
 	/**
 	 * the SMTP port to send mail from
 	 */
@@ -639,7 +639,7 @@ public enum FrameworkOptions {
 			DataType.NUMERIC,
 			"",
 			false),
-	
+
 	/**
 	 * is the mail secured (uses ssl?)
 	 */
@@ -649,7 +649,7 @@ public enum FrameworkOptions {
 			DataType.BOOLEAN,
 			"",
 			false),
-	
+
 	/**
 	 * send mail list (separated by ";")
 	 */
@@ -699,8 +699,8 @@ public enum FrameworkOptions {
 			"",
 			false),
 
-			
-			/**
+
+	/**
 	 * Runner agent id
 	 */
 	AGENT_ID("agent.server.id", "JRunner agent id", DataType.TEXT, "", false),
@@ -751,7 +751,7 @@ public enum FrameworkOptions {
 			"ALL",
 			false,
 			new String[]{"ALL","ALL_ONLY_TITLE","NO_REPORT","NO_FAIL","NO_TEST_INDICATION"}),
-			
+
 	/**
 	 * flag which signals the system to ignore distributed execution.
 	 */
@@ -761,7 +761,7 @@ public enum FrameworkOptions {
 			DataType.BOOLEAN,
 			false,
 			false),
-	
+
 	/**
 	 * flag which signals the system the synchronize agents without opening a dialog box.			
 	 */
@@ -771,7 +771,7 @@ public enum FrameworkOptions {
 			DataType.BOOLEAN,
 			false,
 			false),
-	
+
 	/**
 	 * Limit the number of building blocks in a scenario
 	 */
@@ -781,20 +781,20 @@ public enum FrameworkOptions {
 			DataType.NUMERIC,
 			500,
 			false),		
-			
+
 	/**
 	 * Tag for the command to execute excel
 	 */
 	CUSTOMER_PRODUCT(
-		"customer.product", 
-		"Customer products versions", 
-		DataType.TEXT, 
-		"",
-		false),	
-	
+			"customer.product", 
+			"Customer products versions", 
+			DataType.TEXT, 
+			"",
+			false),	
+
 	/**
-	* if True then SystemObjects will be located and used by the sut planner Action
-	*/
+	 * if True then SystemObjects will be located and used by the sut planner Action
+	 */
 	SUT_PLANNER(
 			"sut.planner", 
 			"Sut Planner enable", 
@@ -827,8 +827,8 @@ public enum FrameworkOptions {
 			true,
 			true
 			),
-			
-	
+
+
 	SCENARIO_STATE_LISTENER (
 			"scenario.state.listener",
 			"",
@@ -836,7 +836,7 @@ public enum FrameworkOptions {
 			"jsystem.undoredo.UserActionManager",
 			true, 
 			new String[] { "jsystem.undoredo.UserActionManager" }),
-	
+
 	PLANNER_JARS_INCLUDE (
 			"planner.jars.include",
 			"",
@@ -844,7 +844,7 @@ public enum FrameworkOptions {
 			"",
 			false
 			),
-			
+
 	SCEANRIO_AS_TEST_TERMINATE_ON_FAIL (
 			"scenario.as.test.fail.terminate",
 			"Terminate Scenario as Test if any test fails",
@@ -852,7 +852,7 @@ public enum FrameworkOptions {
 			true,
 			false
 			),
-	
+
 	FILTER_SUT_IN_ASSETS_TREE(
 			"filter.sut.tree",
 			"",
@@ -860,7 +860,7 @@ public enum FrameworkOptions {
 			"",
 			false
 			),
-	
+
 	TESTS_JAR_NAME_PREFIX(
 			"tests.jar.name.prefix",
 			"The name prefix of jar files that will be scanned for building blocks",
@@ -876,7 +876,7 @@ public enum FrameworkOptions {
 			"",
 			false
 			),
-	
+
 	/**
 	 * confirmation dialog on unsaved changes
 	 */
@@ -886,7 +886,7 @@ public enum FrameworkOptions {
 			DataType.BOOLEAN,
 			false,
 			false),
-			
+
 	//=====================================================================
 	/**
 	 * interval time set between auto saving of scenario.
@@ -894,12 +894,12 @@ public enum FrameworkOptions {
 	AUTO_SAVE_INTERVAL(
 			"auto.save.interval",
 			"the time in seconds to wait before automatically saving changes\n"+
-			"only supports interval change from the UI jsystem.properties window",
-			DataType.NUMERIC,
-			0,
-			false
-	),
-	
+					"only supports interval change from the UI jsystem.properties window",
+					DataType.NUMERIC,
+					0,
+					false
+			),
+
 	//=====================================================================			
 	/**
 	 * confirmation dialog on delete item
@@ -910,7 +910,7 @@ public enum FrameworkOptions {
 			DataType.BOOLEAN,
 			false,
 			false),
-			
+
 	/**
 	 * last export wizard zip file
 	 */
@@ -920,7 +920,7 @@ public enum FrameworkOptions {
 			DataType.FILE,
 			false,
 			false),
-			
+
 	/**
 	 * last import wizard zip file
 	 */
@@ -930,7 +930,7 @@ public enum FrameworkOptions {
 			DataType.FILE,
 			false,
 			false),
-			
+
 	/**
 	 * SUT reader for handling sut
 	 */
@@ -941,9 +941,9 @@ public enum FrameworkOptions {
 			"",
 			true, 
 			new String[] { "jsystem.framework.sut.SutReader" }),
-	
-	
-	
+
+
+
 	/**
 	 * Order of parameters on parameter panel
 	 */
@@ -955,7 +955,26 @@ public enum FrameworkOptions {
 			true,
 			new String[] { ParametersOrder.defaultOrder.toString(),ParametersOrder.ascending.toString(),ParametersOrder.descending.toString()}),
 
-			
+	/**
+	 * Allow editing in runner
+	 */
+	RUNNER_ALOW_EDIT(
+			"runner.allow.edit",
+			"Allow editing in runner",
+			DataType.BOOLEAN,
+			false,
+			true),
+
+	/**
+	 * Disable stop button
+	 */
+	RUNNER_DISABE_STOP(
+			"runner.disable.stop_button",
+			"Disable stop button",
+			DataType.BOOLEAN,
+			false,
+			false),
+
 	/**
 	 * Indicates whether run properties should be saved between at the beginning of 
 	 * each new execution
@@ -966,7 +985,7 @@ public enum FrameworkOptions {
 			DataType.BOOLEAN,
 			false,
 			false),
-			
+
 	CMD_LINE_EXECUTER (
 			"cmd.line.executor",
 			"Type of command line executor",
@@ -974,7 +993,7 @@ public enum FrameworkOptions {
 			CmdExecutor.ADVANCED_EXECUTOR.toString(),
 			false, 
 			new String[]{CmdExecutor.SIMPLE_EXECUTOR.toString(), CmdExecutor.ADVANCED_EXECUTOR.toString()}),		
-	
+
 	/**
 	 * Set to true in order to move all tests properties from XML file to properties file before loading the Scenario		
 	 */
@@ -984,7 +1003,7 @@ public enum FrameworkOptions {
 			DataType.BOOLEAN,
 			false,
 			false),
-	
+
 	CONTEXT_MENU_PLUGIN_CLASSES(
 			"context.menu.plugin.classes",
 			"List of classes of context menu plugins",			
@@ -993,7 +1012,7 @@ public enum FrameworkOptions {
 			true, 
 			new String[] { "jsystem.treeui.teststable.ContextMenuPlugin" }),
 
-	
+
 	SCM_PLUGIN_CLASS(
 			"scm.class",
 			"Class name of the SCM plugin",			
@@ -1001,27 +1020,27 @@ public enum FrameworkOptions {
 			"",
 			true, 
 			new String[] { "jsystem.extensions.sourcecontrol.SourceControlI" }),
-		
-			
+
+
 	SCM_REPOSITORY(
 			"scm.repoistory",
 			"Repository of SCM",			
 			DataType.TEXT,
 			"",
 			false),
-			
+
 	SCM_USER("scm.user",
 			"SCM user",
 			DataType.TEXT,
 			"",
 			false),
-			
+
 	SCM_PASSWORD("scm.password",
 			"SCM password",
 			DataType.TEXT,
 			"",
 			false),
-			
+
 	GENERIC_TABS(
 			"add.generic.tabs",
 			"Add tabs",
@@ -1029,7 +1048,7 @@ public enum FrameworkOptions {
 			"",
 			true,
 			new String[] {"jsystem.treeui.interfaces.JSystemTab"}),
-			
+
 	DATA_PROVIDER_CLASSES(
 			"data.provider.classes",
 			"Data driven data provider classes",
@@ -1037,8 +1056,8 @@ public enum FrameworkOptions {
 			"",
 			false,
 			new String[] {"jsystem.framework.scenario.flow_control.datadriven.DataProvider"}
-		),
-			
+			),
+
 	/**
 	 * Publisher class to user for publishing reports
 	 */
@@ -1064,7 +1083,7 @@ public enum FrameworkOptions {
 			"8080",
 			false);
 
-	
+
 	private String string;
 	private String description;
 	private DataType dataType;
@@ -1072,19 +1091,19 @@ public enum FrameworkOptions {
 	private boolean reloadRunnerRequire;
 	private String[] reserve;
 	private boolean saveDefaultValueToFile;
-	
+
 	FrameworkOptions(String string) {
 		this.string = string;
 	}
-	
+
 	FrameworkOptions(String string, String description, DataType dataType, Object defaultValue, boolean reloadRunnerRequire) {
 		setParameters(string, description, dataType, defaultValue, reloadRunnerRequire, null, true);
 	}
-	
+
 	FrameworkOptions(String string, String description, DataType dataType, Object defaultValue, boolean reloadRunnerRequire, String[] reserve) {
 		setParameters(string, description, dataType, defaultValue, reloadRunnerRequire, reserve, true);
 	}
-	
+
 	FrameworkOptions(String string, String description, DataType dataType, Object defaultValue, boolean reloadRunnerRequire, String[] reserve, boolean saveDefaultValueToFile) {
 		setParameters(string, description, dataType, defaultValue, reloadRunnerRequire, reserve, saveDefaultValueToFile);
 	}
@@ -1098,7 +1117,7 @@ public enum FrameworkOptions {
 		this.reserve = reserve;
 		this.saveDefaultValueToFile = saveDefaultValueToFile;
 	}
-	
+
 	public static FrameworkOptions getFrameworkOptionKeyByStringName(String strName) {
 		for (FrameworkOptions frameworkOptions: FrameworkOptions.values()) {
 			if (strName.equals(frameworkOptions.getString())) {
@@ -1107,7 +1126,7 @@ public enum FrameworkOptions {
 		}
 		return null;
 	}
-	
+
 	public String toString() {
 		return string;
 	}

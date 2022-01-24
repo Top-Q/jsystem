@@ -378,7 +378,7 @@ public class TestsTreeController implements TreeSelectionListener, MouseListener
 				testBrowser.getTree().repaint();
 			}
 
-			boolean enable = TestTreePanel.currentSelectedTests > 0;
+			boolean enable = (TestTreePanel.currentSelectedTests > 0) && "true".equalsIgnoreCase(JSystemProperties.getInstance().getPreference(FrameworkOptions.RUNNER_ALOW_EDIT));
 
 			addButton.setEnabled(enable);
 			testsNumSpinner.setEnabled(enable);
@@ -552,7 +552,7 @@ public class TestsTreeController implements TreeSelectionListener, MouseListener
 					Boolean.toString(sort.isSelected()));
 			RefreshAction.getInstance().actionPerformed(null);
 		}
-		boolean enable = TestTreePanel.getCurrentSelectedTests() > 0;
+		boolean enable = (TestTreePanel.getCurrentSelectedTests() > 0) && "true".equalsIgnoreCase(JSystemProperties.getInstance().getPreference(FrameworkOptions.RUNNER_ALOW_EDIT));
 		addButton.setEnabled(enable);
 		testsNumSpinner.setEnabled(enable);
 	}

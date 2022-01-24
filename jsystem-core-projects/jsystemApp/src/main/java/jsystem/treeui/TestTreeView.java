@@ -848,6 +848,8 @@ public class TestTreeView extends JFrame implements ActionListener, TestsTreeLis
 	}
 
 	private void configureSutStatus(boolean enable) {
+		if ("false".equalsIgnoreCase(JSystemProperties.getInstance().getPreference(FrameworkOptions.RUNNER_ALOW_EDIT)))
+			enable = false;
 		sutCombo.setEnabled(enable);
 		if (null != sutPlanner) {
 			sutPlanner.setEnabled(enable);

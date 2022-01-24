@@ -228,42 +228,45 @@ public class ParametersPanel extends JPanel implements FocusListener {
 		boolean hasDirty = false;
 		Object objectValue = "";
 		Set<Parameter> params = paramsComponents.keySet();
-		for (Parameter currentParameter : params) {
-			Component currentComponent = paramsComponents.get(currentParameter);
-			if (currentComponent == null) {
-				continue;
-			}
-			try {
-
-				if (currentComponent instanceof JTextField) {
-					objectValue = ((JTextField) currentComponent).getText();
-				} else if (currentComponent instanceof JComboBox) {
-					objectValue = ((JComboBox) currentComponent)
-							.getSelectedItem();
-				} else if (currentComponent instanceof ParametersTableFileChooser) {
-					objectValue = ((ParametersTableFileChooser) currentComponent)
-							.getSelectedFile();
-				} else if (currentComponent instanceof ParametersTableDateTimeChooser) {
-					objectValue = ((ParametersTableDateTimeChooser) currentComponent)
-							.getDate();
-				} else if (currentComponent instanceof ParametersTableHostChooser) {
-					objectValue = ((ParametersTableHostChooser) currentComponent)
-							.getSelectedHosts();
-				} else if (currentComponent instanceof ParameterTableUserDefine) {
-					objectValue = ((ParameterTableUserDefine) currentComponent)
-							.getFieldAsString();
+		if ("true".equalsIgnoreCase(JSystemProperties.getInstance().getPreference(FrameworkOptions.RUNNER_ALOW_EDIT))) 
+		{
+			for (Parameter currentParameter : params) {
+				Component currentComponent = paramsComponents.get(currentParameter);
+				if (currentComponent == null) {
+					continue;
 				}
-				currentParameter.setValue(objectValue);
-			} catch (Exception exception) {
-				ErrorPanel.showErrorDialog("Failed to set parameter: "
-						+ currentParameter.getName() + " with value "
-						+ objectValue, exception, ErrorLevel.Warning);
-				buildTabs();
-			}
+				try {
 
-			if (!hasDirty) {
-				hasDirty = (currentParameter.isDirty() && (!(currentParameter instanceof ScenarioParameter) || (recursiveReference
-						.isSelected())));
+					if (currentComponent instanceof JTextField) {
+						objectValue = ((JTextField) currentComponent).getText();
+					} else if (currentComponent instanceof JComboBox) {
+						objectValue = ((JComboBox) currentComponent)
+								.getSelectedItem();
+					} else if (currentComponent instanceof ParametersTableFileChooser) {
+						objectValue = ((ParametersTableFileChooser) currentComponent)
+								.getSelectedFile();
+					} else if (currentComponent instanceof ParametersTableDateTimeChooser) {
+						objectValue = ((ParametersTableDateTimeChooser) currentComponent)
+								.getDate();
+					} else if (currentComponent instanceof ParametersTableHostChooser) {
+						objectValue = ((ParametersTableHostChooser) currentComponent)
+								.getSelectedHosts();
+					} else if (currentComponent instanceof ParameterTableUserDefine) {
+						objectValue = ((ParameterTableUserDefine) currentComponent)
+								.getFieldAsString();
+					}
+					currentParameter.setValue(objectValue);
+				} catch (Exception exception) {
+					ErrorPanel.showErrorDialog("Failed to set parameter: "
+							+ currentParameter.getName() + " with value "
+							+ objectValue, exception, ErrorLevel.Warning);
+					buildTabs();
+				}
+
+				if (!hasDirty) {
+					hasDirty = (currentParameter.isDirty() && (!(currentParameter instanceof ScenarioParameter) || (recursiveReference
+							.isSelected())));
+				}
 			}
 		}
 		if (components != null) {
@@ -384,21 +387,21 @@ public class ParametersPanel extends JPanel implements FocusListener {
 					.getScreenSize();
 
 			table.getColumnModel()
-					.getColumn(0)
-					.setPreferredWidth(
-							(int) (screenSizeDimension.getWidth() * headerRatio[0]));
+			.getColumn(0)
+			.setPreferredWidth(
+					(int) (screenSizeDimension.getWidth() * headerRatio[0]));
 			table.getColumnModel()
-					.getColumn(1)
-					.setPreferredWidth(
-							(int) (screenSizeDimension.getWidth() * headerRatio[1]));
+			.getColumn(1)
+			.setPreferredWidth(
+					(int) (screenSizeDimension.getWidth() * headerRatio[1]));
 			table.getColumnModel()
-					.getColumn(2)
-					.setPreferredWidth(
-							(int) (screenSizeDimension.getWidth() * headerRatio[2]));
+			.getColumn(2)
+			.setPreferredWidth(
+					(int) (screenSizeDimension.getWidth() * headerRatio[2]));
 			table.getColumnModel()
-					.getColumn(3)
-					.setPreferredWidth(
-							(int) (screenSizeDimension.getWidth() * headerRatio[3]));
+			.getColumn(3)
+			.setPreferredWidth(
+					(int) (screenSizeDimension.getWidth() * headerRatio[3]));
 
 			table.getColumnModel().addColumnModelListener(
 					new TableColumnModelListener() {
@@ -519,7 +522,7 @@ public class ParametersPanel extends JPanel implements FocusListener {
 		}
 		return isScenarioEditable(scenario.getParentScenario());
 	}
-	
+
 	/**
 	 * sorting the Parameters array by the relevant method
 	 * 
@@ -738,7 +741,7 @@ public class ParametersPanel extends JPanel implements FocusListener {
 						FileChooserCellEditor fileChooserEditor = new FileChooserCellEditor(
 								chooser);
 						rowEditor
-								.setEditorAt(parameterIndex, fileChooserEditor);
+						.setEditorAt(parameterIndex, fileChooserEditor);
 						break;
 					case DATE:
 						if (!isScenarioEditable(testsTableController.getCurrentNode().getTestsScenario())){
@@ -769,7 +772,7 @@ public class ParametersPanel extends JPanel implements FocusListener {
 		}
 		for (int componentIndex = 0; componentIndex < components.size(); componentIndex++) {
 			((Component) components.elementAt(componentIndex))
-					.addFocusListener(this);
+			.addFocusListener(this);
 		}
 	}
 
@@ -934,31 +937,31 @@ public class ParametersPanel extends JPanel implements FocusListener {
 		if (e.getOppositeComponent() != null
 				&& e.getOppositeComponent().getName() != null
 				&& e.getOppositeComponent()
-						.getName()
-						.equals(ParametersTableFileChooser.SELECT_FILE_BUTTON_NAME)) {
+				.getName()
+				.equals(ParametersTableFileChooser.SELECT_FILE_BUTTON_NAME)) {
 			return;
 		}
 
 		if (e.getOppositeComponent() != null
 				&& e.getOppositeComponent().getName() != null
 				&& e.getOppositeComponent()
-						.getName()
-						.equals(ParametersTableHostChooser.SELECT_HOST_BUTTON_NAME)) {
+				.getName()
+				.equals(ParametersTableHostChooser.SELECT_HOST_BUTTON_NAME)) {
 			return;
 		}
 
 		if (e.getOppositeComponent() != null
 				&& e.getOppositeComponent().getName() != null
 				&& e.getOppositeComponent()
-						.getName()
-						.equals(ParametersTableDateTimeChooser.SELECT_DATE_BUTTON_NAME)) {
+				.getName()
+				.equals(ParametersTableDateTimeChooser.SELECT_DATE_BUTTON_NAME)) {
 			return;
 		}
 		if (e.getOppositeComponent() != null
 				&& e.getOppositeComponent().getName() != null
 				&& e.getOppositeComponent()
-						.getName()
-						.equals(ParameterTableUserDefine.USER_DEFINED_EDITOR_NAME)) {
+				.getName()
+				.equals(ParameterTableUserDefine.USER_DEFINED_EDITOR_NAME)) {
 			return;
 		}
 		if (listener != null) {

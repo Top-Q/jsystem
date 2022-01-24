@@ -759,9 +759,12 @@ public class TestsTableController extends Observable implements TestStatusListen
 
 		JPanel mainPanel = new JPanel(new BorderLayout());
 		JPanel scenarioOperationsPanel = new JPanel(new BorderLayout());
-		scenarioOperationsPanel.add(toolBar, BorderLayout.CENTER);
-		scenarioOperationsPanel.add(flowControlToolBar, BorderLayout.SOUTH);
-		scenarioOperationsPanel.add(sourceControlToolBar, BorderLayout.NORTH);
+		if ("true".equalsIgnoreCase(JSystemProperties.getInstance().getPreference(FrameworkOptions.RUNNER_ALOW_EDIT))) 
+		{
+			scenarioOperationsPanel.add(toolBar, BorderLayout.CENTER);
+			scenarioOperationsPanel.add(flowControlToolBar, BorderLayout.SOUTH);
+			scenarioOperationsPanel.add(sourceControlToolBar, BorderLayout.NORTH);
+		}
 		mainPanel.add(scenarioOperationsPanel, BorderLayout.CENTER);
 		mainPanel.add(statusBar, BorderLayout.SOUTH);
 
@@ -2137,6 +2140,9 @@ public class TestsTableController extends Observable implements TestStatusListen
 	 *            event
 	 */
 	private void showRightMenu(MouseEvent e) {
+		// don't allow any right click when edit is disabled
+		if ("false".equalsIgnoreCase(JSystemProperties.getInstance().getPreference(FrameworkOptions.RUNNER_ALOW_EDIT)))
+			return;
 		int x = e.getX();
 		int y = e.getY();
 
@@ -3625,7 +3631,8 @@ public class TestsTableController extends Observable implements TestStatusListen
 	 *            if not null, then this is the current selected tree node
 	 */
 	public void updateEnabledAndDisabledActions(ScenarioTreeNode treeNode) {
-
+		if ("false".equalsIgnoreCase(JSystemProperties.getInstance().getPreference(FrameworkOptions.RUNNER_ALOW_EDIT)))
+			return;
 		Scenario scenario = ScenariosManager.getInstance().getCurrentScenario();
 		TestsContainer container;
 		if (treeNode == null) {
@@ -3905,6 +3912,9 @@ public class TestsTableController extends Observable implements TestStatusListen
 					// checkBoxLocation = e.getX() < (checkX *
 					// (currentNode.getNodeLevel() / 1.5));
 					setEventCheckEvent(checkBoxLocation);
+					// if no edit is allowed, return without the parent handling.
+					if (checkBoxLocation && "false".equalsIgnoreCase(JSystemProperties.getInstance().getPreference(FrameworkOptions.RUNNER_ALOW_EDIT))) 
+						return;
 				}
 			}
 			super.processMouseEvent(e);
