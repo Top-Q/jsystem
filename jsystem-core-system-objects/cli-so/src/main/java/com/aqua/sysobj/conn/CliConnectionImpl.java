@@ -292,6 +292,7 @@ public abstract class CliConnectionImpl extends SystemObjectImpl implements CliC
 		
 		if (delayedTyping) {
 			terminal.setKeyTypingDelay(keyTypingDelay);
+			terminal.setDelayedTyping(true);
 		}
 		cli = new Cli(terminal);
 		if (enterStr != null) {
