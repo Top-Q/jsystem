@@ -42,24 +42,24 @@ public class JSystemMojo extends AbstractMojo {
 	/**
 	 * The current project representation.
 	 * 
-	 * @parameter expression="${project}"
+	 * @parameter property="project"
 	 * @required
 	 * @readonly
 	 */
 	private MavenProject mavenProject;
 
 	/**
-	 * @parameter expression="${scenario}"
+	 * @parameter property="scenario"
 	 */
 	private String scenario;
 
 	/**
-	 * @parameter expression="${sut}"
+	 * @parameter property="sut"
 	 */
 	private String sut;
 
 	/**
-	 * @parameter expression="${xmlFile}"
+	 * @parameter property="xmlFile"
 	 */
 	private String xmlFile;
 
