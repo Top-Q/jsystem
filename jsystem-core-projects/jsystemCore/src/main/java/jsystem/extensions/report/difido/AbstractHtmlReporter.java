@@ -61,7 +61,7 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 
 	private ScenarioNode currentScenario;
 
-	private TestDetails testDetails;
+	protected TestDetails testDetails;
 
 	private HashMap<Integer, Integer> testCounter;
 
@@ -79,7 +79,7 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 
 	private boolean firstTest = true;
 
-	private long lastMessageTime;
+	protected long lastMessageTime;
 
 	protected abstract void writeTestDetails(TestDetails testDetails);
 
