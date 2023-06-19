@@ -17,8 +17,8 @@ public class SSHWithRSA extends SSH {
 	private File privateKeyFile;
 
 	public SSHWithRSA(String hostnameP, String usernameP, String passwordP,
-			File privateKey) {
-		super(hostnameP, usernameP, passwordP);
+			File privateKey,boolean enablePt) {
+		super(hostnameP, usernameP, passwordP,enablePt);
 		privateKeyFile = privateKey;
 
 	}

@@ -4,6 +4,7 @@
 package jsystem.treeui.tree;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
@@ -58,8 +59,48 @@ public class RootNode extends AssetNode {
 	        add(root);
 		}
 		
-		initChildren(fPathItems.toArray());
+		initChildren(addJarsFromLibFolderToArray(fPathItems.toArray()));
 		markChildrenAsClassPath();
+	}
+
+	/**
+	 * 
+	 * @param array
+	 * @return
+	 * @author Itai Agmon
+	 */
+	private Object[] addJarsFromLibFolderToArray(Object[] array) {
+		String libFolderName = JSystemProperties.getTestsLibFolder();
+		if (libFolderName == null) {
+			return array;
+		}
+		File libFolder = new File(libFolderName);
+		if (!libFolder.isDirectory()){
+			return array;
+		}
+		final String soPrefix = JSystemProperties.getInstance().getPreferenceOrDefault(FrameworkOptions.TESTS_JAR_NAME_PREFIX);
+		if (null == soPrefix) {
+			return array;
+		}
+		File[] jarFiles = libFolder.listFiles(new FilenameFilter(){
+
+			@Override
+			public boolean accept(File dir, String name) {
+				if (name.startsWith(soPrefix) && name.endsWith(".jar")){
+					return true;
+				}
+				return false;
+			}
+			
+		});
+		if (jarFiles == null || jarFiles.length == 0){
+			return array;
+		}
+		
+		Object[] newArr = new Object[array.length + jarFiles.length];
+		System.arraycopy(array, 0, newArr, 0, array.length);
+		System.arraycopy(jarFiles, 0, newArr, array.length, jarFiles.length);
+		return newArr;
 	}
 
 	private void scanPath(String classPath) {

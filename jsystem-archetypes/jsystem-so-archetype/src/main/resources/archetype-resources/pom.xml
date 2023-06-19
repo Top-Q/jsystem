@@ -4,6 +4,12 @@
 	<groupId>\${groupId}</groupId>
 	<artifactId>\${artifactId}</artifactId>
 	<version>\${version}</version>
+	<properties>
+		<jsystem.version>${jsystem.dependency.version}</jsystem.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+	</properties>
 	<repositories>
 		<repository>
 			<id>top-q</id>
@@ -14,26 +20,17 @@
 		<dependency>
 			<groupId>org.jsystemtest</groupId>
 			<artifactId>jsystemCommon</artifactId>
-			<version>${jsystem.dependency.version}</version>
+			<version>\${jsystem.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.jsystemtest.systemobjects</groupId>
 			<artifactId>cli</artifactId>
-			<version>${jsystem.dependency.version}</version>
+			<version>\${jsystem.version}</version>
 		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.5.1</version>
-				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
-				</configuration>
-			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>

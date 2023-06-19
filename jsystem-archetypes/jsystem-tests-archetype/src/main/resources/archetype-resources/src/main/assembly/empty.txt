@@ -1,0 +1,1 @@
+This file purpose is to prevent the Maven assembly plugin to fail in case there are no jars to add to the lib folder

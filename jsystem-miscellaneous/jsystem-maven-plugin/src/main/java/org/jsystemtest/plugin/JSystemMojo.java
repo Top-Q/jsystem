@@ -5,13 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import jsystem.extensions.report.junit.JUnitReporter;
-import jsystem.framework.FrameworkOptions;
-import jsystem.framework.JSystemProperties;
-import jsystem.framework.scenario.RunningProperties;
-import jsystem.runner.AntExecutionListener;
-import jsystem.utils.StringUtils;
-
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -20,6 +13,12 @@ import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
 import org.jsystemtest.plugin.MultipleScenarioSuitExecutionFileParser.Execution;
+
+import jsystem.framework.FrameworkOptions;
+import jsystem.framework.JSystemProperties;
+import jsystem.framework.scenario.RunningProperties;
+import jsystem.runner.AntExecutionListener;
+import jsystem.utils.StringUtils;
 
 /**
  * 
@@ -37,38 +36,46 @@ public class JSystemMojo extends AbstractMojo {
 	private static final String SCENARIO_PATH = "target/classes/scenarios";
 	private static final String SUT_PATH = "target/classes/sut";
 	private static final String TEST_PROPERTIES_FILE_EMPTY = ".testPropertiesFile_Empty";
-	private static final String DEFAULT_REPORTERS = "jsystem.extensions.report.html.LevelHtmlTestReporter;jsystem.framework.report.SystemOutTestReporter;jsystem.extensions.report.xml.XmlReporter";
+	private static final String DEFAULT_REPORTERS = "jsystem.extensions.report.difido.HtmlReporter;jsystem.framework.report.SystemOutTestReporter;jsystem.extensions.report.xml.XmlReporter;jsystem.extensions.report.junit.JUnitReporter";
 	private static final String DELIMITER = ",";
 
 	/**
 	 * The current project representation.
 	 * 
-	 * @parameter expression="${project}"
+	 * @parameter property="project"
 	 * @required
 	 * @readonly
 	 */
 	private MavenProject mavenProject;
 
 	/**
-	 * @parameter expression="${scenario}"
+	 * @parameter property="scenario"
 	 */
 	private String scenario;
 
 	/**
-	 * @parameter expression="${sut}"
+	 * @parameter property="sut"
 	 */
 	private String sut;
 
 	/**
-	 * @parameter expression="${xmlFile}"
+	 * @parameter property="xmlFile"
 	 */
 	private String xmlFile;
 
 	/**
 	 */
 	public void execute() throws MojoExecutionException, MojoFailureException {
+		if (null == scenario) {
+			getLog().error("Please specify a valid scenario name. Scenario can't be " + scenario);
+			throw new MojoExecutionException("Please specify a valid scenario name. Scenario can't be " + scenario);
+		}
+		if (null == sut) {
+			getLog().error("Please specify a valid sut name. Sut can't be " + sut);
+			throw new MojoExecutionException("Please specify a valid sut name. Sut can't be " + sut);
+		}
 
-		getLog().info("changing user working dir to: " + mavenProject.getBasedir().getAbsolutePath());
+		getLog().info("Changing user working dir to: " + mavenProject.getBasedir().getAbsolutePath());
 		// This line is for setting the current folder to the project root
 		// folder. This is very important if we want to run the plug-in from the
 		// parent folder.
@@ -84,7 +91,8 @@ public class JSystemMojo extends AbstractMojo {
 		final File[] scenarioFilesArr = scenarioParameterToFileArray(scenariosPath);
 
 		// Check input correction
-		if (sutFilesArr == null || sutFilesArr.length == 0 || scenarioFilesArr == null || scenarioFilesArr.length == 0) {
+		if (sutFilesArr == null || sutFilesArr.length == 0 || scenarioFilesArr == null
+				|| scenarioFilesArr.length == 0) {
 			throw new MojoFailureException("Sut or scenario parameters was not specified");
 		}
 
@@ -107,25 +115,33 @@ public class JSystemMojo extends AbstractMojo {
 		getLog().info("------------------------------------------------------------------------");
 
 		for (int i = 0; i < scenarioFilesArr.length; i++) {
-			final Project p = createNewAntProject(scenariosPath, scenarioFilesArr[i], scenario.split(DELIMITER)[i],
+			if (!scenarioFilesArr[i].exists()) {
+				throw new MojoFailureException("Scenario file " + scenarioFilesArr[i] + " is not exist");
+			}
+			if (!sutFilesArr[i].exists()) {
+				throw new MojoFailureException("Sut file " + sutFilesArr[i] + " is not exist");
+			}
+			String scenarioName = scenario.split(DELIMITER)[i];
+			if (!scenarioName.startsWith("scenarios/")) {
+				scenarioName = "scenarios/" + scenarioName;
+			}
+			final Project p = createNewAntProject(scenariosPath, scenarioFilesArr[i], scenarioName,
 					sut.split(DELIMITER)[i]);
 
-			updateJSystemProperties(sutFilesArr[i], sut.split(DELIMITER)[i], scenarioFilesArr[i],
-					scenario.split(DELIMITER)[i]);
+			updateJSystemProperties(sutFilesArr[i], sut.split(DELIMITER)[i], scenarioFilesArr[i], scenarioName);
 			executeSingleScenario(scenarioFilesArr[i], p);
 		}
 		getLog().info("------------------------------------------------------------------------");
 		getLog().info("Execution of scenarios " + scenario + " ended ");
-		getLog().info(
-				"Reports can be found in " + mavenProject.getBasedir().getAbsolutePath() + File.separator + "log"
-						+ File.separator + "current");
+		getLog().info("Reports can be found in " + mavenProject.getBasedir().getAbsolutePath() + File.separator + "log"
+				+ File.separator + "current");
 
 	}
 
 	private void xmlFileToParameters() throws MojoFailureException {
 		try {
-			MultipleScenarioSuitExecutionFileParser parser = new MultipleScenarioSuitExecutionFileParser(new File(
-					xmlFile));
+			MultipleScenarioSuitExecutionFileParser parser = new MultipleScenarioSuitExecutionFileParser(
+					new File(xmlFile));
 			parser.parse();
 			StringBuilder scenarioSb = new StringBuilder();
 			StringBuilder sutSb = new StringBuilder();
@@ -155,9 +171,8 @@ public class JSystemMojo extends AbstractMojo {
 		} finally {
 			p.fireBuildFinished(null);
 		}
-		getLog().info(
-				"Execution of scenario " + scenarioFile.getName() + " with sut " + p.getProperty("sutFile")
-						+ " has ended");
+		getLog().info("Execution of scenario " + scenarioFile.getName() + " with sut " + p.getProperty("sutFile")
+				+ " has ended");
 		getLog().info("------------------------------------------------------------------------");
 	}
 
@@ -193,14 +208,10 @@ public class JSystemMojo extends AbstractMojo {
 				mavenProject.getBasedir().getAbsolutePath() + File.separator + "log");
 		String reporters = JSystemProperties.getInstance().getPreference(FrameworkOptions.REPORTERS_CLASSES);
 
-		// Making sure that the JUnit reporter is in the reporter.classes
-		String reporterName = JUnitReporter.class.getName();
+		// Making sure that there are reporters configured in the properties
+		// file.
 		if (null == reporters) {
-			JSystemProperties.getInstance().setPreference(FrameworkOptions.REPORTERS_CLASSES,
-					DEFAULT_REPORTERS + ";" + reporterName);
-		} else if (!reporters.contains(reporterName)) {
-			reporters += ";" + reporterName;
-			JSystemProperties.getInstance().setPreference(FrameworkOptions.REPORTERS_CLASSES, reporters);
+			JSystemProperties.getInstance().setPreference(FrameworkOptions.REPORTERS_CLASSES, DEFAULT_REPORTERS);
 		}
 
 		// Configure all other required parameters:
@@ -216,14 +227,12 @@ public class JSystemMojo extends AbstractMojo {
 				mavenProject.getBasedir().getAbsolutePath() + File.separator + "target" + File.separator + "classes");
 
 		// Test Source
-		JSystemProperties.getInstance().setPreference(
-				FrameworkOptions.TESTS_SOURCE_FOLDER,
+		JSystemProperties.getInstance().setPreference(FrameworkOptions.TESTS_SOURCE_FOLDER,
 				mavenProject.getBasedir().getAbsolutePath() + File.separator + "src" + File.separator + "main"
 						+ File.separator + "java");
 
 		// resources folder.
-		JSystemProperties.getInstance().setPreference(
-				FrameworkOptions.RESOURCES_SOURCE_FOLDER,
+		JSystemProperties.getInstance().setPreference(FrameworkOptions.RESOURCES_SOURCE_FOLDER,
 				mavenProject.getBasedir().getAbsolutePath() + File.separator + "src" + File.separator + "main"
 						+ File.separator + "resources");
 

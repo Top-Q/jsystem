@@ -35,6 +35,9 @@ import org.apache.tools.ant.types.DirSet;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
 
+import jsystem.framework.scenario.Parameter.ParameterType;
+import jsystem.framework.scenario.ParametersManager;
+
 /***
  * ITAI: We had to copy the class to our project in order to allow passing the 
  * FOR operation properties in the properties file instead of in the XML file. 
@@ -126,6 +129,17 @@ public class ForTask extends Task {
 	 */
 	public void setList(String list) {
 		this.list = list;
+	}
+
+	/**
+	 * ITAI. Was added since we need to get this value in order to check if it
+	 * was set by an old version of JSystem
+	 * 
+	 * @return list value
+	 * @author Itai 
+	 */
+	protected String getList() {
+		return this.list;
 	}
 
 	/**
@@ -312,17 +326,23 @@ public class ForTask extends Task {
 
 		// Take Care of the list attribute
 		if (list != null) {
-			StringTokenizer st = new StringTokenizer(list, delimiter);
-
-			while (st.hasMoreTokens()) {
-				String tok = st.nextToken();
-				if (trim) {
-					tok = tok.trim();
+			//if list is a refrence
+			try {
+				list = (String) ParametersManager.replaceAllReferenceValues(list, ParameterType.STRING);
+				
+				StringTokenizer st = new StringTokenizer(list, delimiter);
+	
+				while (st.hasMoreTokens()) {
+					String tok = (String) ParametersManager.replaceReferenceWithValue(st.nextToken(), ParameterType.STRING);
+					if (trim) {
+						tok = tok.trim();
+					}
+					doToken(tok);
 				}
-				doToken(tok);
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
 			}
 		}
-
 		// Take care of the begin/end/step attributes
 		if (end != null) {
 			int iEnd = end.intValue();

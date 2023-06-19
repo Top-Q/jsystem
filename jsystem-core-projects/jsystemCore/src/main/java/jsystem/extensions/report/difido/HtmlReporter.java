@@ -14,6 +14,7 @@ import jsystem.framework.JSystemProperties;
 import jsystem.framework.common.CommonResources;
 import jsystem.framework.report.ListenerstManager;
 import jsystem.framework.report.Summary;
+import jsystem.framework.report.TestInfo;
 import jsystem.framework.scenario.ScenariosManager;
 import jsystem.framework.sut.SutFactory;
 import jsystem.utils.BrowserLauncher;
@@ -40,6 +41,8 @@ public class HtmlReporter extends AbstractHtmlReporter {
 
 	private File logOld;
 
+	private int executedTests;
+
 	@Override
 	public void initReporterManager() throws IOException {
 		BrowserLauncher.openURL(getIndexFile().getAbsolutePath());
@@ -51,16 +54,17 @@ public class HtmlReporter extends AbstractHtmlReporter {
 
 	@Override
 	public void init() {
-		isZipLogDisable = ("true".equals(JSystemProperties.getInstance().getPreference(
-				FrameworkOptions.HTML_ZIP_DISABLE)));
-		setDeleteCurrent(!"false".equals(JSystemProperties.getInstance().getPreference(
-				FrameworkOptions.REPORTER_DELETE_CURRENT)));
+		isZipLogDisable = ("true"
+				.equals(JSystemProperties.getInstance().getPreference(FrameworkOptions.HTML_ZIP_DISABLE)));
+		setDeleteCurrent(!"false"
+				.equals(JSystemProperties.getInstance().getPreference(FrameworkOptions.REPORTER_DELETE_CURRENT)));
 		updateLogDir();
 		try {
 			initReporter(!isZipLogDisable);
 		} catch (Exception e) {
 			log.log(Level.SEVERE, "Fail to init HtmlTestReporter", e);
 		}
+		executedTests = 0;
 
 	}
 
@@ -71,7 +75,15 @@ public class HtmlReporter extends AbstractHtmlReporter {
 			JSystemProperties.getInstance().setPreference(FrameworkOptions.LOG_FOLDER, reportDir);
 		}
 	}
-	
+
+	@Override
+	public void startTest(TestInfo testInfo) {
+		super.startTest(testInfo);
+		if (!testInfo.isHiddenInHTML) {
+			executedTests++;
+		}
+	}
+
 	@Override
 	protected void updateTestDirectory() {
 		final String folder = "tests" + File.separator + "test_" + getCurrentTest().getUid();
@@ -82,7 +94,6 @@ public class HtmlReporter extends AbstractHtmlReporter {
 			log.log(Level.WARNING, "Failed updating tmp properties", e);
 		}
 	}
-
 
 	/**
 	 * init current logs
@@ -123,8 +134,8 @@ public class HtmlReporter extends AbstractHtmlReporter {
 			return;
 		}
 		final File currentLogFolder = new File(reportDir, "current");
-		final File templateFolder = new File(reportDir,"template");
-		if (!templateFolder.exists() || !(new File(templateFolder,"index.html").exists())){
+		final File templateFolder = new File(reportDir, "template");
+		if (!templateFolder.exists() || !(new File(templateFolder, "index.html").exists())) {
 			PersistenceUtils.copyResources(templateFolder);
 		}
 		if (isDeleteCurrent()) {
@@ -140,8 +151,8 @@ public class HtmlReporter extends AbstractHtmlReporter {
 
 	@Override
 	protected void writeTestDetails(TestDetails testDetails) {
-		PersistenceUtils.writeTest(testDetails, new File(reportDir + File.separator + "current"), new File(
-				ListenerstManager.getInstance().getCurrentTestFolder()));
+		PersistenceUtils.writeTest(testDetails, new File(reportDir + File.separator + "current"),
+				new File(ListenerstManager.getInstance().getCurrentTestFolder()));
 
 	}
 
@@ -191,8 +202,8 @@ public class HtmlReporter extends AbstractHtmlReporter {
 		}
 
 		public void run() {
-			boolean disableZipLog = "true".equals(JSystemProperties.getInstance().getPreference(
-					FrameworkOptions.HTML_ZIP_DISABLE));
+			boolean disableZipLog = "true"
+					.equals(JSystemProperties.getInstance().getPreference(FrameworkOptions.HTML_ZIP_DISABLE));
 
 			if (disableZipLog || !zipFirst) {
 				if (deleteCurrent) {
@@ -228,8 +239,8 @@ public class HtmlReporter extends AbstractHtmlReporter {
 			try {
 				String[] toDeleteList = toDelete.list();
 				if (toDeleteList != null && toDeleteList.length > 0) {
-					jsystem.utils.FileUtils.zipDirectory(toDelete.getPath(), "", zipFile.getPath(), JSystemProperties
-							.getInstance().isJsystemRunner());
+					jsystem.utils.FileUtils.zipDirectory(toDelete.getPath(), "", zipFile.getPath(),
+							JSystemProperties.getInstance().isJsystemRunner());
 				}
 			} catch (Exception e) {
 				log.log(Level.WARNING, "Fail to zip old log - Current logs are not deleted!!!", e);
@@ -324,6 +335,21 @@ public class HtmlReporter extends AbstractHtmlReporter {
 			}
 		}
 
+	}
+
+	protected void updateCalculatedNumberOfTestsDueToFailure() {
+		super.updateCalculatedNumberOfTestsDueToFailure();
+		if (getCurrentTest().isHideInHtml()) {
+			// we didn't count this test as executed since it is hidden in the
+			// HTML
+			// but since it failed, we do want it now to be counted.
+			executedTests++;
+		}
+	}
+
+	protected int calculateNumberOfPlannedTests() {
+		int plannedTests = super.calculateNumberOfPlannedTests();
+		return plannedTests + executedTests;
 	}
 
 	@Override

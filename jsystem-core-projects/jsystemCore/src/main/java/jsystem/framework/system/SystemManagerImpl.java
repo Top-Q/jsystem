@@ -60,6 +60,10 @@ public class SystemManagerImpl implements SystemObjectManager, TestListener {
     private SystemManagerImpl(){
     	 resetSeystemObjectsMap();
         ListenerstManager.getInstance().addListener(this);
+		// This is a workaround for loading the SystemObjectCloseThread class to the
+		// class loader. failing to do this will result a 'ClassNotFound' exception when
+		// running using the JSystem Maven plugin with Maven 3.x. Issue #227
+        new SystemObjectCloseThread(null);
     }
     public static SystemManagerImpl getInstance(){
         if (manager == null){

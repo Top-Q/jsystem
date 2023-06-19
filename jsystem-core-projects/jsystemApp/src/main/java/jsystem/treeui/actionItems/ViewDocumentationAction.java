@@ -28,7 +28,7 @@ public class ViewDocumentationAction extends IgnisAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		String url = "http://jsystem.org//documentation//";
+		String url = "https://github.com/Top-Q/jsystem-docs/wiki";
 		try {
 			BrowserLauncher.openURL(url);
 		} catch (Exception e1) {

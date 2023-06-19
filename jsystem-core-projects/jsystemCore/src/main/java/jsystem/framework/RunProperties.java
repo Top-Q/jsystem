@@ -6,9 +6,8 @@ package jsystem.framework;
 import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import org.apache.log4j.Level;
 
 import jsystem.framework.common.CommonResources;
 import jsystem.framework.report.Summary;
@@ -113,9 +112,9 @@ public class RunProperties {
 		Properties p = new Properties();
 		if (runPropertiesFile.getAbsoluteFile().exists()) {
 			p = FileUtils.loadPropertiesFromFile(runPropertiesFile.getAbsolutePath());
-			log.log(java.util.logging.Level.CONFIG,"load run properties at :"+runPropertiesFile.getAbsolutePath());
+			log.log(Level.CONFIG,"load run properties at :"+runPropertiesFile.getAbsolutePath());
 		}else{
-			log.log(java.util.logging.Level.CONFIG,"the run properties doesn't exist,return new Properties object");
+			log.log(Level.CONFIG,"the run properties doesn't exist,return new Properties object");
 		}
 		return p;
 	}

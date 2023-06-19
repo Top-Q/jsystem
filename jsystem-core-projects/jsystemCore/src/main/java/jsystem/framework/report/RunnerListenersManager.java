@@ -21,10 +21,11 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import jsystem.extensions.report.difido.HtmlReporter;
 import jsystem.extensions.report.html.CssUtils.CssType;
+import jsystem.extensions.report.html.ExtendLevelTestReporter;
 import jsystem.extensions.report.html.HtmlCodeWriter;
 import jsystem.extensions.report.html.HtmlTestReporter;
-import jsystem.extensions.report.html.ExtendLevelTestReporter;
 import jsystem.extensions.report.html.LevelHtmlTestReporter;
 import jsystem.extensions.report.html.RepeatTestIndex;
 import jsystem.extensions.report.junit.JUnitReporter;
@@ -58,7 +59,6 @@ import jsystem.framework.system.TName;
 import jsystem.framework.system.TestNameServer;
 import jsystem.runner.ErrorLevel;
 import jsystem.runner.loader.LoadersManager;
-import jsystem.runner.remote.RemoteTestRunner;
 import jsystem.utils.DateUtils;
 import jsystem.utils.StackTraceUtil;
 import jsystem.utils.StringUtils;
@@ -123,8 +123,6 @@ public class RunnerListenersManager extends DefaultReporterImpl implements JSyst
 	boolean inTest = false;
 
 	boolean blockReporters = false;
-
-	RemoteTestRunner remoteRunner = null;
 
 	private EventParser parser;
 
@@ -204,7 +202,7 @@ public class RunnerListenersManager extends DefaultReporterImpl implements JSyst
 		propertiesTimeStampFlag = addTimeStampStatus == null || addTimeStampStatus.toLowerCase().equals("true");
 		String reporters = JSystemProperties.getInstance().getPreference(FrameworkOptions.REPORTERS_CLASSES);
 		if (reporters == null) {
-			reporters = LevelHtmlTestReporter.class.getName() + ";" + SystemOutTestReporter.class.getName() + ";"
+			reporters = HtmlReporter.class.getName() + ";" + SystemOutTestReporter.class.getName() + ";"
 					+ XmlReporter.class.getName() + ";" + JUnitReporter.class.getName();
 			JSystemProperties.getInstance().setPreference(FrameworkOptions.REPORTERS_CLASSES, reporters);
 		}
@@ -545,7 +543,7 @@ public class RunnerListenersManager extends DefaultReporterImpl implements JSyst
 		if (!(currentTest instanceof InternalTest) && !blockReporters && !inScenarioAsTest) {
 			addEndTestInfo();
 		}
-
+		
 		if (inScenarioAsTest) {
 			try {
 				stopLevel();
@@ -682,7 +680,7 @@ public class RunnerListenersManager extends DefaultReporterImpl implements JSyst
 			((SystemTest) test).clearDocumentation();
 			((SystemTest) test).clearFailCause();
 			((SystemTest) test).clearSteps();
-
+			((SystemTest) test).initFlags();
 		
 		}
 		

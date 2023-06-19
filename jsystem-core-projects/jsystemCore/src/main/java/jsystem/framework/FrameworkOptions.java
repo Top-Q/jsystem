@@ -860,7 +860,15 @@ public enum FrameworkOptions {
 			"",
 			false
 			),
-			
+	
+	TESTS_JAR_NAME_PREFIX(
+			"tests.jar.name.prefix",
+			"The name prefix of jar files that will be scanned for building blocks",
+			DataType.TEXT,
+			"so-",
+			true
+			),
+
 	SORT_ASSETS_TREE(
 			"sort.tests.tree",
 			"",
@@ -977,6 +985,15 @@ public enum FrameworkOptions {
 			false,
 			false),
 	
+	CONTEXT_MENU_PLUGIN_CLASSES(
+			"context.menu.plugin.classes",
+			"List of classes of context menu plugins",			
+			DataType.SEARCH_AND_MULTY_SELECT_LIST, 
+			"",
+			true, 
+			new String[] { "jsystem.treeui.teststable.ContextMenuPlugin" }),
+
+	
 	SCM_PLUGIN_CLASS(
 			"scm.class",
 			"Class name of the SCM plugin",			
@@ -1012,6 +1029,15 @@ public enum FrameworkOptions {
 			"",
 			true,
 			new String[] {"jsystem.treeui.interfaces.JSystemTab"}),
+			
+	DATA_PROVIDER_CLASSES(
+			"data.provider.classes",
+			"Data driven data provider classes",
+			DataType.SEARCH_AND_MULTY_SELECT_LIST,
+			"",
+			false,
+			new String[] {"jsystem.framework.scenario.flow_control.datadriven.DataProvider"}
+		),
 			
 	/**
 	 * Publisher class to user for publishing reports

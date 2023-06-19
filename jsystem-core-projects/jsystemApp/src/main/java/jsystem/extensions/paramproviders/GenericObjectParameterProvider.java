@@ -20,7 +20,6 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Properties;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -82,6 +81,7 @@ public class GenericObjectParameterProvider extends AbstractSerializingParameter
 		String propertiesString = stringRepresentation.substring(classEndIndex + 1);
 		Properties properties = new Properties();
 		try {
+			propertiesString = multiplySingleBackslashes(propertiesString);
 			properties.load(new StringReader(propertiesString));
 		} catch (IOException e1) {
 			log.log(Level.WARNING, "Fail to load properties: " + propertiesString, e1);
@@ -149,15 +149,6 @@ public class GenericObjectParameterProvider extends AbstractSerializingParameter
 		return properties;
 	}
 	
-	private static LinkedHashMap<String, String> propertiesToMap(Properties properties){
-		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
-		Set<Object> keys = properties.keySet();
-		for(Object key: keys){
-			map.put(key.toString(), properties.getProperty(key.toString()));
-		}
-		return map;
-	}
-
 	@Override
 	public void setProviderConfig(String... args) {
 	}

@@ -1,5 +1,20 @@
 package jsystem.extensions.report.difido;
 
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Properties;
+import java.util.Random;
+import java.util.Scanner;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import il.co.topq.difido.model.Enums.ElementType;
 import il.co.topq.difido.model.Enums.Status;
 import il.co.topq.difido.model.execution.Execution;
@@ -10,31 +25,19 @@ import il.co.topq.difido.model.execution.ScenarioNode;
 import il.co.topq.difido.model.execution.TestNode;
 import il.co.topq.difido.model.test.ReportElement;
 import il.co.topq.difido.model.test.TestDetails;
-
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Random;
-import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import jsystem.extensions.report.difido.DifidoConfig.DifidoProperty;
 import jsystem.extensions.report.html.ExtendLevelTestReporter;
+import jsystem.framework.FrameworkOptions;
 import jsystem.framework.JSystemProperties;
-import jsystem.framework.common.CommonResources;
 import jsystem.framework.report.ExtendTestListener;
 import jsystem.framework.report.ListenerstManager;
 import jsystem.framework.report.Reporter.EnumReportLevel;
+import jsystem.framework.report.Summary;
 import jsystem.framework.report.TestInfo;
 import jsystem.framework.scenario.JTestContainer;
+import jsystem.framework.scenario.Scenario;
 import jsystem.framework.scenario.ScenarioHelpers;
+import jsystem.framework.scenario.ScenariosManager;
 import jsystem.framework.scenario.flow_control.AntFlowControl;
 import jsystem.framework.scenario.flow_control.AntForLoop;
 import jsystem.utils.StringUtils;
@@ -50,15 +53,15 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 
 	private static final Logger log = Logger.getLogger(AbstractHtmlReporter.class.getName());
 
-	private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm:ss:");
+	protected static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm:ss");
 
-	private static final SimpleDateFormat TIME_AND_DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd 'at' HH:mm:ss");
+	protected static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd");
 
 	private Execution execution;
 
 	private ScenarioNode currentScenario;
 
-	private TestDetails testDetails;
+	protected TestDetails testDetails;
 
 	private HashMap<Integer, Integer> testCounter;
 
@@ -74,11 +77,20 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 
 	private String executionUid;
 
+	private boolean firstTest = true;
+
+	protected long lastMessageTime;
+
 	protected abstract void writeTestDetails(TestDetails testDetails);
 
 	protected abstract void writeExecution(Execution execution);
 
 	protected abstract Execution readExecution();
+
+	@Override
+	public void init() {
+		firstTest = true;
+	}
 
 	@Override
 	public boolean asUI() {
@@ -95,7 +107,7 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 		report(title, message, status, bold, false, false);
 	}
 
-	private ReportElement updateTimestampAndTitle(ReportElement element, String title) {
+	protected ReportElement updateTimestampAndTitle(ReportElement element, String title) {
 		Pattern pattern = Pattern.compile("(\\d{2}:\\d{2}:\\d{2}:)");
 		Matcher matcher = pattern.matcher(title);
 		if (matcher.find()) {
@@ -115,6 +127,7 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 
 	@Override
 	public void report(String title, final String message, int status, boolean bold, boolean html, boolean link) {
+		log.fine("Recieved report request with title '" + title + "'");
 		if (null == specialReportsElementsHandler) {
 			// This never suppose to happen, since it was initialized in the
 			// start test event.
@@ -159,9 +172,20 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 		} else {
 			element.setType(ElementType.regular);
 		}
-		testDetails.addReportElement(element);
+		addReportElement(element);
+		if (System.currentTimeMillis() - lastMessageTime <= DifidoConfig.getInstance()
+				.getLong(DifidoProperty.MIN_INTERVAL_BETWEEN_MESSAGES)) {
+			// We want to make sure the test does not stress the IO with
+			// messages. Issue #271
+			return;
+		}
+		lastMessageTime = System.currentTimeMillis();
 		writeTestDetails(testDetails);
 
+	}
+
+	protected void addReportElement(ReportElement element) {
+		testDetails.addReportElement(element);
 	}
 
 	private File[] getAddedFiles(final String message) {
@@ -194,8 +218,8 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 		}
 		updateIndex();
 		generateUid();
-
-		addMachineToExecution();
+		execution = new Execution();
+		addMachineToExecution(execution);
 		if (JSystemProperties.getInstance().isExecutedFromIDE()) {
 			// We are running from the IDE, so there will be no scenario
 			currentScenario = new ScenarioNode("default");
@@ -204,8 +228,9 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 			currentScenario = null;
 		}
 		currentTest = null;
-
-		writeExecution(execution);
+		// NOTE: DO NOT CALL TO writeExecution() AT THIS STAGE. Writing the
+		// execution here will cause the last execution to be deleted from the
+		// Difido server
 	}
 
 	protected void generateUid() {
@@ -221,13 +246,11 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 	 * create a new one.
 	 * 
 	 */
-	private void addMachineToExecution() {
-		MachineNode currentMachine = new MachineNode(getMachineName());
+	protected void addMachineToExecution(Execution execution) {
 		if (null == execution) {
-			execution = new Execution();
-			execution.addMachine(currentMachine);
-			return;
+			throw new NullPointerException("Execution object can't be null");
 		}
+		MachineNode currentMachine = new MachineNode(getMachineName());
 		// We are going to append to existing execution
 		MachineNode lastMachine = execution.getLastMachine();
 		if (null == lastMachine || null == lastMachine.getName()) {
@@ -242,6 +265,18 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 			execution.addMachine(currentMachine);
 		}
 
+	}
+
+	protected int calculateNumberOfPlannedTests() {
+		final Scenario scenario = ScenariosManager.getInstance().getCurrentScenario();
+		if (null == scenario) {
+			return 0;
+		}
+		int[] enabledTestsIds = scenario.getEnabledTestsIndexes();
+		if (null == enabledTestsIds) {
+			return 0;
+		}
+		return enabledTestsIds.length;
 	}
 
 	private void updateIndex() {
@@ -262,7 +297,7 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 		}
 	}
 
-	private static String getMachineName() {
+	protected static String getMachineName() {
 		String machineName;
 		try {
 			machineName = InetAddress.getLocalHost().getHostName();
@@ -274,18 +309,42 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 
 	@Override
 	public void addError(Test arg0, Throwable arg1) {
-		currentTest.setStatus(Status.error);
+		log.fine("Received error event");
+		if (DifidoConfig.getInstance().getBoolean(DifidoProperty.ERRORS_TO_FAILURES)) {
+			// We don't want errors in the report, so we will change each error
+			// to failure.
+			currentTest.setStatus(Status.failure);
+		} else {
+			currentTest.setStatus(Status.error);
+		}
+		updateCalculatedNumberOfTestsDueToFailure();
 	}
 
 	@Override
 	public void addFailure(Test arg0, AssertionFailedError arg1) {
+		log.fine("Received failure event");
 		currentTest.setStatus(Status.failure);
+		updateCalculatedNumberOfTestsDueToFailure();
+	}
 
+	/**
+	 * If the test fails it will be shown in the HTML even if it set as hidden
+	 * in HTML, So will add it back to the number of tests in the machine
+	 * 
+	 */
+	protected void updateCalculatedNumberOfTestsDueToFailure() {
+		if (currentTest.isHideInHtml()) {
+			execution.getLastMachine().setPlannedTests(execution.getLastMachine().getPlannedTests() + 1);
+		}
 	}
 
 	@Override
 	public void endTest(Test arg0) {
+		log.fine("Received end test");
 		currentTest.setDuration(System.currentTimeMillis() - testStartTime);
+		// In case scenario properties were added during the test run, we want
+		// also to add them to the scenario model
+		addScenarioProperties(currentScenario);
 		writeTestDetails(testDetails);
 	}
 
@@ -296,17 +355,25 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 
 	@Override
 	public void addWarning(Test test) {
+		log.fine("Received warning event");
 		currentTest.setStatus(Status.warning);
 	}
 
 	private void addPropertyIfExist(String propertyName, String property) {
 		if (!StringUtils.isEmpty(property)) {
-			testDetails.addProperty(propertyName, property);
+			currentTest.addProperty(propertyName, property);
 		}
 	}
 
 	@Override
 	public void startTest(TestInfo testInfo) {
+		if (firstTest) {
+			// If we run from IDE, we will not receive startContainer event, so
+			// we will need to call the startRun here. Issue #269
+			firstTest = false;
+			startRun();
+		}
+		log.fine("Recieved start test event");
 		specialReportsElementsHandler = new SpecialReportElementsHandler();
 		String testName = testInfo.meaningfulName;
 		if (null == testName || "null".equals(testName)) {
@@ -318,14 +385,21 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 		if (null == testName || "null".equals(testName)) {
 			testName = testInfo.className;
 		}
+		log.fine("Test name is " + testName);
 		currentTest = new TestNode(index++, testName, executionUid + "-" + index);
+		currentTest.setClassName(testInfo.className);
 		testStartTime = System.currentTimeMillis();
 		currentTest.setTimestamp(TIME_FORMAT.format(new Date(testStartTime)));
+		currentTest.setDate(DATE_FORMAT.format(new Date(testStartTime)));
+		if (testInfo.isHiddenInHTML) {
+			currentTest.setHideInHtml(testInfo.isHiddenInHTML);
+			execution.getLastMachine().setPlannedTests(execution.getLastMachine().getPlannedTests() - 1);
+
+		}
 		currentScenario.addChild(currentTest);
-		testDetails = new TestDetails(testName, currentTest.getUid());
-		testDetails.setTimeStamp(TIME_AND_DATE_FORMAT.format(new Date(testStartTime)));
+		testDetails = new TestDetails(currentTest.getUid());
 		if (!StringUtils.isEmpty(testInfo.comment)) {
-			testDetails.setDescription(testInfo.comment);
+			currentTest.setDescription(testInfo.comment);
 		}
 		addPropertyIfExist("Class", testInfo.className);
 		addPropertyIfExist("Class Documentation", testInfo.classDoc);
@@ -334,10 +408,22 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 		addPropertyIfExist("Test Documentation", testInfo.testDoc);
 		addPropertyIfExist("User Documentation", testInfo.userDoc);
 		if (!StringUtils.isEmpty(testInfo.parameters)) {
+			log.info("Adding parameters " + testInfo.parameters);
 			try (Scanner scanner = new Scanner(testInfo.parameters)) {
 				while (scanner.hasNextLine()) {
 					final String parameter = scanner.nextLine();
-					testDetails.addParameter(parameter.split("=")[0], parameter.split("=")[1]);
+					if (!parameter.contains("=")) {
+						log.warning("There is an illegal parameter '" + parameter + "' in test " + testName);
+						continue;
+					}
+					// We are searching only for the first '"' since that in
+					// parameters providers there are usually more then one '"'
+					// sign if we will just split on the sign, we will lose a
+					// lot of the parameter value.
+					int equalsIndex = parameter.indexOf("=");
+					String key = parameter.substring(0, equalsIndex);
+					String value = parameter.substring(equalsIndex + 1);
+					addParameterToCurrentTest(key, value);
 				}
 
 			}
@@ -346,15 +432,54 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 		if (numOfAppearances > 0) {
 			currentTest.setName(currentTest.getName() + " (" + ++numOfAppearances + ")");
 		}
-		updateTestDirectory();
-		writeExecution(execution);
-		writeTestDetails(testDetails);
+		try {
+			updateTestDirectory();
+		} catch (Throwable t) {
+			log.severe("Failed updating test directory due to " + t.getMessage());
+		}
+		try {
+			writeExecution(execution);
+		} catch (Throwable t) {
+			log.severe("Failed writing execution due to " + t.getMessage());
+		}
+		try {
+			writeTestDetails(testDetails);
+		} catch (Throwable t) {
+			log.severe("Failed writing test details due to " + t.getMessage());
+		}
+	}
+
+	/**
+	 * Adding parameter to the current test. <br>
+	 * The importance of this method is that JSystem is adding additional
+	 * backslash to special characters like : = # \ .<br>
+	 * Since we don't want to see the additional backslashes in the report we
+	 * are cleaning them before adding them as parameter to the current test.
+	 * 
+	 * 
+	 * @param key
+	 * @param value
+	 */
+	private void addParameterToCurrentTest(String key, String value) {
+		// The regular expression will search for any backslash that has a
+		// special character after it or another backslash but do not have a
+		// backslash before and will replace it with nothing.
+		String noarmalizedValue = value.replaceAll("(?<!\\\\)\\\\(?=[:!=#\\\\])", "");
+		currentTest.addParameter(key, noarmalizedValue);
+	}
+
+	/**
+	 * This method is meant to be override. It is called at the start of the run
+	 */
+	public void startRun() {
+		execution.getLastMachine().setPlannedTests(calculateNumberOfPlannedTests());
 	}
 
 	/**
 	 * This method will be called at the beginning of each test. If the reporter
 	 * is using the file system, it is responsible for updating the current test
-	 * folder in the '.testdir.tmp' file. See the HtmlReporter implementation for example.
+	 * folder in the '.testdir.tmp' file. See the HtmlReporter implementation
+	 * for example.
 	 */
 	protected abstract void updateTestDirectory();
 
@@ -373,6 +498,7 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 
 	@Override
 	public void endRun() {
+		firstTest = true;
 		writeExecution(execution);
 	}
 
@@ -387,11 +513,17 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 
 	@Override
 	public void endLoop(AntForLoop loop, int count) {
+		log.fine("Recieved end loop event");
 		currentScenario = (ScenarioNode) currentScenario.getParent();
 	}
 
 	@Override
 	public void startContainer(JTestContainer container) {
+		log.fine("Recieved start containter event");
+		if (firstTest) {
+			firstTest = false;
+			startRun();
+		}
 		ScenarioNode scenario = new ScenarioNode(ScenarioHelpers.removeScenarioHeader(container.getName()));
 		if (container.isRoot()) {
 			// We keep scenario history only for the root scenario;
@@ -399,6 +531,7 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 			if (numOfAppearances > 0) {
 				scenario.setName(scenario.getName() + " (" + ++numOfAppearances + ")");
 			}
+			addScenarioProperties(scenario);
 			execution.getLastMachine().addChild(scenario);
 		} else {
 			if (container instanceof AntForLoop) {
@@ -413,8 +546,39 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 
 	}
 
+	/**
+	 * Adding the scenario properties to the newly created scenario. <br>
+	 * Override this method if you would your reporter to add additional
+	 * properties to the scenario.
+	 * 
+	 * @param scenario
+	 *            Newly created scenario.
+	 */
+	protected void addScenarioProperties(ScenarioNode scenario) {
+		// Adding the summary properties. Those also include the run properties
+		// that have a 'summary' prefix
+		final Properties summaryProperties = Summary.getInstance().getProperties();
+		for (Object key : summaryProperties.keySet()) {
+			final String value = summaryProperties.getProperty(key + "");
+			if (!StringUtils.isEmpty(value)) {
+				scenario.addScenarioProperty(key.toString(), value);
+			}
+		}
+		// We are adding some additional information that we may find
+		// interesting
+		final String sutFile = JSystemProperties.getInstance().getPreference(FrameworkOptions.USED_SUT_FILE);
+		if (!StringUtils.isEmpty(sutFile)) {
+			scenario.addScenarioProperty("sutFile", sutFile);
+		}
+		final String testDir = JSystemProperties.getInstance().getPreference(FrameworkOptions.TESTS_CLASS_FOLDER);
+		if (!StringUtils.isEmpty(testDir)) {
+			scenario.addScenarioProperty("testDir", testDir);
+		}
+	}
+
 	@Override
 	public void endContainer(JTestContainer container) {
+		log.fine("Recieved end container event");
 		if (currentScenario.getParent() instanceof ScenarioNode) {
 			currentScenario = (ScenarioNode) currentScenario.getParent();
 
@@ -441,11 +605,22 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 
 	@Override
 	public void addProperty(String key, String value) {
-		testDetails.addProperty(key, value);
+		currentTest.addProperty(key, value);
 	}
 
 	@Override
-	public void setContainerProperties(int ancestorLevel, String key, String value) {
+	public void setContainerProperties(final int ancestorLevel, String key, String property) {
+		if (null == currentScenario) {
+			throw new IllegalStateException("Current scenario is null. Can't add container property");
+		}
+		ScenarioNode scenario = currentScenario;
+		int level = ancestorLevel;
+		if (ancestorLevel > 0) {
+			while (!(scenario.getParent() instanceof MachineNode) && (level-- > 0)) {
+				scenario = (ScenarioNode) scenario.getParent();
+			}
+		}
+		scenario.addScenarioProperty(key, property);
 	}
 
 	@Override
@@ -454,6 +629,7 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 
 	@Override
 	public void startLevel(String level, EnumReportLevel place) throws IOException {
+		log.fine("Recieved start level event");
 		ReportElement element = new ReportElement();
 		element.setTime(TIME_FORMAT.format(new Date()));
 		element.setTitle(level);
@@ -468,6 +644,7 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 
 	@Override
 	public void stopLevel() {
+		log.fine("Recieved stop level event");
 		ReportElement element = new ReportElement();
 		element.setTime(TIME_FORMAT.format(new Date()));
 		element.setType(ElementType.stopLevel);
@@ -541,22 +718,21 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 			case NONE:
 				break;
 			case CLASS_DOC:
-				testDetails.addProperty("Class Documentation", title);
-				testDetails.setDescription(title);
+				currentTest.addProperty("Class Documentation", title);
 				elementData = NONE;
 				return false;
 			case TEST_DOC:
-				testDetails.addProperty("Test Documentation", title);
-				testDetails.setDescription(title);
+				currentTest.addProperty("Test Documentation", title);
+				currentTest.setDescription(title);
 				elementData = NONE;
 				return false;
 			case USER_DOC:
-				testDetails.addProperty("User Documentation", title);
-				testDetails.setDescription(title);
+				currentTest.addProperty("User Documentation", title);
+				currentTest.setDescription(title);
 				elementData = NONE;
 				return false;
 			case TEST_BREADCUMBS:
-				testDetails.addProperty("Breadcrumb", title.replace("</span>", ""));
+				currentTest.addProperty("Breadcrumb", title.replace("</span>", ""));
 				elementData = NONE;
 				// This also closes the span
 				spanTrace--;
@@ -615,8 +791,20 @@ public abstract class AbstractHtmlReporter implements ExtendLevelTestReporter, E
 		return execution;
 	}
 
+	protected ScenarioNode getCurrentScenario() {
+		return currentScenario;
+	}
+
 	protected TestDetails getTestDetails() {
 		return testDetails;
+	}
+
+	protected int getIndex() {
+		return index;
+	}
+
+	protected String getExecutionUid() {
+		return executionUid;
 	}
 
 }

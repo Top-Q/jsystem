@@ -21,20 +21,23 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javax.xml.parsers.DocumentBuilder;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+
 import jsystem.framework.FrameworkOptions;
 import jsystem.framework.JSystemProperties;
 import jsystem.framework.RunProperties;
 import jsystem.framework.common.CommonResources;
 import jsystem.framework.report.ListenerstManager;
 import jsystem.framework.scenario.flow_control.AntFlowControl;
-import jsystem.framework.scenario.flow_control.AntForLoop;
 import jsystem.utils.FileUtils;
+import jsystem.utils.SortedProperties;
 import jsystem.utils.StringUtils;
 import jsystem.utils.XmlUtils;
 import junit.framework.Test;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * Utility class for performing {@link Scenario} related manipulations and
@@ -576,6 +579,7 @@ public class ScenarioHelpers {
 		saveScenarioPropertiesToSrcAndClass(p, scenarioName, onlyCache);
 	}
 
+	public static int counter = 0;
 	/**
 	 * save the given properties to the given scenario file (both source and
 	 * class files)
@@ -649,7 +653,51 @@ public class ScenarioHelpers {
 			}
 		}
 	}
-
+	
+	public static Properties removeDeletedScenarioProperties(Properties properties, String scenarioName) throws Exception {
+		String lastTestFullUuid = "";
+		Properties sortedProperties = new SortedProperties();
+		sortedProperties.putAll(properties);
+		Enumeration<Object> e1 = sortedProperties.keys();
+		while (e1.hasMoreElements()) {
+			final Object key1 = e1.nextElement();
+			if (sortedProperties.get(key1) == null) {
+				continue;
+			}
+			if (key1.toString().indexOf(".") == -1) {
+				continue;
+			}
+			String testFullUuid = key1.toString().substring(0, key1.toString().indexOf("."));
+			if (!testFullUuid.equals(lastTestFullUuid)) {
+				lastTestFullUuid = testFullUuid;
+				JTest test = ScenarioHelpers.getTestById(ScenariosManager.getInstance().getCurrentScenario(), testFullUuid);
+				if (test instanceof RunnerTest) {
+					Properties testProps = ScenarioHelpers.getTestPropertiesFromScenarioProps(scenarioName, testFullUuid);
+					Parameter[] testParams = ((RunnerTest) test).getParameters();
+					List<String> testParamsNames = new ArrayList<>();
+					for (int i = 0; i < testParams.length; i++) {
+						testParamsNames.add(testParams[i].getName());
+					}
+					Enumeration<Object> e2 = testProps.keys();	
+					while (e2.hasMoreElements()) {
+						final Object key2 = e2.nextElement();
+						if (testProps.get(key2) == null ) {
+							continue;
+						}
+						String testParamName = key2.toString();
+						if (testParamName.startsWith("jsystem.") || testParamName.equals("meaningfulName")) {
+							continue;
+						}
+						if (!testParamsNames.contains(testParamName)) {
+							sortedProperties.remove(testFullUuid + "." + testParamName);
+						}
+					}
+				}
+			}
+		}
+		return sortedProperties;
+	}
+	
 	public static void deleteScenario(Scenario scenario) {
 		if (scenario == null) {
 			return;

@@ -321,10 +321,8 @@ public class JSystemProperties {
 			if (!isReporterVm()) {
 				String remoteLogConf = "logger=true\n"
 						+ "handlers=java.util.logging.FileHandler java.util.logging.ConsoleHandler\n"
-						+ "java.util.logging.FileHandler.limit=10000000\n"
-						+ "java.util.logging.FileHandler.count=4\n"
-						+ "jsystem.level= FINER\n"
-						+ "java.util.logging.FileHandler.append=true\n"
+						+ "java.util.logging.FileHandler.limit=10000000\n" + "java.util.logging.FileHandler.count=4\n"
+						+ "jsystem.level= FINER\n" + "java.util.logging.FileHandler.append=true\n"
 						+ "java.util.logging.FileHandler.formatter=java.util.logging.SimpleFormatter\n"
 						// +
 						// "java.util.logging.FileHandler.formatter=jsystem.utils.BasicFormatter\n"
@@ -373,7 +371,8 @@ public class JSystemProperties {
 		}
 
 		if (!JSystemProperties.getInstance().isJsystemRunner()) {
-			StringTokenizer st = new StringTokenizer(System.getProperty("java.class.path"),  System.getProperty("path.separator"));
+			StringTokenizer st = new StringTokenizer(System.getProperty("java.class.path"),
+					System.getProperty("path.separator"));
 			while (st.hasMoreTokens()) {
 				File f = new File(st.nextToken());
 				if (f.isDirectory() && f.exists()) {
@@ -387,12 +386,12 @@ public class JSystemProperties {
 		if (path != null && getInstance().getPreference(FrameworkOptions.TESTS_SOURCE_FOLDER) == null) {
 			File pathFile = new File(path);
 			File testSrc = new File(pathFile.getParent(), "tests");
-			if (testSrc.exists()){
-				//Ant project structure
+			if (testSrc.exists()) {
+				// Ant project structure
 				getInstance().setPreference(FrameworkOptions.TESTS_SOURCE_FOLDER, testSrc.getPath());
-				getInstance().setPreference(FrameworkOptions.RESOURCES_SOURCE_FOLDER, testSrc.getPath());				
-			}else {
-				//Maven project structure
+				getInstance().setPreference(FrameworkOptions.RESOURCES_SOURCE_FOLDER, testSrc.getPath());
+			} else {
+				// Maven project structure
 				testSrc = new File(pathFile.getParentFile().getParentFile(), "src/main/java");
 				getInstance().setPreference(FrameworkOptions.TESTS_SOURCE_FOLDER, testSrc.getPath());
 				File resourcesSrc = new File(pathFile.getParentFile().getParentFile(), "src/main/resources");
@@ -402,6 +401,24 @@ public class JSystemProperties {
 		}
 
 		return path;
+	}
+
+	/**
+	 * Finds the lib folder of the tests project
+	 * 
+	 * @return return the lib folder of the tests project or null if not exists
+	 * @author Itai Agmon
+	 */
+	public static String getTestsLibFolder() {
+		String testPath = getCurrentTestsPath();
+		if (testPath == null) {
+			return null;
+		}
+		File libFolder = new File(new File(testPath).getParentFile().getParentFile(), "lib");
+		if (!libFolder.exists() || !libFolder.isDirectory()) {
+			return null;
+		}
+		return libFolder.getAbsolutePath().toString();
 	}
 
 	public void removePreference(FrameworkOptions option) {
@@ -490,7 +507,8 @@ public class JSystemProperties {
 	/**
 	 * 
 	 * @return True - if called from the Reporter VM<br>
-	 *         (for JRunner execution - True only if called from the JRunner VM, <br>
+	 *         (for JRunner execution - True only if called from the JRunner VM,
+	 *         <br>
 	 *         for Ant\IDE execution - True always)
 	 */
 	public boolean isReporterVm() {

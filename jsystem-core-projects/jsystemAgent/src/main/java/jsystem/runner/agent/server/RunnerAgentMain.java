@@ -18,7 +18,6 @@ import jsystem.framework.sut.SutFactory;
 import jsystem.runner.agent.MBeanNames;
 import jsystem.utils.FileLock;
 
-import org.springframework.jmx.export.MBeanExporter;
 
 import com.aqua.filetransfer.ftp.FTPServer;
 import com.ignis.embeddedcatalina.EmbeddedCatalina;
@@ -66,33 +65,39 @@ public class RunnerAgentMain implements StartRunner {
 		System.exit(exitCode);
 	}
 
-	private void initAgent() throws Exception {		
-		
-		MBeanExporter	exporter	=	new	MBeanExporter();
-		MBeanServer		server	=	ManagementFactory.getPlatformMBeanServer();
-		exporter.setServer(server);
-		
-		//agent
-		RunnerAgent agent = new RunnerAgent();
-		server.registerMBean(agent,MBeanNames.RUNNER_AGENT);
-		
-		//ftp server
-		FTPServer ftpServer = new FTPServer();
-		ftpServer.setDefaultUserHomeDirectory("externalFiles");
-		ftpServer.setPort(getFtpPort());
-		ftpServer.init();
-		ftpServer.startServer();
-		exporter.registerManagedResource(ftpServer,MBeanNames.FTP_SERVER);
+	/**
+	 * ITAI: This method was removed since it was using the Spring dependency that was removed due
+	 * to log4j known security vulnerabilities. issue #360
+	 * @throws Exception
+	 */
+	private void initAgent() throws Exception {
 
-		//servlet container
-		EmbeddedCatalina catalina = new EmbeddedCatalina();
-		catalina.setDefaultConnectorPort(getWebPort());
-		catalina.init();
-		catalina.start();
 		
-		//main class
-		exporter.registerManagedResource(this,MBeanNames.AGENT_MAIN);
-		agent.init();
+//		MBeanExporter	exporter	=	new	MBeanExporter();
+//		MBeanServer		server	=	ManagementFactory.getPlatformMBeanServer();
+//		exporter.setServer(server);
+//
+//		//agent
+//		RunnerAgent agent = new RunnerAgent();
+//		server.registerMBean(agent,MBeanNames.RUNNER_AGENT);
+//
+//		//ftp server
+//		FTPServer ftpServer = new FTPServer();
+//		ftpServer.setDefaultUserHomeDirectory("externalFiles");
+//		ftpServer.setPort(getFtpPort());
+//		ftpServer.init();
+//		ftpServer.startServer();
+//		exporter.registerManagedResource(ftpServer,MBeanNames.FTP_SERVER);
+//
+//		//servlet container
+//		EmbeddedCatalina catalina = new EmbeddedCatalina();
+//		catalina.setDefaultConnectorPort(getWebPort());
+//		catalina.init();
+//		catalina.start();
+//
+//		//main class
+//		exporter.registerManagedResource(this,MBeanNames.AGENT_MAIN);
+//		agent.init();
 	}
 			
 	private void waitForShutdownSignal() throws Exception {

@@ -3,26 +3,18 @@
  */
 package jsystem.extensions.paramproviders;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Vector;
-
-import javax.swing.Action;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-
+import jsystem.framework.common.CommonResources;
 import jsystem.treeui.actionItems.IgnisAction;
 import jsystem.treeui.images.ImageCenter;
 import jsystem.utils.StringUtils;
+
+import javax.swing.*;
+import javax.swing.table.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Vector;
 
 /**
  * MultiOptions chooser for the parameters panel.
@@ -41,7 +33,12 @@ public class OptionsMultiSelectDialog extends JDialog {
 		OptionsMultiSelectDialog dialog = new OptionsMultiSelectDialog();		
 		dialog.initDialog(fullList,selectedOptions);
 	}
+	
+	public void initDialog(Object[] fullList, String options) {
+        initDialog(fullList, options.split(CommonResources.DELIMITER));
+    }
 
+	
 	public void initDialog(Object[] fullList,String[] options) {
 		setTitle("Select Options");
 		((Frame) this.getOwner()).setIconImage(ImageCenter.getInstance()
@@ -80,7 +77,7 @@ public class OptionsMultiSelectDialog extends JDialog {
 	}
 
 	private void buildOptionsListTableModel()  {
-		Vector<Object> model = new Vector<Object>();
+        Vector<Vector<Object>> model = new Vector<>();
 		for (Object s : fullList) {
 			model.add(getOptionDataVector(s.toString()));
 		}
@@ -119,7 +116,7 @@ public class OptionsMultiSelectDialog extends JDialog {
 	class OptionsSelectTableModel extends DefaultTableModel{
 		private static final long serialVersionUID = 1L;
 		
-		OptionsSelectTableModel(Vector<Object> model,Vector<String> columns){
+        OptionsSelectTableModel(Vector<Vector<Object>> model,Vector<String> columns){
 			super(model,columns);
 		}
 		@Override

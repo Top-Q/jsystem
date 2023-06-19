@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.jsystemtest.systemobjects</groupId>
 		<artifactId>jsystem-core-system-objects</artifactId>
-		<version>6.1.01-SNAPSHOT</version>
+		<version>6.1.12-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
 	<artifactId>embeddedCatalina</artifactId>	
@@ -18,6 +18,10 @@
 		<dependency>
 			<groupId>tomcat</groupId>
 			<artifactId>catalina</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>xml-apis</groupId>
+			<artifactId>xml-apis</artifactId>
 		</dependency>
 	</dependencies>
 </project>

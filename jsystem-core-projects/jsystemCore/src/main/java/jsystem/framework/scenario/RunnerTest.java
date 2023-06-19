@@ -31,6 +31,7 @@ import jsystem.framework.FrameworkOptions;
 import jsystem.framework.JSystemProperties;
 import jsystem.framework.ParameterProperties;
 import jsystem.framework.TestProperties;
+import jsystem.framework.report.ListenerstManager;
 import jsystem.framework.report.RunnerListenersManager;
 import jsystem.framework.scenario.Parameter.ParameterType;
 import jsystem.framework.scripts.ScriptEngine;
@@ -38,13 +39,13 @@ import jsystem.framework.scripts.ScriptExecutor;
 import jsystem.framework.scripts.ScriptsEngineManager;
 import jsystem.runner.loader.LoadersManager;
 import jsystem.utils.DateUtils;
+import jsystem.utils.ObjectUtils;
 import jsystem.utils.StringUtils;
 import jsystem.utils.XmlUtils;
 import junit.framework.SystemTest;
 import junit.framework.Test;
 import junit.framework.TestResult;
 
-import org.springframework.util.ObjectUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -558,10 +559,13 @@ public class RunnerTest implements JTest, UIHandler {
 	private void loadMeaningfulName(boolean include) {
 		Scenario upto = include ? null : getRoot();
 		String meaningful = null;
-		if (JSystemProperties.getInstance().getPreferenceOrDefault(FrameworkOptions.CACHE_SCENARIO_PROPERTIES).equals("true")){
-			meaningful = ScenarioHelpers.getAllTestPropertiesUpTo(this, upto, false).getProperty(RunningProperties.MEANINGFUL_NAME_TAG);
-		}else {
-			meaningful = ScenarioHelpers.getAllTestPropertiesUpTo(this, upto, true).getProperty(RunningProperties.MEANINGFUL_NAME_TAG);
+		if (JSystemProperties.getInstance().getPreferenceOrDefault(FrameworkOptions.CACHE_SCENARIO_PROPERTIES)
+				.equals("true")) {
+			meaningful = ScenarioHelpers.getAllTestPropertiesUpTo(this, upto, false).getProperty(
+					RunningProperties.MEANINGFUL_NAME_TAG);
+		} else {
+			meaningful = ScenarioHelpers.getAllTestPropertiesUpTo(this, upto, true).getProperty(
+					RunningProperties.MEANINGFUL_NAME_TAG);
 		}
 		this.meaningfulName = meaningful;
 	}
@@ -1336,55 +1340,42 @@ public class RunnerTest implements JTest, UIHandler {
 			}
 
 			Class<?>[] types = setter.getParameterTypes();
-			if (types != null && types.length > 0 && types[0].isEnum()) { // if
-				// enum
-				Class type = types[0];
-				/*
-				 * Convert the string value into Enum
-				 */
-				try {
+			try {
+				if (types != null && types.length > 0 && types[0].isEnum()) { // if
+					// enum
+					Class type = types[0];
+					/*
+					 * Convert the string value into Enum
+					 */
 					ob = currentParameter.getEnumValueAsName();
 					setter.invoke(test, new Object[] { Enum.valueOf(type, ob.toString()) });
-				} catch (Exception e) {
-					log.log(Level.WARNING, "Fail to set: " + currentParameter.getName(), e);
-					continue;
-				}
-			} else if (types != null && types.length > 0 && File.class.isAssignableFrom(types[0])) { // if
-				try {
+				} else if (types != null && types.length > 0 && File.class.isAssignableFrom(types[0])) { // if
 					File f = ParameterFileUtils.convertBeforeTestUpdate(ob.toString());
 					setter.invoke(test, new Object[] { f });
-				} catch (Exception e) {
-					log.log(Level.WARNING, "Fail to set: " + currentParameter.getName(), e);
-					continue;
-				}
-			} else if (types != null && types.length > 0 && Date.class.isAssignableFrom(types[0])) { // if
-				try { // trying first date parser option
+				} else if (types != null && types.length > 0 && Date.class.isAssignableFrom(types[0])) { // if
 					setter.invoke(test, new Object[] { DateUtils.parseDate(ob.toString()) });
-				} catch (Exception e1) {
-					log.log(Level.WARNING, "Fail to set: " + currentParameter.getName(), e1.getMessage());
-					continue;
-				}
-			} else if (types != null && types.length > 0 && String[].class.isAssignableFrom(types[0])) {// in
-																										// case
-																										// of
-				// 'string
-				// array'
-				try {
+				} else if (types != null && types.length > 0 && String[].class.isAssignableFrom(types[0])) {// in
+																											// case
+																											// of
+					// 'string
+					// array'
 					if (ob instanceof String) {
 						ob = StringUtils.split((String) ob, ";");
 					}
 					setter.invoke(test, new Object[] { ob });
-				} catch (Exception e2) {
-					log.log(Level.WARNING, "Fail to set: " + currentParameter.getName(), e2.getMessage());
-					continue;
-				}
-			} else { // not an enum
-				try {
+				} else { // not an enum
 					setter.invoke(test, new Object[] { ob });
-				} catch (Exception e) {
-					log.log(Level.WARNING, "Fail to set: " + currentParameter.getName(), e);
-					continue;
 				}
+
+			} catch (Exception e) {
+				// Fixes issue #232. When parameter from type enum is using a
+				// value that is longer part of the enum, the value becomes null
+				// without proper message
+				ListenerstManager.getInstance().report(
+						"Failed to set value to parameter with name '" + currentParameter.getName() + "'", 2);
+				log.log(Level.WARNING, "Failed to set value to parameter with name '" + currentParameter.getName()
+						+ "'", e);
+
 			}
 		}
 	}
@@ -1441,11 +1432,14 @@ public class RunnerTest implements JTest, UIHandler {
 				properties.put(originalParameter.getName(), stringValue);
 			}
 		}
-		TestProperties tp = getTestProperties();
-		if (tp != null) {
-			meaningfulName = StringUtils.isEmpty(tp.name()) ? null : tp.name();
-			meaningfulName = processTestName(meaningfulName);
+		String originalName = meaningfulName;
+		if (originalName == null) {
+			TestProperties tp = getTestProperties();
+			if (tp != null) {
+				originalName = StringUtils.isEmpty(tp.name()) ? null : tp.name();
+			}
 		}
+		meaningfulName = processTestName(originalName);
 	}
 
 	private void updateTestInnerFlag(Parameter parameter, String parameterValue) {

@@ -33,8 +33,10 @@ import java.util.EventListener;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Observable;
 import java.util.Properties;
+import java.util.StringTokenizer;
 import java.util.TreeMap;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -71,6 +73,8 @@ import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
+
+import org.jfree.util.Log;
 
 import jsystem.extensions.report.html.HtmlCodeWriter;
 import jsystem.extensions.scenarionamehook.ScenarioNameHookManager;
@@ -110,6 +114,7 @@ import jsystem.framework.sut.ChangeSutTest;
 import jsystem.guiMapping.JsystemMapping;
 import jsystem.runner.ErrorLevel;
 import jsystem.runner.agent.tests.PublishTest;
+import jsystem.runner.loader.LoadersManager;
 import jsystem.treeui.TestRunner;
 import jsystem.treeui.WaitDialog;
 import jsystem.treeui.actionItems.AddScenarioAction;
@@ -163,8 +168,6 @@ import jsystem.utils.StringUtils;
 import jsystem.utils.SwingUtils;
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
-
-import org.jfree.util.Log;
 
 public class TestsTableController extends Observable implements TestStatusListener, ActionListener, ExtendTestListener,
 		TreeSelectionListener, MouseListener, TreeExpansionListener, ScenarioListener {
@@ -271,6 +274,8 @@ public class TestsTableController extends Observable implements TestStatusListen
 	private JMenuItem popupExpandTreeRoot;
 
 	private JMenuItem popupCollapseTreeRoot;
+	
+	private List<ContextMenuPlugin> contextMenuPlugins;
 
 	private ScenarioTreeNode currentNode;
 
@@ -298,7 +303,7 @@ public class TestsTableController extends Observable implements TestStatusListen
 
 	private TreeMap<Integer, JTest> testByRow;
 	private int[] paths = null;
-	private JTest[] selectedTests;
+	JTest[] selectedTests;
 	private LinkedHashMap<Integer, JTest> clipboardTests;
 
 	/**
@@ -773,7 +778,31 @@ public class TestsTableController extends Observable implements TestStatusListen
 
 		setEdit(false, false, false, true, true, false);
 
+		initContextMenuPlugins();
+		
 		refreshTree();
+	}
+
+	private void initContextMenuPlugins() {
+		contextMenuPlugins = new ArrayList<ContextMenuPlugin>();
+		String pluginNamesString = JSystemProperties.getInstance().getPreferenceOrDefault(FrameworkOptions.CONTEXT_MENU_PLUGIN_CLASSES);
+		if (StringUtils.isEmpty(pluginNamesString)) {
+			return;
+		}
+		StringTokenizer st = new StringTokenizer(pluginNamesString, ";");
+		while (st.hasMoreTokens()){
+			String pluginName = st.nextToken();
+			try {
+				Class<?> reporterClass = LoadersManager.getInstance().getLoader().loadClass(pluginName);
+				ContextMenuPlugin plugin = (ContextMenuPlugin)reporterClass.newInstance();
+				plugin.init(this);
+				ListenerstManager.getInstance().addListener(plugin);
+				contextMenuPlugins.add(plugin);
+			} catch (Exception e) {
+				log.log(Level.WARNING, "Failed to init context menu plugin " + pluginName +" due to " + e.getMessage());
+			}
+
+		}
 	}
 
 	private void setSelectionModel() {
@@ -1811,10 +1840,8 @@ public class TestsTableController extends Observable implements TestStatusListen
 			// Limor Bortman
 			// return To Default for the test popup men
 			addResetToDefault();
-			return popupMenu;
 
 		} else if (type == ROOT_POP_UP) {
-			popupMenu = new JPopupMenu();
 
 			if (comment) {
 				popupCommentItem = new JMenuItem("Comment Item");
@@ -1884,10 +1911,8 @@ public class TestsTableController extends Observable implements TestStatusListen
 
 			// return To Default for the test Root menu
 			addResetToDefault();
-			return popupMenu;
 
 		} else if (type == SCEN_POP_UP) {
-			popupMenu = new JPopupMenu();
 
 			// Scenario popup Menu
 
@@ -1976,11 +2001,10 @@ public class TestsTableController extends Observable implements TestStatusListen
 					popupMenu.add(editOnlyLocallyItem);
 				}
 			} catch (Exception e) {
-
+				
 			}
 			// Limor Bortman
 			addResetToDefault();
-			return popupMenu;
 		} else if (type == FIXTURE_POP_UP) {
 
 			if (comment) {
@@ -1990,7 +2014,6 @@ public class TestsTableController extends Observable implements TestStatusListen
 			}
 
 			popupMenu.add(RemoveItemAction.getInstance());
-			return popupMenu;
 		}
 		// Added in order to resolve bug #266
 		else if (type == FLOW_POP_UP) {
@@ -2038,9 +2061,20 @@ public class TestsTableController extends Observable implements TestStatusListen
 				popupMenu.add(popupExpandTree);
 			}
 
-			return popupMenu;
 		}
-		return null;
+		
+		// Handling the context menu plugins. 
+		for (ContextMenuPlugin plugin : contextMenuPlugins){
+			if (plugin.shouldDisplayed(currentNode, null, currentNode.getTest())){
+				JMenuItem pluginMenu = new JMenuItem(plugin.getItemName());
+				if (plugin.getIcon() != null){
+					pluginMenu.setIcon(plugin.getIcon());					}
+				pluginMenu.addActionListener(plugin);
+				popupMenu.add(pluginMenu);
+			}
+		}
+
+		return popupMenu;
 	}
 
 	// Limor Bortman
@@ -3920,6 +3954,10 @@ public class TestsTableController extends Observable implements TestStatusListen
 		return isOK;
 	}
 
+	public JTest[] getSelectedTests() {
+		return selectedTests;
+	}
+	
 
 }
 
@@ -3971,6 +4009,9 @@ class StatusBar extends JToolBar {
 
 		g.fillRect(0, 0, size.width, size.height);
 	}
+	
+	
+	
 
 
 

@@ -10,6 +10,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 /**
@@ -47,13 +48,18 @@ public class DateUtils {
 	 * @return
 	 * @throws ParseException	if no format matches
 	 */
-	public static Date parseDate(String dateString) throws ParseException{
+	public static Date parseDate(String dateString) throws ParseException {
 		ParseException exception = null;
-		for (String format : DATE_FORMATS){
-			try{
-				return new SimpleDateFormat(format).parse(dateString);
-			}catch (ParseException e) {
-				exception = e;
+		for (String format : DATE_FORMATS) {
+			try {
+				return new SimpleDateFormat(format,Locale.US).parse(dateString);
+			} catch (ParseException e) {
+				try {
+					return new SimpleDateFormat(format).parse(dateString);
+				} catch (ParseException e0){
+					exception = e;
+					
+				}
 			}
 		}
 		throw exception;

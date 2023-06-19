@@ -2,13 +2,13 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<packaging>maven-plugin</packaging>
-
+	<artifactId>jsystem-maven-plugin</artifactId>
 	<name>JSystem Maven Plugin</name>
 	<url>http://www.jsystemtest.org</url>
 	<parent>
 		<groupId>org.jsystemtest</groupId>
 		<artifactId>jsystem-parent</artifactId>
-		<version>6.1.01-SNAPSHOT</version>
+		<version>6.1.12-SNAPSHOT</version>
 		<relativePath>../../jsystem-parent</relativePath>
 	</parent>
 	<repositories>
@@ -40,17 +40,18 @@
 		<dependency>
 			<groupId>org.apache.ant</groupId>
 			<artifactId>ant</artifactId>
-			<version>1.7.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jsystemtest</groupId>
 			<artifactId>jsystemApp</artifactId>
 			<version>${project.version}</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.jsystemtest</groupId>
 			<artifactId>jsystemAnt</artifactId>
 			<version>${project.version}</version>
+			
 		</dependency>
 		<dependency>
 			<groupId>org.apache.maven</groupId>
@@ -58,6 +59,14 @@
 			<version>2.0.2</version>
 		</dependency>
 	</dependencies>
-	<artifactId>jsystem-maven-plugin</artifactId>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-plugin-plugin</artifactId>
+				<version>3.4</version>
+			</plugin>
+		</plugins>
+	</build>
 
 </project>

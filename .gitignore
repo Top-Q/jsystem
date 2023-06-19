@@ -23,6 +23,9 @@
 target
 lib
 
+#Pydev project
+.pydevproject
+
 #JSystem files
 .ant.properties
 .testPropertiesFile_Empty
@@ -31,8 +34,13 @@ testtimes.properties
 jsystem-core-projects/jsystemCore/file.properties
 !jsystem-assembly/jsystem-runner/src/main/etc/jsystem.properties
 !jsystem-assembly/jsystem-runner/src/main/etc/.project
+jsystem-core-projects/jsystemApp/.run.properties
 jsystem.properties.bu
 runnerState.properties
 log
 myFile.txt
 *.xml.versionsBackup
+difido.properties
+remoteDifido.properties
+bin/
+jsystem0.log*

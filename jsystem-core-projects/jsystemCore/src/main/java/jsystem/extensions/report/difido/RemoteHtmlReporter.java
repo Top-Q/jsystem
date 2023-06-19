@@ -1,14 +1,16 @@
 package jsystem.extensions.report.difido;
 
 import il.co.topq.difido.model.execution.Execution;
+import il.co.topq.difido.model.execution.ScenarioNode;
+import il.co.topq.difido.model.remote.ExecutionDetails;
 import il.co.topq.difido.model.test.TestDetails;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 import java.util.logging.Logger;
 
-import jsystem.framework.FrameworkOptions;
-import jsystem.framework.JSystemProperties;
+import jsystem.extensions.report.difido.RemoteDifidoProperties.RemoteDifidoOptions;
 
 public class RemoteHtmlReporter extends AbstractHtmlReporter {
 
@@ -20,13 +22,15 @@ public class RemoteHtmlReporter extends AbstractHtmlReporter {
 
 	private DifidoClient client;
 
-	private boolean appendToExistingExecution = true;
-
 	private int executionId;
 
 	private int machineId;
 
 	private int numOfFailures;
+
+	protected RemoteDifidoProperties difidoProps;
+
+	private ExecutionDetails details;
 
 	public RemoteHtmlReporter() {
 		super();
@@ -43,26 +47,97 @@ public class RemoteHtmlReporter extends AbstractHtmlReporter {
 
 	@Override
 	public void init() {
-		super.initModel();
-		try {
-			final String host = JSystemProperties.getInstance().getPreferenceOrDefault(
-					FrameworkOptions.REPORTS_PUBLISHER_HOST);
-			final int port = Integer.parseInt(JSystemProperties.getInstance().getPreferenceOrDefault(
-					FrameworkOptions.REPORTS_PUBLISHER_PORT));
-			client = new DifidoClient(host, port);
-			if (true) {
-				executionId = client.getLastExecutionId();
-			} else {
-				executionId = client.addExecution();
+		super.init();
+
+		// We are doing it because we need that the file of the Difido
+		// properties to be created if it is not exists.
+		new RemoteDifidoProperties();
+
+	}
+
+	public void endRun() {
+		super.endRun();
+		// We are not using shared execution, that means that we are the only
+		// one that are using it and we just ended with it, so let's set it to
+		// not active
+		if (executionId > 0 && !difidoProps.getPropertyAsBoolean(RemoteDifidoOptions.USE_SHARED_EXECUTION)) {
+			try {
+				client.endExecution(executionId);
+			} catch (Exception e) {
+				log.warning("Failed to close execution with id " + executionId);
 			}
-			machineId = client.addMachine(executionId, getExecution().getLastMachine());
-			enabled = true;
-			log.fine(RemoteHtmlReporter.class.getName() + " was initilized successfully");
-		} catch (Throwable t) {
-			enabled = false;
-			log.warning("Failed to init " + RemoteHtmlReporter.class.getName() + " due to " + t.getMessage());
+			executionId = -1;
 		}
 
+	}
+
+	@Override
+	public void startRun() {
+		super.initModel();
+		super.startRun();
+		difidoProps = new RemoteDifidoProperties();
+		String host = null;
+		int port = 0;
+		try {
+			enabled = Boolean.parseBoolean(difidoProps.getPropertyAsString(RemoteDifidoOptions.ENABLED));
+			if (!enabled) {
+				return;
+			}
+			host = difidoProps.getPropertyAsString(RemoteDifidoOptions.HOST);
+			port = Integer.parseInt(difidoProps.getPropertyAsString(RemoteDifidoOptions.PORT));
+			client = new DifidoClient(host, port);
+			executionId = prepareExecution();
+			machineId = client.addMachine(executionId, getExecution().getLastMachine());
+			enabled = true;
+			log.fine(RemoteHtmlReporter.class.getName() + " was initialized successfully");
+		} catch (Throwable t) {
+			enabled = false;
+			log.warning("Failed to init " + RemoteHtmlReporter.class.getName() + "connection with host '" + host + ":"
+					+ port + "' due to " + t.getMessage());
+		}
+
+	}
+
+	private int prepareExecution() throws Exception {
+		// Fetching properties
+		final boolean appendToExistingExecution = difidoProps
+				.getPropertyAsBoolean(RemoteDifidoOptions.APPEND_TO_EXISTING_EXECUTION);
+		final boolean useSharedExecution = difidoProps.getPropertyAsBoolean(RemoteDifidoOptions.USE_SHARED_EXECUTION);
+		final String description = difidoProps.getPropertyAsString(RemoteDifidoOptions.DESCRIPTION);
+		final int id = difidoProps.getPropertyAsInt(RemoteDifidoOptions.EXISTING_EXECUTION_ID);
+		final boolean forceNewExecution = difidoProps.getPropertyAsBoolean(RemoteDifidoOptions.FORCE_NEW_EXECUTION);
+		final Map<String, String> properties = difidoProps.getPropertyAsMap(RemoteDifidoOptions.EXECUTION_PROPETIES);
+
+		if (appendToExistingExecution && !forceNewExecution) {
+			if (id >= 0) {
+				return id;
+			}
+			if (executionId > 0) {
+				return executionId;
+			}
+
+		}
+		details = new ExecutionDetails(description, useSharedExecution);
+		details.setForceNew(forceNewExecution);
+		details.setExecutionProperties(properties);
+		return client.addExecution(details);
+	}
+
+	/**
+	 * We want to add all the execution properties for each scenario. This will
+	 * eventually appear in the ElasticSearch
+	 * 
+	 * @param scenario
+	 */
+	protected void addScenarioProperties(ScenarioNode scenario) {
+		super.addScenarioProperties(scenario);
+		// If the execution is shared, and we were not responsible for creating
+		// the execution, the execution details in this stage will be null.
+		if (details != null && details.getExecutionProperties() != null) {
+			for (String key : details.getExecutionProperties().keySet()) {
+				scenario.addScenarioProperty(key, details.getExecutionProperties().get(key));
+			}
+		}
 	}
 
 	@Override

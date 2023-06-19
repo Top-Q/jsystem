@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.jsystemtest</groupId>
 		<artifactId>jsystem-parent</artifactId>
-		<version>6.1.01-SNAPSHOT</version>
+		<version>6.1.12-SNAPSHOT</version>
 		<relativePath>../../jsystem-parent</relativePath>
 	</parent>
 	<dependencies>
@@ -60,7 +60,19 @@
 					</execution>
 				</executions>
 			</plugin>
-
+			<plugin>
+				<groupId>org.jsystemtest</groupId>
+				<artifactId>jsystem-maven-plugin</artifactId>
+				<version>${project.version}</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.jsystemtest</groupId>
+						<artifactId>jsystem-services-tests</artifactId>
+						<version>6.1.12-SNAPSHOT</version>
+						<scope>runtime</scope>
+					</dependency>
+				</dependencies>
+			</plugin>
 		</plugins>
 	</build>
 </project>

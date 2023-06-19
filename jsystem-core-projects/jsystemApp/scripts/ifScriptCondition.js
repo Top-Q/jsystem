@@ -9,17 +9,18 @@ self.setValue(result); // the result for the condition
  * Parse a given expression, using optional operators array
  */
 function parseExpression(expression, optionalOperators){
+	// This is done for compatability with Java 8
+	expression = expression.replaceAll(separator,"");
 	for (var i=0 ; i<optionalOperators.length ; i++){
 		if (expression.contains(optionalOperators[i])){
 			var temp = expression.split(optionalOperators[i]);
 			if (temp.length < 2){
 				return false;
 			}
-			
+
 			return [temp[0].trim(),temp[1].trim()];
 		}
 	}
-	
 	return false;
 }
 
@@ -39,7 +40,7 @@ function getComparisonTypeAndRest(expression){
  * Evaluate a mathematical comparison expression
  */
 function evaluateMath(expression){
-	var numbers = parseExpression(expression, ['>=','<=','=','!=','<','>']);
+	var numbers = parseExpression(expression, ['>=','<=','!=','=','<','>']);
 
 	if (numbers == false || isNaN(numbers[0]) || isNaN(numbers[1])){
 		print("Not a mathematical expression: " + expression);
@@ -49,6 +50,8 @@ function evaluateMath(expression){
 	numbers[0] = parseFloat(numbers[0]);
 	numbers[1] = parseFloat(numbers[1]);
 	
+	// This is done for compatability with Java 8
+	expression = expression.replaceAll(separator,"");
 	if (expression.contains(">=")){
 		return (numbers[0] >= numbers[1]);
 	}
@@ -84,6 +87,8 @@ function evaluateString(expression,isCaseSensitive){
 		numbers[0] = numbers[0].toLowerCase();
 		numbers[1] = numbers[1].toLowerCase();
 	}
+	// This is done for compatability with Java 8
+	expression = expression.replaceAll(separator,"");
 	if (expression.contains("NOT_EQUALS")){
 		return (!numbers[0].equals(numbers[1]));
 	}

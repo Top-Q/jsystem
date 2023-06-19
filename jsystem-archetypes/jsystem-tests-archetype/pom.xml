@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.jsystemtest.archetypes</groupId>
 		<artifactId>jsystem-archetypes</artifactId>
-		<version>6.1.01-SNAPSHOT</version>
+		<version>6.1.12-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
 	<properties>
@@ -45,10 +45,6 @@
 					<escapeString>\</escapeString>
 				</configuration>
 			</plugin>
-
-
-
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>

@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.jsystemtest</groupId>
 	<artifactId>jsystem-parent</artifactId>
-	<version>6.1.01-SNAPSHOT</version>
+	<version>6.1.12-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>jsystem-parent</name>
 	<organization>
@@ -29,6 +29,8 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<assembly.format>dir</assembly.format>
 		<topq.repository.rootUrl>http://maven.top-q.co.il</topq.repository.rootUrl>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
 
 	<dependencies>
@@ -42,18 +44,13 @@
 			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
-				<version>4.10</version>
+				<version>4.13.1</version>
 			</dependency>
 
 			<dependency>
 				<groupId>javax.mail</groupId>
 				<artifactId>mail</artifactId>
 				<version>1.4</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring</artifactId>
-				<version>2.0</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.ant</groupId>
@@ -70,6 +67,12 @@
 				<groupId>xalan</groupId>
 				<artifactId>xalan</artifactId>
 				<version>2.7.1</version>
+				<exclusions>
+					<exclusion>
+						<groupId>xml-apis</groupId>
+						<artifactId>xml-apis</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 
 			<dependency>
@@ -152,12 +155,18 @@
 			<dependency>
 				<groupId>commons-io</groupId>
 				<artifactId>commons-io</artifactId>
-				<version>2.3</version>
+				<version>2.7</version>
 			</dependency>
 			<dependency>
 				<groupId>tomcat</groupId>
 				<artifactId>catalina</artifactId>
 				<version>5.5.23</version>
+				<exclusions>
+					<exclusion>
+						<groupId>xml-apis</groupId>
+						<artifactId>xml-apis</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 			<dependency>
 				<groupId>com.jgoodies</groupId>
@@ -188,12 +197,17 @@
 			<dependency>
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-compress</artifactId>
-				<version>1.4</version>
+				<version>1.21</version>
 			</dependency>
 			<dependency>
 				<groupId>il.co.topq.difido</groupId>
 				<artifactId>difido-reports-common</artifactId>
-				<version>0.5-SNAPSHOT</version>
+				<version>2.2.05</version>
+			</dependency>
+			<dependency>
+				<groupId>xml-apis</groupId>
+				<artifactId>xml-apis</artifactId>
+				<version>1.4.01</version>
 			</dependency>
 		</dependencies>
 
@@ -202,16 +216,6 @@
 	<build>
 		<!--<finalName>${project.artifactId}</finalName> -->
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.5.1</version>
-				<configuration>
-					<target>1.7</target>
-					<source>1.7</source>
-					<encoding>UTF-8</encoding>
-				</configuration>
-			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>

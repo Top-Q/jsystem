@@ -26,7 +26,7 @@ public class BeanDefaultsExtractor {
 	public static Properties getBeanDefaults(Class<?> c, String...properties) throws Exception{
 		String[] args = new String[properties.length + 1];
 		boolean debug = false;
-		String debugString = "-classic -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=${8787},server=y,suspend=y";
+		String debugString = "-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=${8787},server=y,suspend=y";
 		String vmParams = JSystemProperties.getInstance().getPreference(FrameworkOptions.TEST_VM_PARMS);
 		if (null != vmParams) {
 			debug = true;
