@@ -264,5 +264,83 @@ public abstract class DefaultReporterImpl implements Reporter {
 		}
 		
 	}
+	
+	@Override
+	public void jira(String title, String jiraId) {
+		report(title + EnumBadge.JIRA.setText(jiraId).get());		
+	}
+
+	@Override
+	public void info(String title, String info) {
+		report(title + EnumBadge.INFO.setText(info).get());		
+	}
+
+	@Override
+	public void info(String title) {
+		report(title + EnumBadge.INFO.setText(EnumBadge.INFO.name().toLowerCase()).get());		
+	}
+
+	@Override
+	public void workaround(String title) {
+		report(title + EnumBadge.WORKAROUND.get());		
+	}
+
+	@Override
+	public void debug(String title) {
+		report(title + EnumBadge.DEBUG.get());
+	}
+
+	@Override
+	public void bug(String title) {
+		report(title + EnumBadge.BUG.get());		
+	}
+
+	@Override
+	public void result(String title, int status) {
+		report(title + EnumBadge.RESULT.get(), status);
+	}
+
+	@Override
+	public void result(String title) {
+		result(title, Reporter.PASS);
+	}
+
+	@Override
+	public void result(String title, boolean status) {
+		result(title, status ? Reporter.PASS : Reporter.FAIL);
+	}
+
+	@Override
+	public void result(String title, ReportAttribute reportAttribute) {
+		report(title + EnumBadge.RESULT.get(), reportAttribute);
+	}
+	
+	public class ReportLevel implements AutoCloseable {
+
+		public ReportLevel(String levelTitle) {
+			try {
+				startLevel(levelTitle);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}
+
+		public ReportLevel(String levelTitle, EnumBadge badge) {
+			try {
+				startLevel(levelTitle + badge.get());
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}
+
+		@Override
+		public void close() {
+			try {
+				stopLevel();
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}
+	}
 
 }

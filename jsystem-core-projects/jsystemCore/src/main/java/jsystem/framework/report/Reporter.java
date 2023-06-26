@@ -23,6 +23,42 @@ import junit.framework.SystemTestCase;
  */
 public interface Reporter extends InteractiveReporter{
 	
+	public enum EnumBadge {
+		RESULT("badge-dark", "#result"),
+		DEBUG("badge-secondary", "#debug"),
+		JIRA("badge-primary", ""), // text will be converted to link
+		INFO("badge-info", "#info"),
+		BUG("badge-danger", "#bug"),
+		WORKAROUND("badge-warning", "#workaround"),;
+		// LIGHT("badge-light", ""),
+		// SUCCESS("badge-success", ""),
+	    ;
+
+		private String keyword;
+		public String text;
+
+		EnumBadge(String keyword, String text) {
+			this.keyword = keyword;
+			this.text = text;
+		}
+
+		/**
+		 * In the case of a Jira Badge, the text will be converted to the link
+		 * @param text
+		 * @return
+		 */
+		public EnumBadge setText(String text) {
+			this.text = text;
+			return this;
+		}
+
+		public String get() {
+			return keyword + "<text>" + text + "<text>";
+		}
+
+	}
+
+	
 	public enum EnumReportLevel{
 		CurrentPlace(0),
 		MainFrame(1);
@@ -524,4 +560,27 @@ public interface Reporter extends InteractiveReporter{
 	 * @param attribute - Can hold one of the following values: BOLD, LINK, HTML, STEP
 	 */
 	public void report(String title, String message, int status, ReportAttribute attribute);
+	
+	
+	//***** Badge Methods *****//
+	public void jira(String title, String jiraId);
+
+	public void info(String title, String info);
+
+	public void info(String title);
+
+	public void workaround(String title);
+
+	public void debug(String title);
+
+	public void bug(String title);
+
+	public void result(String title, int status);
+
+	public void result(String title);
+
+	public void result(String title, boolean status);
+
+	public void result(String title, ReportAttribute reportAttribute);
+	
 }
