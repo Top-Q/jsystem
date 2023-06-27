@@ -315,6 +315,16 @@ public abstract class DefaultReporterImpl implements Reporter {
 		report(title + EnumBadge.RESULT.get(), reportAttribute);
 	}
 	
+	@Override
+	public ReportLevel reportLevel(String level) {
+		return new ReportLevel(level);
+	}
+	
+	@Override
+	public ReportLevel reportLevel(String level, EnumBadge badge) {
+		return new ReportLevel(level, badge);
+	}
+	
 	public class ReportLevel implements AutoCloseable {
 
 		public ReportLevel(String levelTitle) {

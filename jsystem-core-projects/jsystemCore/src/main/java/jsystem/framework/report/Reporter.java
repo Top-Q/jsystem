@@ -6,6 +6,7 @@ package jsystem.framework.report;
 import java.io.IOException;
 import java.util.List;
 
+import jsystem.framework.report.DefaultReporterImpl.ReportLevel;
 import jsystem.framework.system.SystemObjectImpl;
 import junit.framework.SystemTestCase;
 
@@ -583,4 +584,7 @@ public interface Reporter extends InteractiveReporter{
 
 	public void result(String title, ReportAttribute reportAttribute);
 	
+	public ReportLevel reportLevel(String level);
+	
+	public ReportLevel reportLevel(String level, EnumBadge badge);
 }
