@@ -34,6 +34,8 @@ public class SSH extends Terminal {
 	protected int destinationPort = -1;
 
 	protected boolean xtermTerminal = true;
+	
+	protected boolean connected = false;
 
 	/**
 	 * Is enabled the sudo terminal
@@ -140,6 +142,7 @@ public class SSH extends Terminal {
 
 		in =  sess.getStdout();
 		out = sess.getStdin();
+		connected = true;
 	}
 
 	@Override
@@ -156,11 +159,12 @@ public class SSH extends Terminal {
 		if (conn != null) {
 			conn.close();
 		}
+		connected = false;
 	}
 
 	@Override
 	public boolean isConnected() {
-		return true;
+		return connected;
 	}
 
 	@Override
