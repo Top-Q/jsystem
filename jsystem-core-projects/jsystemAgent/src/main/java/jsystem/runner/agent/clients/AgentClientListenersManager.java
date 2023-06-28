@@ -16,6 +16,7 @@ import javax.management.Notification;
 import javax.management.NotificationListener;
 
 import jsystem.framework.fixture.Fixture;
+import jsystem.framework.report.DefaultReporterImpl.ReportLevel;
 import jsystem.framework.report.JSystemListeners;
 import jsystem.framework.report.ReportElement;
 import jsystem.framework.report.Reporter;
@@ -446,6 +447,67 @@ public class AgentClientListenersManager implements JSystemListeners,Notificatio
 	public void flushReporters() {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	
+	@Override
+	public void jira(String title, String jiraId) {
+		report(title + EnumBadge.JIRA.setText(jiraId).get());		
+	}
+
+	@Override
+	public void info(String title, String info) {
+		report(title + EnumBadge.INFO.setText(info).get());		
+	}
+
+	@Override
+	public void info(String title) {
+		report(title + EnumBadge.INFO.setText(EnumBadge.INFO.name().toLowerCase()).get());		
+	}
+
+	@Override
+	public void workaround(String title) {
+		report(title + EnumBadge.WORKAROUND.get());		
+	}
+
+	@Override
+	public void debug(String title) {
+		report(title + EnumBadge.DEBUG.get());
+	}
+
+	@Override
+	public void bug(String title) {
+		report(title + EnumBadge.BUG.get());		
+	}
+
+	@Override
+	public void result(String title, int status) {
+		report(title + EnumBadge.RESULT.get(), status);
+	}
+
+	@Override
+	public void result(String title) {
+		result(title, Reporter.PASS);
+	}
+
+	@Override
+	public void result(String title, boolean status) {
+		result(title, status ? Reporter.PASS : Reporter.FAIL);
+	}
+
+	@Override
+	public void result(String title, ReportAttribute reportAttribute) {
+		report(title + EnumBadge.RESULT.get(), reportAttribute);
+	}
+	
+	@Override
+	public ReportLevel reportLevel(String level) {
+		return (ReportLevel) invokeMethod("reportLevel", new Object[]{level},new Class[]{String.class});
+	}
+	
+	@Override
+	public ReportLevel reportLevel(String level, EnumBadge badge) {
+		return (ReportLevel) invokeMethod("reportLevel", new Object[]{level,badge},new Class[]{String.class,EnumBadge.class});
 	}
 	
 }
