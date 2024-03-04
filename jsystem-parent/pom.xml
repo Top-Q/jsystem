@@ -28,7 +28,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<assembly.format>dir</assembly.format>
-		<topq.repository.rootUrl>http://maven.top-q.co.il</topq.repository.rootUrl>
+		<topq.repository.rootUrl>https://maven.top-q.co.il</topq.repository.rootUrl>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
@@ -200,9 +200,9 @@
 				<version>1.21</version>
 			</dependency>
 			<dependency>
-				<groupId>il.co.topq.difido</groupId>
+				<groupId>il.co.top-q.difido</groupId>
 				<artifactId>difido-reports-common</artifactId>
-				<version>2.2.05</version>
+				<version>3.1.01</version>
 			</dependency>
 			<dependency>
 				<groupId>xml-apis</groupId>

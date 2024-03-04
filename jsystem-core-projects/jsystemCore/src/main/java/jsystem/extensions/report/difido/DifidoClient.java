@@ -92,6 +92,7 @@ public class DifidoClient {
 			throw new Exception("Request was not successful. Response is: " + responseCode + ".\n Response body: "
 					+ method.getResponseBodyAsString());
 		}
+		method.releaseConnection();
 
 	}
 
