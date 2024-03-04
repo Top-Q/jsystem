@@ -239,11 +239,12 @@ public class JSystemMojo extends AbstractMojo {
 	}
 
 	/**
-	 * Create ANT project that can be executed programatically
+	 * Create ANT project that can be executed programmatically
 	 * 
 	 * @param scenariosPath
 	 * @param scenarioFile
-	 * @param sutFile
+	 * @param scenarioName
+	 * @param sutName
 	 * @return
 	 */
 	private Project createNewAntProject(File scenariosPath, File scenarioFile, String scenarioName, String sutName) {
