@@ -36,16 +36,24 @@ public class DifidoClient {
 			final String descriptionJson = new ObjectMapper().writeValueAsString(details);
 			method.setRequestEntity(new StringRequestEntity(descriptionJson,"application/json","utf-8"));
 		}
-		final int responseCode = client.executeMethod(method);
-		handleResponseCode(method, responseCode);
-		return Integer.parseInt(method.getResponseBodyAsString());
+		try {
+			final int responseCode = client.executeMethod(method);
+			handleResponseCode(method, responseCode);
+			return Integer.parseInt(method.getResponseBodyAsString());
+		} finally {
+			method.releaseConnection();
+		}
 	}
 
 	public void endExecution(int executionId) throws Exception {
 		final PutMethod method = new PutMethod(baseUri + "executions/" + executionId + "?active=false");
 		method.setRequestHeader(new Header("Content-Type", "text/plain"));
-		final int responseCode = client.executeMethod(method);
-		handleResponseCode(method, responseCode);
+		try {
+			final int responseCode = client.executeMethod(method);
+			handleResponseCode(method, responseCode);
+		} finally {
+			method.releaseConnection();
+		}
 	}
 
 	public int addMachine(int executionId, MachineNode machine) throws Exception {
@@ -54,9 +62,13 @@ public class DifidoClient {
 		final String json = mapper.writeValueAsString(machine);
 		final RequestEntity entity = new StringRequestEntity(json,"application/json","utf-8");
 		method.setRequestEntity(entity);
-		int responseCode = client.executeMethod(method);
-		handleResponseCode(method, responseCode);
-		return Integer.parseInt(method.getResponseBodyAsString());
+		try {
+			int responseCode = client.executeMethod(method);
+			handleResponseCode(method, responseCode);
+			return Integer.parseInt(method.getResponseBodyAsString());
+		} finally {
+			method.releaseConnection();
+		}
 	}
 
 	public void updateMachine(int executionId, int machineId, MachineNode machine) throws Exception {
@@ -65,8 +77,12 @@ public class DifidoClient {
 		final String json = mapper.writeValueAsString(machine);
 		final RequestEntity entity = new StringRequestEntity(json,"application/json","utf-8");
 		method.setRequestEntity(entity);
-		int responseCode = client.executeMethod(method);
-		handleResponseCode(method, responseCode);
+		try {
+			int responseCode = client.executeMethod(method);
+			handleResponseCode(method, responseCode);
+		} finally {
+			method.releaseConnection();
+		}
 	}
 
 	public void addTestDetails(int executionId, TestDetails testDetails) throws Exception {
@@ -75,16 +91,24 @@ public class DifidoClient {
 		final String json = mapper.writeValueAsString(testDetails);
 		final RequestEntity entity = new StringRequestEntity(json,"application/json","utf-8");
 		method.setRequestEntity(entity);
-		final int responseCode = client.executeMethod(method);
-		handleResponseCode(method, responseCode);
+		try {
+			int responseCode = client.executeMethod(method);
+			handleResponseCode(method, responseCode);
+		} finally {
+			method.releaseConnection();
+		}
 	}
 
 	public void addFile(final int executionId, final String uid, final File file) throws Exception {
 		PostMethod method = new PostMethod(baseUri + "executions/" + executionId + "/details/" + uid + "/file/");
 		Part[] parts = new Part[] { new FilePart("file", file) };
 		method.setRequestEntity(new MultipartRequestEntity(parts, method.getParams()));
-		final int responseCode = client.executeMethod(method);
-		handleResponseCode(method, responseCode);
+		try {
+			int responseCode = client.executeMethod(method);
+			handleResponseCode(method, responseCode);
+		} finally {
+			method.releaseConnection();
+		}
 	}
 
 	private void handleResponseCode(HttpMethod method, int responseCode) throws Exception {
@@ -92,8 +116,6 @@ public class DifidoClient {
 			throw new Exception("Request was not successful. Response is: " + responseCode + ".\n Response body: "
 					+ method.getResponseBodyAsString());
 		}
-		method.releaseConnection();
-
 	}
 
 }
