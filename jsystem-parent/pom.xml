@@ -134,7 +134,7 @@
 			<dependency>
 				<groupId>ch.ethz.ganymed</groupId>
 				<artifactId>ganymed-ssh2</artifactId>
-				<version>build210</version>
+				<version>262</version>
 			</dependency>
 			<dependency>
 				<groupId>javax.comm</groupId>
@@ -208,6 +208,11 @@
 				<groupId>xml-apis</groupId>
 				<artifactId>xml-apis</artifactId>
 				<version>1.4.01</version>
+			</dependency>
+			<dependency>
+				<groupId>com.opencsv</groupId>
+				<artifactId>opencsv</artifactId>
+				<version>4.1</version>
 			</dependency>
 		</dependencies>
 
