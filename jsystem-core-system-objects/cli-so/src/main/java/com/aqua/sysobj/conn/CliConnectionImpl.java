@@ -23,7 +23,7 @@ import systemobject.terminal.Cli;
 import systemobject.terminal.InOutInputStream;
 import systemobject.terminal.Prompt;
 import systemobject.terminal.RS232;
-import systemobject.terminal.SSH;
+import systemobject.terminal.SSH25;
 import systemobject.terminal.SSHWithRSA;
 import systemobject.terminal.Telnet;
 import systemobject.terminal.Terminal;
@@ -271,7 +271,8 @@ public abstract class CliConnectionImpl extends SystemObjectImpl implements CliC
 			terminal = new RS232(params[0], Integer.parseInt(params[1]), Integer.parseInt(params[2]), Integer.parseInt(params[3]), Integer
 					.parseInt(params[4]));
 		} else if (protocol.toLowerCase().equals(EnumConnectionType.SSH.value())) {
-			terminal = new SSH(host, user, password, port, enableSudoTerminal);
+			//terminal = new SSH(host, user, password, port, enableSudoTerminal);
+			terminal = new SSH25(user, password, host, port);
 		} else if (protocol.toLowerCase().equals(
 				EnumConnectionType.SSH_RSA.value())) {
 			terminal = new SSHWithRSA(host, user, password, privateKey, enableSudoTerminal);
@@ -317,7 +318,8 @@ public abstract class CliConnectionImpl extends SystemObjectImpl implements CliC
 		}else if (isRsa){
 			cli.login();
 		}else {
-			cli.login(60000, delayedTyping);
+			if (!protocol.toLowerCase().equals(EnumConnectionType.SSH.value()))
+				cli.login(60000, delayedTyping);
 		}
 		connected = true;
 	}
