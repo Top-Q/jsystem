@@ -8,6 +8,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.Vector;
 import java.util.jar.JarEntry;
@@ -52,7 +53,7 @@ import org.w3c.dom.NodeList;
  * @author guy.arieli
  * 
  */
-public abstract class AssetNode extends DefaultMutableTreeNode implements Comparable<Object>{
+public abstract class AssetNode extends DefaultMutableTreeNode {
 
 	/**
 	 * 
@@ -88,7 +89,7 @@ public abstract class AssetNode extends DefaultMutableTreeNode implements Compar
 	public AssetNode(){
 		isSelected = false;
 		if (children == null) {
-			children = new Vector<AssetNode>();
+			children = new Vector<>();
 		}
 	}
 
@@ -246,7 +247,8 @@ public abstract class AssetNode extends DefaultMutableTreeNode implements Compar
 			}
 		}
 		if("true".equals(JSystemProperties.getInstance().getPreferenceOrDefault(FrameworkOptions.SORT_ASSETS_TREE))){
-			Collections.sort(children);
+			//Collections.sort(children);
+			children.sort(Comparator.comparing(a -> ((AssetNode)a).getUserObject().toString()));
 		}
 	}
 
@@ -477,9 +479,8 @@ public abstract class AssetNode extends DefaultMutableTreeNode implements Compar
         return root;
     }
     
-	@Override
-	public int compareTo(Object o) {
-		return this.getUserObject().toString().compareTo(((AssetNode)o).getUserObject().toString());
-	}
-
+//	@Override
+//	public int compareTo(Object o) {
+//		return this.getUserObject().toString().compareTo(((AssetNode)o).getUserObject().toString());
+//	}
 }

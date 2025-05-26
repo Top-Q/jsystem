@@ -4,7 +4,7 @@
 package jsystem.treeui.tree;
 
 import java.lang.reflect.Method;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Vector;
 
@@ -25,7 +25,8 @@ public class TestCaseNode extends AssetNode {
 		super(parent, userObject);
 		aClass = userObject;
 
-		children = new Vector();
+		//children = new Vector();
+		children = new Vector<>();
 		
 		if (TestCase.class.isAssignableFrom(userObject)) {
 			// JUnit 3 style class
@@ -35,8 +36,10 @@ public class TestCaseNode extends AssetNode {
 			// JUnit 4 style class
 			createJUnit4TestNodes(userObject);
 		}
+
 		if("true".equals(JSystemProperties.getInstance().getPreferenceOrDefault(FrameworkOptions.SORT_ASSETS_TREE))){
-			Collections.sort(children);
+			//Collections.sort(children);
+			children.sort(Comparator.comparing(a -> ((AssetNode)a).getUserObject().toString()));
 		}
 	}
 

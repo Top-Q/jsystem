@@ -169,7 +169,7 @@ public class MailUtil extends SystemObjectImpl{
 			props.put("mail.smtp.socketFactory.fallback", "false");
 		}
 
-		Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
+		//Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
 
 		props.put("mail.smtp.host", smtpHostName);
 

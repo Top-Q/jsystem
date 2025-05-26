@@ -85,7 +85,8 @@ public class AgentsSelectionDialog extends JDialog {
 	}
 
 	private void buildAgentsListTableModel() throws Exception {
-		Vector<Object> model = new Vector<Object>();
+		//Vector<Object> model = new Vector<Object>();
+		Vector<Vector<Object>> model = new Vector<Vector<Object>>();
 		JSystemAgentClient[] clients = (JSystemAgentClient[]) JSystemAgentClientsPool.getClients(null);
 		for (JSystemAgentClient client : clients) {
 			Vector<Object> clientRow = getJSystemAgentDataVector(client);
@@ -132,7 +133,11 @@ public class AgentsSelectionDialog extends JDialog {
 	class AgentSelectTableModel extends DefaultTableModel {
 		private static final long serialVersionUID = 1L;
 
-		AgentSelectTableModel(Vector<Object> model, Vector<String> columns) {
+//		AgentSelectTableModel(Vector<Object> model, Vector<String> columns) {
+//			super(model, columns);
+//		}
+
+		AgentSelectTableModel(Vector<? extends Vector> model, Vector<?> columns) {
 			super(model, columns);
 		}
 
