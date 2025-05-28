@@ -18,16 +18,8 @@ import java.util.regex.Pattern;
 
 import jsystem.framework.analyzer.AnalyzerParameter;
 import jsystem.framework.system.SystemObjectImpl;
-import systemobject.terminal.BufferInputStream;
-import systemobject.terminal.Cli;
-import systemobject.terminal.InOutInputStream;
-import systemobject.terminal.Prompt;
-import systemobject.terminal.RS232;
-import systemobject.terminal.SSH25;
-import systemobject.terminal.SSHWithRSA;
-import systemobject.terminal.Telnet;
-import systemobject.terminal.Terminal;
-import systemobject.terminal.VT100FilterInputStream;
+import systemobject.terminal.*;
+
 
 /**
  * This is a default implementation for CliConnection your implementation should
@@ -270,9 +262,16 @@ public abstract class CliConnectionImpl extends SystemObjectImpl implements CliC
 			}
 			terminal = new RS232(params[0], Integer.parseInt(params[1]), Integer.parseInt(params[2]), Integer.parseInt(params[3]), Integer
 					.parseInt(params[4]));
-		} else if (protocol.toLowerCase().equals(EnumConnectionType.SSH.value())) {
-			//terminal = new SSH(host, user, password, port, enableSudoTerminal);
-			terminal = new SSH25(user, password, host, port);
+		}
+		else if (protocol.toLowerCase().equals(EnumConnectionType.SSH.value())) {
+
+			if (this instanceof SshCliConnection) {
+				terminal = new SSH25(user, password, host, port); // new SSH implementation based on Apache MINA SSHD (org.apache.sshd)
+			}
+			else {
+				terminal = new SSH(host, user, password, port, enableSudoTerminal); // legacy SSH implementation based on Ganymed SSH-2 (ch.ethz.ssh2)
+			}
+
 		} else if (protocol.toLowerCase().equals(
 				EnumConnectionType.SSH_RSA.value())) {
 			terminal = new SSHWithRSA(host, user, password, privateKey, enableSudoTerminal);
@@ -313,12 +312,13 @@ public abstract class CliConnectionImpl extends SystemObjectImpl implements CliC
 		for (int i = 0; i < prompts.length; i++) {
 			cli.addPrompt(prompts[i]);
 		}
+
 		if (isRs232 || leadingEnter) {
 			cli.command("");
-		}else if (isRsa){
+		} else if (isRsa){
 			cli.login();
-		}else {
-			if (!protocol.toLowerCase().equals(EnumConnectionType.SSH.value()))
+		} else {
+			if (!(this instanceof SshCliConnection))
 				cli.login(60000, delayedTyping);
 		}
 		connected = true;

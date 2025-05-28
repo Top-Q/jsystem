@@ -15,6 +15,7 @@ public class Ssh25ExampleTests extends SystemTestCase4 {
 		// To run this example, use the following SUT: ssh25_example.xml
 		
 		LinuxDefaultCliConnection cliConnection = (LinuxDefaultCliConnection) system.getSystemObject("wsl_ubuntu");
+//		LinuxDefaultCliConnection cliConnection = (LinuxDefaultCliConnection) system.getSystemObject("docker_container");
 		
 		CliCommand command = new CliCommand("uptime");
 		cliConnection.command(command);
