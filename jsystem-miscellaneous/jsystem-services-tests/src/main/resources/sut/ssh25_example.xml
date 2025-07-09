@@ -3,21 +3,17 @@
 <sut>
 	
 	<wsl_ubuntu>
-<!--		<class>com.aqua.sysobj.conn.LinuxDefaultCliConnection</class>-->
+
+		<!-- This will use the new SSH implementation based on Apache MINA SSHD (org.apache.sshd) -->
 		<class>com.aqua.sysobj.conn.SshCliConnection</class>
+
+		<!-- This will use the legacy SSH implementation based on Ganymed SSH-2 (ch.ethz.ssh2) -->
+<!--		<class>com.aqua.sysobj.conn.LinuxDefaultCliConnection</class> -->
+
 		<host>172.17.119.44</host>
 		<port>22</port>
 		<user>rony</user>
 		<password>123456</password>
 	</wsl_ubuntu>
-
-	<docker_container>
-<!--		<class>com.aqua.sysobj.conn.LinuxDefaultCliConnection</class>-->
-		<class>com.aqua.sysobj.conn.SshCliConnection</class>
-		<host>127.0.0.1</host>
-		<port>32768</port>
-		<user>root</user>
-		<password>root</password>
-	</docker_container>
 
 </sut>
