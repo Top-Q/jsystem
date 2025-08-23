@@ -36,7 +36,7 @@ public class TestCaseNode extends AssetNode {
 			createJUnit4TestNodes(userObject);
 		}
 		if("true".equals(JSystemProperties.getInstance().getPreferenceOrDefault(FrameworkOptions.SORT_ASSETS_TREE))){
-			Collections.sort(children);
+			Collections.sort(children, null);
 		}
 	}
 

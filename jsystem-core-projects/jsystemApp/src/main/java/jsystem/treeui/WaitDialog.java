@@ -23,8 +23,6 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.SwingWorker;
 
-import sun.awt.AppContext;
-
 import jsystem.framework.TestRunnerFrame;
 
 /**
@@ -177,9 +175,6 @@ public class WaitDialog extends JDialog {
 		/*
 		 * Execute the open of the dialog in a thread as the dialog is modal
 		 */
-		// This line suppose to fix bug in the SwingWorker that causes deadlocks
-		// in some of the Java versions. Please see http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6880336
-		AppContext.getAppContext().put(SwingWorker.class, Executors.newCachedThreadPool());
 		dialog = new WaitDialog(TestRunnerFrame.guiMainFrame, listener, title);
 		class RunWaitDiaolg extends SwingWorker<String, Object> {
 			public String doInBackground() {

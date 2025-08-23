@@ -126,6 +126,12 @@
 				<include>*:jackson-databind:*</include>
 				<include>*:jackson-annotations:*</include>
 				<include>*:jackson-core:*</include>
+				<include>*:jackson-dataformat-xml:*</include>
+				<include>*:stax2-api:*</include>
+				<include>*:jaxb-api:*</include>
+				<include>*:jaxb-core:*</include>
+				<include>*:jaxb-impl:*</include>
+				<include>*:javassist:*</include>
 				<include>*:difido-reports-common:*</include>
 			</includes>
 		</dependencySet>

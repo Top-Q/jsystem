@@ -145,7 +145,7 @@ public class AgentsDialog extends JDialog {
 	}
 
 	private void buildAgentsListTableModel() throws Exception {
-		Vector<Object> model = new Vector<Object>();
+		Vector<Vector<Object>> model = new Vector<Vector<Object>>();
 		RunnerEngine[] clients = JSystemAgentClientsPool.getClients(null);
 		for (RunnerEngine client : clients) {
 			Vector<Object> clientRow = getJSystemAgentDataVector(client, false);
@@ -231,7 +231,7 @@ public class AgentsDialog extends JDialog {
 	}
 
 	class AgentListTableModel extends DefaultTableModel {
-		AgentListTableModel(Vector<Object> model, Vector<String> columns) {
+		AgentListTableModel(Vector<Vector<Object>> model, Vector<String> columns) {
 			super(model, columns);
 		}
 

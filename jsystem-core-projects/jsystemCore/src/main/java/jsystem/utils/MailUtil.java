@@ -4,7 +4,7 @@
 package jsystem.utils;
 
 import java.io.File;
-import java.security.Security;
+
 import java.util.ArrayList;
 import java.util.Properties;
 
@@ -168,8 +168,6 @@ public class MailUtil extends SystemObjectImpl{
 			props.put("mail.smtp.socketFactory.class", SSL_FACTORY);
 			props.put("mail.smtp.socketFactory.fallback", "false");
 		}
-
-		Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
 
 		props.put("mail.smtp.host", smtpHostName);
 

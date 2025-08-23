@@ -88,7 +88,7 @@ public abstract class AssetNode extends DefaultMutableTreeNode implements Compar
 	public AssetNode(){
 		isSelected = false;
 		if (children == null) {
-			children = new Vector<AssetNode>();
+			children = new Vector();
 		}
 	}
 
@@ -246,7 +246,7 @@ public abstract class AssetNode extends DefaultMutableTreeNode implements Compar
 			}
 		}
 		if("true".equals(JSystemProperties.getInstance().getPreferenceOrDefault(FrameworkOptions.SORT_ASSETS_TREE))){
-			Collections.sort(children);
+			Collections.sort(children, null);
 		}
 	}
 

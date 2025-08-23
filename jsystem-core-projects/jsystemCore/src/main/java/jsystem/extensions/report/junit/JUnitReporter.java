@@ -134,7 +134,7 @@ public class JUnitReporter implements ExtendTestReporter, ExtendTestListener {
 	}
 
 	/**
-	 * Exports the model to XML. The file will be copies to the JSystem root
+	 * Exports the model to XML. The file will be copied to the JSystem root
 	 * directory.
 	 */
 	public void toXml() {
