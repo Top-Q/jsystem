@@ -127,6 +127,8 @@
 				<include>*:jackson-annotations:*</include>
 				<include>*:jackson-core:*</include>
 				<include>*:difido-reports-common:*</include>
+				<include>*:sshd-core:*</include>
+				<include>*:sshd-common:*</include>
 			</includes>
 		</dependencySet>
 		<dependencySet>
