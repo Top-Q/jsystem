@@ -5,7 +5,7 @@
 	<wsl_ubuntu>
 
 		<!-- This will use the new SSH implementation based on Apache MINA SSHD (org.apache.sshd) -->
-		<class>com.aqua.sysobj.conn.SshCliConnection</class>
+		<class>com.aqua.sysobj.conn.MinaSshdCliConnection</class>
 
 		<!-- This will use the legacy SSH implementation based on Ganymed SSH-2 (ch.ethz.ssh2) -->
 <!--		<class>com.aqua.sysobj.conn.LinuxDefaultCliConnection</class> -->

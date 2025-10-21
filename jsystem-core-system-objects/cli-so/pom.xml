@@ -5,7 +5,7 @@
 		<groupId>org.jsystemtest.systemobjects</groupId>
 		<artifactId>jsystem-core-system-objects</artifactId>
 		<version>6.1.13-SNAPSHOT</version>
-		<relativePath>..</relativePath>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>cli</artifactId>
 	<dependencies>

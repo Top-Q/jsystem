@@ -265,7 +265,7 @@ public abstract class CliConnectionImpl extends SystemObjectImpl implements CliC
 		}
 		else if (protocol.toLowerCase().equals(EnumConnectionType.SSH.value())) {
 
-			if (this instanceof SshCliConnection) {
+			if (this instanceof MinaSshdCliConnection) {
 				terminal = new SSH25(user, password, host, port); // new SSH implementation based on Apache MINA SSHD (org.apache.sshd)
 			}
 			else {
@@ -318,7 +318,7 @@ public abstract class CliConnectionImpl extends SystemObjectImpl implements CliC
 		} else if (isRsa){
 			cli.login();
 		} else {
-			if (!(this instanceof SshCliConnection))
+			if (!(this instanceof MinaSshdCliConnection))
 				cli.login(60000, delayedTyping);
 		}
 		connected = true;
