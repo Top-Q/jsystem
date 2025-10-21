@@ -12,9 +12,9 @@ public class TestSSHRemote extends SystemTestCase4 {
    @Test
     public void testSimpleSSHCommand() throws Exception {
         CliConnectionImpl connection = new LinuxDefaultCliConnection();
-        connection.setHost("172.29.104.35");
-        connection.setUser("itaiag");
-        connection.setPassword("topq1!");
+        connection.setHost("");
+        connection.setUser("");
+        connection.setPassword("");
         connection.init();
         CliCommand command = new CliCommand("ls");
         connection.handleCliCommand("ls", command);
