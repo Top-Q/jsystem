@@ -22,48 +22,48 @@ public interface CliConnection extends SystemObject{
      * @param command
      * @throws Exception
      */
-	public void navigateToPosition(CliCommand command) throws Exception;
+	void navigateToPosition(CliCommand command) throws Exception;
     
 	/**
 	 * 
 	 * @param command
 	 * @throws Exception
 	 */
-	public void returnFromPosition(CliCommand command) throws Exception;
+	void returnFromPosition(CliCommand command) throws Exception;
     
     /**
      * run a given command object
      * 
      * @param command	CliCommand object
      */
-    public void command(CliCommand command);
+    void command(CliCommand command);
     
     /**
      * 
      * @return	the host String set for this CLI
      */
-    public String getHost();
+    String getHost();
     
     /**
      * set the Host for this CLI
      * @param host
      */
-    public void setHost(String host);
+    void setHost(String host);
     
     /**
      * get defined Prompts array 
      * @return
      */
-    public Prompt[] getPrompts();
+    Prompt[] getPrompts();
     
     /**
      * establish a connection with the CLI
      * @throws Exception
      */
-    public void connect() throws Exception;
+    void connect() throws Exception;
     
     
-    public Position[] getPositions();
+    Position[] getPositions();
     
     /**
      * send an empty command and wait for all notification in the result
@@ -79,12 +79,12 @@ public interface CliConnection extends SystemObject{
      * 
      * @return
      */
-    public String getCliBuffer();
+    String getCliBuffer();
     
     /**
      * empty the CLI buffer
      */
-    public void cleanCliBuffer();
+    void cleanCliBuffer();
     
     /**
 	 * returns the current status of the CliConnection :<br>
@@ -93,88 +93,88 @@ public interface CliConnection extends SystemObject{
 	 * 
 	 * @return boolean : true if connected, false if not connected.
 	 */
-    public boolean isConnected();
+    boolean isConnected();
     
     /**
      * checks if the connection should be established when initiating the SystemObject<br>
      * can be set from the sut
      * @return
      */
-    public boolean isConnectOnInit();
+    boolean isConnectOnInit();
     
     /**
      * signal disconnection of the CLI
      */
-    public void disconnect();
+    void disconnect();
     
     /**
      * the long representation of the time the last command was executed
      * 
      * @return
      */
-    public long getLastCommandTime();
+    long getLastCommandTime();
     
     /**
      * Get the maximum idle time for the idle monitor.
      * @return
      */
-    public long getMaxIdleTime();
+    long getMaxIdleTime();
     
     /**
      * Set the maximum idle time for the idle monitor.
      * @param maxIdleTime
      */
-    public void setMaxIdleTime(long maxIdleTime);
+    void setMaxIdleTime(long maxIdleTime);
     
     
     /**
      * get the password used for connection
      * @return
      */
-    public String getPassword();
+    String getPassword();
     
     /**
      * get the user defined for connection
      * @return
      */
-    public String getUser();
+    String getUser();
     
     /**
      * set the password for CLI connection
      * 
      * @param password
      */
-    public void setPassword(String password);
+    void setPassword(String password);
     
     /**
      * set the user for CLI connection
      * 
      * @param user
      */
-    public void setUser(String user);
+    void setUser(String user);
     
     /**
      * a String representing the connection protocol (RS232/SSH/Telnet)
      * @return
      */
-    public String getProtocol();
+    String getProtocol();
     
     /**
      * set the protocol type for this connection ((RS232/SSH/Telnet)
      * @param protocol
      */
-    public void setProtocol(String protocol);
+    void setProtocol(String protocol);
     /**
      * If set to True add enter after waitForPromp fail on timeout
      * And will wait again for prompt
      */
-    public void setGraceful(boolean graceful);
+    void setGraceful(boolean graceful);
     
     /**
      * Flag that indicates if after command timeout an enterString should be sent
      * @return
      */
-    public boolean isGraceful();
+    boolean isGraceful();
     
 	/**
 	 * Sets the print stream to which the stream of the connection 
@@ -182,24 +182,24 @@ public interface CliConnection extends SystemObject{
 	 * Set the print stream to System.out to dump terminal stream to the console,
 	 * Set print stream to null to turn off stream dump.
 	 */
-    public void setPrintStream(PrintStream printStream);
+    void setPrintStream(PrintStream printStream);
     
 	/**
 	 * Returns the prompt which identification triggered the termination
 	 * of the CLI operation.
 	 */
-    public Prompt getResultPrompt();
+    Prompt getResultPrompt();
     
 	/**
 	 * Reads the stream in the input buffer 
 	 * and returns it as a String.
 	 */
-    public String read() throws Exception;
+    String read() throws Exception;
 
     /**
      * reconnect the terminal
      */
-    public void reconnect();
+    void reconnect();
     
 	/**
 	 * Activates the command <code>command</code> 
@@ -211,14 +211,14 @@ public interface CliConnection extends SystemObject{
 	 *    in case of an error. (and ignore error flags were not raised)<br>
 	 * 4. Performs Analysis if one or more analyzers are defined (and ignore error flags were not raised)   
 	 */
-	public void handleCliCommand( String title,CliCommand command) throws Exception;
+	void handleCliCommand( String title,CliCommand command) throws Exception;
 
 	/**
 	 * add possible Prompts to the CLI
 	 * 
 	 * @param prompts
 	 */
-	public void addPrompts(Prompt[] prompts);
+	void addPrompts(Prompt[] prompts);
 	
 	/**
 	 * set the Prompts to check in the result<br>
@@ -226,7 +226,7 @@ public interface CliConnection extends SystemObject{
 	 * 
 	 * @param prompts
 	 */
-	public void setPrompts(Prompt[] prompts);
+	void setPrompts(Prompt[] prompts);
 
 	/**
 	 * the defined enter String for the CLI<br>
@@ -234,14 +234,14 @@ public interface CliConnection extends SystemObject{
 	 * 
 	 * @param enterStr
 	 */
-	public void setEnterStr(String enterStr);
+	void setEnterStr(String enterStr);
 	
 	/**
 	 * the time (in ms) to wait for a terminal input to be received before declaring scroll end (no more input)
 	 * 
 	 * @param timeout
 	 */
-	public void setScrollEndTimeout(long timeout);
+	void setScrollEndTimeout(long timeout);
 	
 	/**
 	 * create a filter input stream on the terminal result:<br>
@@ -250,63 +250,63 @@ public interface CliConnection extends SystemObject{
      * 
 	 * @param input
 	 */
-	public void addFilter(InOutInputStream input);
+	void addFilter(InOutInputStream input);
 	
 	/**
 	 * send a given string to the terminal (no prompt waiting)
      * 
-     * @param command	the command to send
+     * @param toSend	the command to send
      * @param delayedTyping	if True will sleep 20 ms between each typed byte entered to the terminal
 	 * @throws Exception
 	 */
-	public void sendString(String toSend,boolean delayedTyping) throws Exception;
-	
+	void sendString(String toSend, boolean delayedTyping) throws Exception;
+
 	/**
 	 * get the enter String set for this cli
 	 * 
 	 * @return
 	 */
-	public String getEnterStr();
+	String getEnterStr();
 	
 	/**
 	 * get the number of retries to establish a connection
 	 * 
 	 * @return
 	 */
-	public int getConnectRetries();
+	int getConnectRetries();
 
 	/**
 	 * set the number of retries for connection establishing
 	 * 
 	 * @param connectRetries
 	 */
-	public void setConnectRetries(int connectRetries);
+	void setConnectRetries(int connectRetries);
 	
 	/**
 	 * checks if enter String should be sent on log-in
 	 * 
 	 * @return
 	 */
-	public boolean isLeadingEnter();
+	boolean isLeadingEnter();
 
 	/**
 	 * if True will send an enter String on log-in
 	 * 
 	 * @param leadingEnter
 	 */
-	public void setLeadingEnter(boolean leadingEnter);
+	void setLeadingEnter(boolean leadingEnter);
 	
 	/**
 	 * the time (in ms) to sleep between each typed byte entered to the terminal
 	 * 
 	 * @return
 	 */
-	public long getKeyTypingDelay();
+	long getKeyTypingDelay();
 	
 	/**
 	 * the time (in ms) to sleep between each typed byte entered to the terminal
 	 * 
 	 * @param keyTypingDelay
 	 */
-	public void setKeyTypingDelay(long keyTypingDelay);
+	void setKeyTypingDelay(long keyTypingDelay);
 }

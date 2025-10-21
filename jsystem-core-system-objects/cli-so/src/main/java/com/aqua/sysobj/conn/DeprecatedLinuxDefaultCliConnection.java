@@ -3,43 +3,43 @@
  */
 package com.aqua.sysobj.conn;
 
-import java.util.ArrayList;
-
 import systemobject.terminal.Prompt;
 import systemobject.terminal.VT100FilterInputStream;
 
+import java.util.ArrayList;
+
 /**
  * Default CliConnection for a Cli connection to a linux machine.
- * The class uses Mina SSHD for SSH connections. For deprecated SSH implementation,
- * use DeprecatedLinuxDefaultCliConnection.
+ * The class uses deprecated SSH implementation for SSH connections.
+ * Prefer Mina SSHD implementation in LinuxDefaultCliConnection.
+ *
  * Protocol is ssh
  * Default port 22
- *
- * @author Itai Agmon
+ * @author goland
  */
-public class LinuxDefaultCliConnection extends CliConnectionImpl {
+public class DeprecatedLinuxDefaultCliConnection extends CliConnectionImpl {
 
-	public LinuxDefaultCliConnection(){
+	public DeprecatedLinuxDefaultCliConnection(){
 		setDump(true);
 		setUseTelnetInputStream(true);
-		setProtocol("ssh");
+		setProtocol("deprecated-ssh");
 		setPort(22);
 	}
 
-	public LinuxDefaultCliConnection(String host,String user,String password){
+	public DeprecatedLinuxDefaultCliConnection(String host, String user, String password){
 		this();
 		setUser(user);
 		setPassword(password);
 		setHost(host);
 	}
 	
+
 	@Override
 	public void connect() throws Exception {
 		super.connect();
 		terminal.addFilter(new VT100FilterInputStream());
 	}
 	
-	@Override
 	public Position[] getPositions() {
 		// TODO Auto-generated method stub
 		return null;
@@ -53,11 +53,6 @@ public class LinuxDefaultCliConnection extends CliConnectionImpl {
 		prompts.add(p);
 
 		p = new Prompt();
-		p.setCommandEnd(true);
-		p.setPrompt("$ ");
-		prompts.add(p);
-
-		p = new Prompt();
 		p.setPrompt("login: ");
 		p.setStringToSend(getUser());
 		prompts.add(p);
@@ -66,7 +61,7 @@ public class LinuxDefaultCliConnection extends CliConnectionImpl {
 		p.setPrompt("Password: ");
 		p.setStringToSend(getPassword());
 		prompts.add(p);
-		return prompts.toArray(new Prompt[0]);
+		return prompts.toArray(new Prompt[prompts.size()]);
 	}
 
 }
