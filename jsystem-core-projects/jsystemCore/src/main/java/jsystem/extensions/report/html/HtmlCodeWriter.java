@@ -5,11 +5,10 @@ package jsystem.extensions.report.html;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.io.Writer;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,6 +17,8 @@ import jsystem.framework.FrameworkOptions;
 import jsystem.framework.JSystemProperties;
 import jsystem.runner.loader.LoadersManager;
 import jsystem.utils.FileUtils;
+
+import org.codelibs.jhighlight.renderer.JavaXhtmlRenderer;
 
 import com.thoughtworks.qdox.JavaDocBuilder;
 import com.thoughtworks.qdox.model.DocletTag;
@@ -112,7 +113,7 @@ public class HtmlCodeWriter {
 	 * Get the test code formated as HTML.
 	 * @param className the test class name.
 	 * @return an html with the code formated.
-	 * @throws Exception when java2html class is missing, the file is not found or other error occurs
+	 * @throws Exception when JHighlight is missing, the file is not found or other error occurs
 	 */
 	public String getCode(String className) throws FileNotFoundException, ClassNotFoundException, Exception {
 		File srcFile = new File(srcDir.getPath(), className.replace('.', File.separatorChar) + ".java");
@@ -122,39 +123,21 @@ public class HtmlCodeWriter {
 				throw new FileNotFoundException(srcFile.getPath());
 			}
 		}
-		// Create a reader of the raw input text
 
-		// Parse the raw text to a JavaSource object
-
-		Class<?> sourceParserClass = LoadersManager.getInstance().getLoader().loadClass("de.java2html.javasource.JavaSourceParser");
-		Object sourceParser = sourceParserClass.newInstance();
-		Method parseMethod = sourceParserClass.getMethod("parse", File.class);
-		if (parseMethod == null) {
-			return "";
-		}
-		Object source = parseMethod.invoke(sourceParser, srcFile);
-		if (source == null) {
-			return "";
-		}
-		Class<?> converterClass = LoadersManager.getInstance().getLoader().loadClass("de.java2html.converter.JavaSource2HTMLConverter");
-		StringWriter writer = new StringWriter();
-		Object converter = converterClass.getConstructor(source.getClass()).newInstance(source);
-		converterClass.getMethod("convert", Writer.class).invoke(converter, writer);
-		
-		
-//		JavaSource source = null;
-//		source = new JavaSourceParser().parse(srcFile);
-
-		// Create a converter and write the JavaSource object as Html
-//		JavaSource2HTMLConverter converter = new JavaSource2HTMLConverter(source);
-//		StringWriter writer = new StringWriter();
-//		converter.convert(writer);
 		String toReturn = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\n" + "<html><head>\n" +
 		// "<title></title>\n" +
-				"</head>\n" + "<body>\n" + writer.toString() + "</body>\n" + "</html>\n";
+				"</head>\n" + "<body>\n" + formatSourceAsHtml(srcFile) + "</body>\n" + "</html>\n";
 
 		return toReturn;
 
+	}
+
+	static String formatSourceAsHtml(File srcFile) throws ClassNotFoundException, IOException {
+		try {
+			return new JavaXhtmlRenderer().highlight(srcFile.getName(), FileUtils.read(srcFile), "UTF-8", true);
+		} catch (NoClassDefFoundError e) {
+			throw new ClassNotFoundException("JHighlight is missing from the runtime classpath", e);
+		}
 	}
 	
 	/**

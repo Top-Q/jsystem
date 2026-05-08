@@ -93,6 +93,7 @@
 				<include>*:logkit:*</include>
 				<include>*:mail:*</include>
 				<include>*:qdox:*</include>
+				<include>*:jhighlight:*</include>
 				<include>*:serializer:*</include>
 				<include>*:servlet-api:*</include>
 				<include>*:spring:*</include>

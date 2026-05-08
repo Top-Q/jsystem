@@ -108,6 +108,10 @@
 
 		</dependency>
 		<dependency>
+			<groupId>org.codelibs</groupId>
+			<artifactId>jhighlight</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>net.javaprog.jwizz</groupId>
 			<artifactId>jwizz</artifactId>
 
