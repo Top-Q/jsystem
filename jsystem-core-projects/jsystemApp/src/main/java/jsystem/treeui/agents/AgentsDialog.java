@@ -232,7 +232,7 @@ public class AgentsDialog extends JDialog {
 
 	class AgentListTableModel extends DefaultTableModel {
 		AgentListTableModel(Vector<Object> model, Vector<String> columns) {
-			super(model, columns);
+			super();
 		}
 
 		private static final long serialVersionUID = 1L;

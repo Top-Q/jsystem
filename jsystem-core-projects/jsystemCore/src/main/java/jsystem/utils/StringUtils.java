@@ -168,6 +168,9 @@ public class StringUtils {
 	}
 
 	public static String getClassName(String className) {
+		if (className == null) {
+			return "";
+		}
 		int lastIndex = className.lastIndexOf(".");
 		if (lastIndex < 0) {
 			return className;

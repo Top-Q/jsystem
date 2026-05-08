@@ -17,6 +17,9 @@
 *.iml
 .idea/
 
+# VS Code files
+.vscode/
+
 #Java and Maven
 *.class
 *.jar
@@ -40,6 +43,7 @@ runnerState.properties
 log
 myFile.txt
 *.xml.versionsBackup
+*.rej
 difido.properties
 remoteDifido.properties
 bin/

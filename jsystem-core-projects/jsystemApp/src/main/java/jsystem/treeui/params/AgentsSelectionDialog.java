@@ -133,7 +133,7 @@ public class AgentsSelectionDialog extends JDialog {
 		private static final long serialVersionUID = 1L;
 
 		AgentSelectTableModel(Vector<Object> model, Vector<String> columns) {
-			super(model, columns);
+			super();
 		}
 
 		@Override

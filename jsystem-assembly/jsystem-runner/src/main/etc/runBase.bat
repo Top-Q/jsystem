@@ -18,10 +18,8 @@ if exist "%JAVA_HOME%\bin\java.exe" set _JAVACMD=%JAVA_HOME%\bin\java.exe
 set JSYSTEM_USED_CLASSPATH=%current_dir%/lib/jsystem-launcher.jar
 if not "%JSYSTEM_CUSTOMER_JARS%" == "" set JSYSTEM_USED_CLASSPATH=%JSYSTEM_USED_CLASSPATH%;%JSYSTEM_CUSTOMER_JARS%
 
-::add modules(xml.bind/java.desktop) in case running on java 9+ version
+rem Already compiled with Java 11 no need for this workaround
 set ADD_MODULES_STR=
-for /f tokens^=2-5^ delims^=.-_^" %%j in ('java -fullversion 2^>^&1') do set "jver=%%j"
-if %jver% NEQ 1 set ADD_MODULES_STR=--add-modules java.xml.bind --add-modules java.desktop
 
 :launch
 rem echo %_JAVACMD% 
