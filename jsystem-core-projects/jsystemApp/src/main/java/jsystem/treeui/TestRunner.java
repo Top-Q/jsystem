@@ -3,7 +3,6 @@
  */
 package jsystem.treeui;
 
-import com.jgoodies.looks.plastic.Plastic3DLookAndFeel;
 import jsystem.framework.FrameworkOptions;
 import jsystem.framework.GeneralEnums.CmdExecutor;
 import jsystem.framework.JSystemProperties;
@@ -82,7 +81,8 @@ public class TestRunner extends BaseTestRunner implements StartRunner {
 		log.fine("Tree TestRunner is starting");
 
 		try {
-			UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
+			//UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
+			UIManager.getSystemLookAndFeelClassName();
 		} catch (Exception e) {
 			log.log(Level.SEVERE, "Error setting UI Look and Feel");
 		}

@@ -3,6 +3,7 @@ package jsystem.extensions.reporter;
 import java.io.File;
 import java.io.IOException;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import jsystem.framework.FrameworkOptions;
@@ -20,6 +21,7 @@ import junit.framework.SystemTestCase4;
  * @author optier
  *
  */
+@Ignore("Requires JSystem report runner context; getCurrentTestFileName returns 'Not Defined' when run via Maven")
 public class TestReportForGetCurrentTestFileName extends SystemTestCase4 {
 	
 	public TestReportForGetCurrentTestFileName() {

@@ -120,6 +120,7 @@ public class JSystemDataDrivenTask extends PropertyReaderTask {
 		param = getParameterFromProperties("Parameter", "");
 		try {
 			param = ParametersManager.replaceAllReferenceValues(param, ParameterType.STRING);
+			file = ParametersManager.replaceAllReferenceValues(file, ParameterType.FILE);
 		} catch (Exception e) {
 			log.log(Level.SEVERE, "Error trying to replace reference parameters for input: " + param, e);
 		}
