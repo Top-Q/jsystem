@@ -1300,9 +1300,9 @@ public class TestsTableController extends Observable implements TestStatusListen
 			JOptionPane
 					.showMessageDialog(
 							null,
-							"Can't display test code because java2html.jar is missing.\nIf you wish to view code, please install java2html.jar. For instructions go to http://trac.jsystemtest.org/wiki/DetailedOSProjectsList",
+							"Can't display test code because JHighlight is missing from the runtime classpath.",
 							"View Test Code warning", JOptionPane.INFORMATION_MESSAGE);
-			log.log(Level.WARNING, "Fail to load test code because java2html jar is missing. " + e.getMessage());
+			log.log(Level.WARNING, "Fail to load test code because JHighlight is missing. " + e.getMessage());
 		} catch (Exception e) {
 			log.log(Level.WARNING, "Fail to load test code. " + e.getMessage());
 		}
