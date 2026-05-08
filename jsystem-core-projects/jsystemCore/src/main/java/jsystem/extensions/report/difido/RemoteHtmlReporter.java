@@ -120,7 +120,7 @@ public class RemoteHtmlReporter extends AbstractHtmlReporter {
 		}
 		details = new ExecutionDetails(description, useSharedExecution);
 		details.setForceNew(forceNewExecution);
-		details.setExecutionProperties(new HashMap<>(properties));
+		details.setExecutionProperties((HashMap<String, String>) properties);
 		return client.addExecution(details);
 	}
 

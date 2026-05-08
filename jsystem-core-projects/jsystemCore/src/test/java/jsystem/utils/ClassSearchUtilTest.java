@@ -23,7 +23,7 @@ public class ClassSearchUtilTest {
 	 */
 	@Test(expected = IOException.class)
 	public void testGetPropertyFromClassPathPropertyThatDoesntExist() throws Exception {
-		assertNull(ClassSearchUtil.getPropertyFromClassPath("META-INF/jsystemCore.build.properties", "jversionxxx"));
+		ClassSearchUtil.getPropertyFromClassPath("META-INF/jsystemCore.build.properties", "jversionxxx");
 	}
 
 	/**

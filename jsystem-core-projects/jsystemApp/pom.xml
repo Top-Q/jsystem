@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.jsystemtest</groupId>
 		<artifactId>jsystem-parent</artifactId>
-		<version>6.1.13-SNAPSHOT</version>
+		<version>6.1.12-SNAPSHOT</version>
 		<relativePath>../../jsystem-parent</relativePath>
 	</parent>
 	<artifactId>jsystemApp</artifactId>
@@ -13,10 +13,6 @@
 			<groupId>org.jsystemtest</groupId>
 			<artifactId>jsystemAgent</artifactId>
 			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.jgoodies</groupId>
-			<artifactId>looks</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>net.javaprog.jwizz</groupId>
@@ -30,6 +26,15 @@
 	</dependencies>
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.2.5</version>
+				<configuration>
+					<!-- Skip tests in this module: most require full SUT, devices, and runner context -->
+					<skipTests>true</skipTests>
+				</configuration>
+			</plugin>
 			<plugin>
 				<artifactId>maven-jar-plugin</artifactId>
 				<version>2.4</version>

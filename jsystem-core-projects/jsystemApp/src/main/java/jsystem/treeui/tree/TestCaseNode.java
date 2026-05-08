@@ -5,6 +5,7 @@ package jsystem.treeui.tree;
 
 import java.lang.reflect.Method;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Vector;
 
@@ -36,7 +37,8 @@ public class TestCaseNode extends AssetNode {
 			createJUnit4TestNodes(userObject);
 		}
 		if("true".equals(JSystemProperties.getInstance().getPreferenceOrDefault(FrameworkOptions.SORT_ASSETS_TREE))){
-			Collections.sort(children);
+			Comparator comparator = Collections.reverseOrder();
+			Collections.sort(children,comparator);
 		}
 	}
 
