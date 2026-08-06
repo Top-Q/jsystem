@@ -1178,8 +1178,14 @@ public class RunnerTest implements JTest, UIHandler {
 						currentParameter.setOptions(enumStrings);
 						currentParameter.setEnumStringsAndNames(enumStringsAndNames);
 					} else {
-						log.fine("Unknown parameter type: " + type.getName() + " for: " + paramName);
-						continue;
+						if(!type.equals(junit.framework.TestResult.class)) {
+							log.fine("Unknown parameter type: " + type.getName() + " for: " + paramName);
+							continue;
+						}else{
+							//TODO: needs to handle jUnit TestResult type
+							log.finest("Unknown parameter type: " + type.getName() + " for: " + paramName);
+							continue;
+						}
 					}
 				}
 

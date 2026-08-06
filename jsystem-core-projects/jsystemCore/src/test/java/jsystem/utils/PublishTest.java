@@ -5,8 +5,10 @@ package jsystem.utils;
 
 import junit.framework.Assert;
 import junit.framework.SystemTestCase4;
+import org.junit.Ignore;
 import org.junit.Test;
 
+@Ignore("Requires local mail server (localhost:25, POP3 110)")
 public class PublishTest extends SystemTestCase4 {
 	public PublishTest() {
 		super();

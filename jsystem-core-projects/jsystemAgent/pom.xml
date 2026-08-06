@@ -4,7 +4,7 @@
 	<parent>	
 		<groupId>org.jsystemtest</groupId>
 		<artifactId>jsystem-parent</artifactId>
-		<version>6.1.13-SNAPSHOT</version>	
+		<version>6.1.12-SNAPSHOT</version>
 		<relativePath>../../jsystem-parent</relativePath>
 	</parent>
 	<artifactId>jsystemAgent</artifactId>
@@ -26,4 +26,23 @@
 		</dependency>
 		
 	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.2.5</version>
+				<configuration>
+					<!-- Exclude tests that require running Agent, RMI, or project paths -->
+					<excludes>
+						<exclude>**/LocalAgentTest.java</exclude>
+						<exclude>**/RemoteAgentClientTest.java</exclude>
+						<exclude>**/ExecutionClientTest.java</exclude>
+						<exclude>**/MD5Test.java</exclude>
+						<exclude>**/ProjectZipTest.java</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>

@@ -62,7 +62,11 @@ public class ClassSearchUtil {
 				inStream.close();
 			}
 		}
-		return p.getProperty(propertyName);
+		String value = p.getProperty(propertyName);
+		if (value == null) {
+			throw new IOException("Property not found in resource. " + propertyName);
+		}
+		return value;
 	}
 
 }

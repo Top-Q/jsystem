@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.jsystemtest</groupId>
 		<artifactId>jsystem-parent</artifactId>
-		<version>6.1.13-SNAPSHOT</version>
+		<version>6.1.12-SNAPSHOT</version>
 		<relativePath>../../jsystem-parent</relativePath>
 	</parent>
 	<artifactId>jsystemCore</artifactId>
@@ -45,8 +45,16 @@
 			<artifactId>qdox</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>il.co.top-q.difido</groupId>
+			<groupId>org.codelibs</groupId>
+			<artifactId>jhighlight</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>il.co.topq.difido</groupId>
 			<artifactId>difido-reports-common</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.jsystemtest</groupId>
@@ -73,6 +81,18 @@
 		<dependency>
 			<groupId>xml-apis</groupId>
 			<artifactId>xml-apis</artifactId>
+		</dependency>
+		<!--Java 11 Workaround-->
+		<dependency>
+			<groupId>jakarta.xml.bind</groupId>
+			<artifactId>jakarta.xml.bind-api</artifactId>
+			<version>4.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-impl</artifactId>
+			<version>4.0.3</version>
+			<scope>runtime</scope>
 		</dependency>
 	</dependencies>
 	<build>

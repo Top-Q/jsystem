@@ -885,14 +885,16 @@ public class ParametersPanel extends JPanel implements FocusListener {
 	 * @param section
 	 */
 	public void setActiveTab(String section) {
-		int n = paramsTab.getComponentCount();
-		for (int i = 0; i < n; i++) {
-			if (paramsTab.getTitleAt(i).equals(section)) {
-				this.activeTab = i;
-				if (activeTab != -1
-						&& paramsTab.getComponentCount() > activeTab)
-					paramsTab.setSelectedIndex(activeTab);
+		synchronized (paramsTab.getTreeLock()) {
+			int n = paramsTab.getComponentCount();
+			for (int i = 0; i < n; i++) {
+				if (paramsTab.getTitleAt(i).equals(section)) {
+					this.activeTab = i;
+					if (activeTab != -1
+							&& paramsTab.getComponentCount() > activeTab)
+						paramsTab.setSelectedIndex(activeTab);
 
+				}
 			}
 		}
 	}

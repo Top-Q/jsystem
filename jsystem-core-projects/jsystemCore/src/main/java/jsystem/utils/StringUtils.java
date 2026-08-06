@@ -168,6 +168,9 @@ public class StringUtils {
 	}
 
 	public static String getClassName(String className) {
+		if (className == null) {
+			return "";
+		}
 		int lastIndex = className.lastIndexOf(".");
 		if (lastIndex < 0) {
 			return className;
@@ -511,6 +514,21 @@ public class StringUtils {
 	 */
 	public static boolean isEmpty(String stringToCheck){
 		return stringToCheck == null || "".equals(stringToCheck.trim());
+	}
+
+	/**
+	 * Unwraps legacy Xerces text-node toString format {@code [#text: value]}.
+	 * Values that merely contain {@code #} (e.g. passwords) are returned unchanged.
+	 */
+	public static String unwrapXercesTextNode(String text) {
+		if (text == null) {
+			return null;
+		}
+		String trimmed = text.trim();
+		if (trimmed.startsWith("[#text:") && trimmed.endsWith("]")) {
+			return trimmed.substring(trimmed.lastIndexOf(' ') + 1, trimmed.length() - 1);
+		}
+		return text;
 	}
 	
 	

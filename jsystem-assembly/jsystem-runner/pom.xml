@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.jsystemtest</groupId>
 		<artifactId>jsystem-parent</artifactId>
-		<version>6.1.13-SNAPSHOT</version>
+		<version>6.1.12-SNAPSHOT</version>
 		<relativePath>../../jsystem-parent</relativePath>
 	</parent>
 	<artifactId>jsystem-runner</artifactId>
@@ -98,14 +98,13 @@
 
 		</dependency>
 		<dependency>
-			<groupId>com.jgoodies</groupId>
-			<artifactId>looks</artifactId>
-
-		</dependency>
-		<dependency>
 			<groupId>com.thoughtworks.qdox</groupId>
 			<artifactId>qdox</artifactId>
 
+		</dependency>
+		<dependency>
+			<groupId>org.codelibs</groupId>
+			<artifactId>jhighlight</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>net.javaprog.jwizz</groupId>

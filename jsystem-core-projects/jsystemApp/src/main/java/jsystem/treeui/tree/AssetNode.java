@@ -8,6 +8,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.Vector;
 import java.util.jar.JarEntry;
@@ -15,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeNode;
 
 import jsystem.framework.FrameworkOptions;
 import jsystem.framework.JSystemProperties;
@@ -88,7 +90,7 @@ public abstract class AssetNode extends DefaultMutableTreeNode implements Compar
 	public AssetNode(){
 		isSelected = false;
 		if (children == null) {
-			children = new Vector<AssetNode>();
+			children = new Vector<TreeNode>();
 		}
 	}
 
@@ -246,7 +248,8 @@ public abstract class AssetNode extends DefaultMutableTreeNode implements Compar
 			}
 		}
 		if("true".equals(JSystemProperties.getInstance().getPreferenceOrDefault(FrameworkOptions.SORT_ASSETS_TREE))){
-			Collections.sort(children);
+			Comparator comparator = Collections.reverseOrder();
+			Collections.sort(children,comparator);
 		}
 	}
 
@@ -390,7 +393,6 @@ public abstract class AssetNode extends DefaultMutableTreeNode implements Compar
      * 2. Find all fields that are not in the sut
      * @param root
      * @param doc
-     * @param nonModelDoc
      * @return new SutTreeNode
      * @throws Exception
      */

@@ -90,7 +90,7 @@
           <entry location="thirdparty/lib/JainSipApi1.2.jar" fileType="regular" />
           <entry location="thirdparty/lib/JainSipRi1.2.jar" fileType="regular" />
           <entry location="thirdparty/lib/jars.txt" fileType="regular" />
-          <entry location="thirdparty/lib/java2html.jar" fileType="regular" />
+          <entry location="thirdparty/commonLib/jhighlight.jar" fileType="regular" />
           <entry location="thirdparty/lib/java-getopt-1.0.12.jar" fileType="regular" />
           <entry location="thirdparty/lib/javacsv.jar" fileType="regular" />
           <entry location="thirdparty/lib/javadoc_net.sourceforge.jpcap-0.01.16.jar" fileType="regular" />
