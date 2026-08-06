@@ -141,12 +141,7 @@ public class SutImpl implements Sut {
 			throw new Exception("Object was not found: " + path);
 		}
 		String text = ((Node) list.get(0)).getTextContent();
-		if (text != null && text.indexOf('#') >= 0) { // look like the xerses implemantation.
-										// We should fix the class name
-			// the inputs look like: [#text: com....]
-			text = text.substring(text.lastIndexOf(' ') + 1, text.length() - 1);
-		}
-		return text;
+		return StringUtils.unwrapXercesTextNode(text);
 
 	}
 

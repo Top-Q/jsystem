@@ -164,12 +164,7 @@ public class SystemManagerImpl implements SystemObjectManager, TestListener {
                 throw new Exception("Unable to find class atribute to systemObject: " + name);
             }
             
-            className = className.trim();
-            
-            if(className.indexOf('#') >= 0){ // look like the xerses implemantation. We should fix the class name
-            	// the inputs look like: [#text: com....]
-            	className = className.substring(className.lastIndexOf(' ') + 1, className.length() - 1);
-            }
+            className = StringUtils.unwrapXercesTextNode(className.trim());
 
             Class<?> c = LoadersManager.getInstance().getLoader().loadClass(className); 
 
@@ -291,10 +286,7 @@ public class SystemManagerImpl implements SystemObjectManager, TestListener {
     	
     }
     private SystemObject processReferance(String ref, String xPath, SystemObject parent, String tag, String name) throws Exception{
-        if(ref.indexOf('#') >= 0){ // look like the xerses implemantation. We should fix the class name
-        	// the inputs look like: [#text: com....]
-        	ref = ref.substring(ref.lastIndexOf(' ') + 1, ref.length() - 1);
-        }
+        ref = StringUtils.unwrapXercesTextNode(ref);
         if(!ref.startsWith("/")){ // if the referance is not start with / add it
         	ref = "/" + ref;
         }
